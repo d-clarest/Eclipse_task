@@ -9,13 +9,9 @@
 	<div class="login">
 		<p><b>新規登録</b></p>
 		
-		<input type="text" name="username" placeholder="ユーザー名">
-
-		<input type="text" name="password" placeholder="パスワード">
-		
 		<form th:action="@{/log-in}" method="POST">
-<!--			<input type="hidden" th:field="*{new_username}">-->
-<!--			<input type="hidden" th:field="*{new_password}">-->
+			<input type="text" name="newUsername" placeholder="ユーザー名">
+			<input type="text" name="newPassword" placeholder="パスワード">
 			<button type="submit">登録</button>
 		</form>
 
