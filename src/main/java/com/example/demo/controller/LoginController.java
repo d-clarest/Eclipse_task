@@ -2,10 +2,12 @@ package com.example.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.demo.entity.User;
 import com.example.demo.form.NewRegistForm;
+import com.example.demo.form.LogInForm;
 import com.example.demo.service.LoginRegistService;
 
 import lombok.RequiredArgsConstructor;
@@ -37,9 +39,17 @@ public class LoginController {
 		return "log-in";
 	}
 	
-	@PostMapping("/task-top")
-	public String showTop() {
-		return "task-top";
-	}
+        @PostMapping("/task-top")
+        public String showTop(LogInForm form, Model model) {
+                User u = new User();
+                u.setUsername(form.getUsername());
+                u.setPassword(form.getPassword());
+                if (service.login(u)) {
+                        return "task-top";
+                } else {
+                        model.addAttribute("errorMessage", "ログイン失敗");
+                        return "log-in";
+                }
+        }
 }
 

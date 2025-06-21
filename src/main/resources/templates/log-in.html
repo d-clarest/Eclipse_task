@@ -11,16 +11,14 @@
 	
 	<div class="login">
 		
-		<p><b>ログイン画面</b></p>
+                <p><b>ログイン画面</b></p>
+                <p th:text="${errorMessage}" th:if="${errorMessage}" class="error-msg"></p>
 
-		<input type="text" name="username" placeholder="ユーザー名">
-
-		<input type="text" name="password" placeholder="パスワード">
-		
-		
-		<form th:action="@{/task-top}" method="POST">
-			<button type="submit">ログイン</button>
-		</form>
+                <form th:action="@{/task-top}" method="POST">
+                        <input type="text" name="username" placeholder="ユーザー名">
+                        <input type="password" name="password" placeholder="パスワード">
+                        <button type="submit">ログイン</button>
+                </form>
 		
 		
 		<form th:action="@{/new-regist}" method="GET">
