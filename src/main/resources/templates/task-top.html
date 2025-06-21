@@ -14,6 +14,22 @@
         </div>
 		<div id="calendar" class="calendar-area"></div>
         <p><b>トップ画面</b></p>
+
+        <div>
+                <table>
+                        <tr>
+                                <th>Task Name</th>
+                                <th>Due Date</th>
+                                <th>Confirmed</th>
+                        </tr>
+                        <tr th:each="task : ${tasks}">
+                                <td th:text="${task.taskName}"></td>
+                                <td th:text="${task.dueDate}"></td>
+                                <td th:text="${task.confirmed}"></td>
+                        </tr>
+                </table>
+        </div>
+
         <script th:src="@{/js/calende.js}"></script>
 		
 </body>
