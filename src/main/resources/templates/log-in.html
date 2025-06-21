@@ -17,12 +17,13 @@
 
 		<input type="text" name="password" placeholder="パスワード">
 		
+		
 		<form th:action="@{/task-top}" method="POST">
 			<button type="submit">ログイン</button>
 		</form>
 		
 		
-		<form th:action="@{/new-regist}" method="POST">
+		<form th:action="@{/new-regist}" method="GET">
 			<button type="submit">新規登録</button>
 		</form>
 	</div>

@@ -23,7 +23,7 @@ public class LoginController {
 		return "log-in";
 	}
 	
-	@PostMapping("/new-regist")
+	@GetMapping("/new-regist")
 	public String newRsgistForm() {
 		return "new-regist";
 	}
