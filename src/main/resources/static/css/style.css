@@ -169,3 +169,8 @@ td {
     height: 24px;
     text-align: center;
 }
+
+/* 本日の日付を赤枠で強調 */
+.calendar-area .today {
+    border: 2px solid red;
+}
