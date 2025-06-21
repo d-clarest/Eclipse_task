@@ -36,5 +36,10 @@ public class LoginController {
 		service.userRegist(u);
 		return "log-in";
 	}
+	
+	@PostMapping("/task-top")
+	public String showTop() {
+		return "task-top";
+	}
 }
 
