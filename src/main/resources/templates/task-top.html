@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <html>
 <head>
 <meta charset="UTF-8">
@@ -11,7 +12,44 @@
                 <a href="question-survey-box.html">疑問・調査ボックス</a>
                 <a href="task-box.html">タスクボックス</a>
         </div>
+		<div id="calendar" class="calendar-area"></div>
         <p><b>トップ画面</b></p>
+		
+		<script>
+	       document.addEventListener('DOMContentLoaded', function() {
+	           const container = document.getElementById('calendar');
+	           const today = new Date();
+	           const year = today.getFullYear();
+	           const month = today.getMonth(); // 0-based
+
+	           const firstDay = new Date(year, month, 1).getDay();
+	           const lastDate = new Date(year, month + 1, 0).getDate();
+
+	           let html = '<table>';
+	           html += '<tr><th colspan="7">' + year + '年' + (month + 1) + '月</th></tr>';
+	           html += '<tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr><tr>';
+
+	           for (let i = 0; i < firstDay; i++) {
+	               html += '<td></td>';
+	           }
+
+	           for (let day = 1; day <= lastDate; day++) {
+	               if ((firstDay + day - 1) % 7 === 0 && day !== 1) {
+	                   html += '</tr><tr>';
+	               }
+	               html += '<td>' + day + '</td>';
+	           }
+
+	           const remaining = (firstDay + lastDate) % 7;
+	           if (remaining !== 0) {
+	               for (let i = 0; i < 7 - remaining; i++) {
+	                   html += '<td></td>';
+	               }
+	           }
+	           html += '</tr></table>';
+	           container.innerHTML = html;
+	       });
+       </script>
 
 </body>
 </html>

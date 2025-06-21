@@ -146,3 +146,26 @@ td {
 .link-area a:hover {
     text-decoration: underline;
 }
+
+/* カレンダーを画面右上に配置 */
+.calendar-area {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: 2px solid #5e696c;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.calendar-area table {
+    border-collapse: collapse;
+}
+
+.calendar-area th,
+.calendar-area td {
+    border: 1px solid #5e696c;
+    width: 30px;
+    height: 24px;
+    text-align: center;
+}
