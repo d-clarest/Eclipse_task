@@ -123,3 +123,10 @@ td {
 .review-list {
     background-color: #afeeee;
 }
+
+/* リンクエリアを画面左上に配置 */
+.link-area {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
