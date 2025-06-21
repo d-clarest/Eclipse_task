@@ -22,6 +22,13 @@ public class LoginRegistServiceImpl implements LoginRegistService {
                 repository.add(user);
         }
 
+        @Override
+        public boolean login(User user) {
+                String hashed = hashPassword(user.getPassword());
+                User found = repository.findByUsernameAndPassword(user.getUsername(), hashed);
+                return found != null;
+        }
+
         private String hashPassword(String password) {
                 try {
                         MessageDigest md = MessageDigest.getInstance("SHA-256");
