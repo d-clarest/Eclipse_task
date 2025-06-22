@@ -165,9 +165,14 @@ td {
 .calendar-area th,
 .calendar-area td {
     border: 1px solid #5e696c;
-    width: 30px;
-    height: 24px;
+    width: 40px;
+    height: 32px;
     text-align: center;
+    vertical-align: top;
+}
+
+.calendar-area td .tasks div {
+    font-size: 10px;
 }
 
 /* 本日の日付を赤枠で強調 */
