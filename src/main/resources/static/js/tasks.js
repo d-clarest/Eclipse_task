@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.confirm-box').forEach(cb => {
+    document.querySelectorAll('.task-confirm-box').forEach(cb => {
         cb.addEventListener('change', () => {
             const data = {
                 taskName: cb.dataset.name,

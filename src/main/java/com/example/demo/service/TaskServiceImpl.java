@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import java.util.List;
-import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void updateConfirmed(String taskName, LocalDate dueDate, boolean confirmed) {
-        repository.updateConfirmed(taskName, dueDate, confirmed);
+    public void updateConfirmed(Task task) {
+        repository.updateConfirmed(task);
     }
 }

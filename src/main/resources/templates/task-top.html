@@ -26,7 +26,7 @@
                                 <td th:text="${task.taskName}"></td>
                                 <td th:text="${task.dueDate}"></td>
                                 <td>
-                                    <input type="checkbox" th:checked="${task.confirmed}" class="confirm-box"
+                                    <input type="checkbox" th:checked="${task.confirmed}" class="task-confirm-box"
                                         th:data-name="${task.taskName}" th:data-date="${task.dueDate}">
                                 </td>
                         </tr>

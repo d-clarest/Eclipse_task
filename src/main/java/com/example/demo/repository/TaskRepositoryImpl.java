@@ -36,8 +36,8 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public void updateConfirmed(String taskName, LocalDate dueDate, boolean confirmed) {
+    public void updateConfirmed(Task task) {
         String sql = "UPDATE tasks SET confirmed = ? WHERE task_name = ? AND due_date = ?";
-        jdbcTemplate.update(sql, confirmed, taskName, java.sql.Date.valueOf(dueDate));
+        jdbcTemplate.update(sql, task.isConfirmed(), task.getTaskName(), java.sql.Date.valueOf(task.getDueDate()));
     }
 }
