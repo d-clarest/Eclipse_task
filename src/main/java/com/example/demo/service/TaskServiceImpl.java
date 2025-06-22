@@ -19,4 +19,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllTasks() {
         return repository.findAll();
     }
+
+    @Override
+    public void updateConfirmed(String taskName, boolean confirmed) {
+        repository.updateConfirmed(taskName, confirmed);
+    }
 }

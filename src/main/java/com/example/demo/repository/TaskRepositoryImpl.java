@@ -34,4 +34,10 @@ public class TaskRepositoryImpl implements TaskRepository {
             }
         });
     }
+
+    @Override
+    public void updateConfirmed(String taskName, boolean confirmed) {
+        String sql = "UPDATE tasks SET confirmed = ? WHERE task_name = ?";
+        jdbcTemplate.update(sql, confirmed, taskName);
+    }
 }

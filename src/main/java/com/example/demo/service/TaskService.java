@@ -6,4 +6,6 @@ import com.example.demo.entity.Task;
 
 public interface TaskService {
     List<Task> getAllTasks();
+
+    void updateConfirmed(String taskName, boolean confirmed);
 }
