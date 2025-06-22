@@ -29,4 +29,9 @@ public class TaskServiceImpl implements TaskService {
     public void updateDueDate(Task task) {
         repository.updateDueDate(task);
     }
+
+    @Override
+    public void updateTaskName(String oldTaskName, String newTaskName) {
+        repository.updateTaskName(oldTaskName, newTaskName);
+    }
 }

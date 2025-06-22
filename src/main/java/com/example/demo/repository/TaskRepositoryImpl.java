@@ -46,4 +46,10 @@ public class TaskRepositoryImpl implements TaskRepository {
         String sql = "UPDATE tasks SET due_date = ? WHERE task_name = ?";
         jdbcTemplate.update(sql, java.sql.Date.valueOf(task.getDueDate()), task.getTaskName());
     }
+
+    @Override
+    public void updateTaskName(String oldTaskName, String newTaskName) {
+        String sql = "UPDATE tasks SET task_name = ? WHERE task_name = ?";
+        jdbcTemplate.update(sql, newTaskName, oldTaskName);
+    }
 }
