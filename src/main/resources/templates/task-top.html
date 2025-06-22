@@ -25,7 +25,9 @@
                         <tr th:each="task : ${tasks}">
                                 <td th:text="${task.taskName}"></td>
                                 <td th:text="${task.dueDate}"></td>
-                                <td th:text="${task.confirmed}"></td>
+								<td>
+                                    <input type="checkbox" th:checked="${task.confirmed}" disabled>
+                                </td>
                         </tr>
                 </table>
         </div>

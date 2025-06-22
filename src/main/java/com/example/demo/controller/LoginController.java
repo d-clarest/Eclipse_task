@@ -30,14 +30,14 @@ public class LoginController {
 		return "new-regist";
 	}
 	
-        @PostMapping("/log-in")
-        public String reShowLogInForm(NewRegistForm form) {
-                User u=new User();
-                u.setUsername(form.getNewUsername());
-                u.setPassword(form.getNewPassword());
-                loginService.userRegist(u);
-                return "log-in";
-        }
+    @PostMapping("/log-in")
+    public String reShowLogInForm(NewRegistForm form) {
+            User u=new User();
+            u.setUsername(form.getNewUsername());
+            u.setPassword(form.getNewPassword());
+            loginService.userRegist(u);
+            return "log-in";
+    }
 	
     @PostMapping("/task-top")
     public String showTop(LogInForm form, Model model) {
