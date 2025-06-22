@@ -40,4 +40,10 @@ public class TaskRepositoryImpl implements TaskRepository {
         String sql = "UPDATE tasks SET confirmed = ? WHERE task_name = ? AND due_date = ?";
         jdbcTemplate.update(sql, task.isConfirmed(), task.getTaskName(), java.sql.Date.valueOf(task.getDueDate()));
     }
+
+    @Override
+    public void updateDueDate(Task task) {
+        String sql = "UPDATE tasks SET due_date = ? WHERE task_name = ?";
+        jdbcTemplate.update(sql, java.sql.Date.valueOf(task.getDueDate()), task.getTaskName());
+    }
 }

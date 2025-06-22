@@ -8,4 +8,6 @@ public interface TaskRepository {
     List<Task> findAll();
 
     void updateConfirmed(Task task);
+
+    void updateDueDate(Task task);
 }

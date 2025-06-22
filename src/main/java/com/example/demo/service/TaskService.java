@@ -8,4 +8,6 @@ public interface TaskService {
     List<Task> getAllTasks();
 
     void updateConfirmed(Task task);
+
+    void updateDueDate(Task task);
 }

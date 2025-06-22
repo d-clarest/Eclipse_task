@@ -29,4 +29,10 @@ public class TaskListController {
         service.updateConfirmed(task);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/task-due-date")
+    public ResponseEntity<Void> updateDueDate(@RequestBody Task task) {
+        service.updateDueDate(task);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -24,4 +24,9 @@ public class TaskServiceImpl implements TaskService {
     public void updateConfirmed(Task task) {
         repository.updateConfirmed(task);
     }
+
+    @Override
+    public void updateDueDate(Task task) {
+        repository.updateDueDate(task);
+    }
 }
