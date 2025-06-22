@@ -63,4 +63,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    document.querySelectorAll('.due-date-input').forEach(inp => {
+        inp.addEventListener('change', () => {
+            const data = {
+                taskName: inp.dataset.name,
+                dueDate: inp.value
+            };
+            fetch('/task-due-date', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const cb = document.querySelector('.task-confirm-box[data-name="' + inp.dataset.name + '"]');
+            if (cb) {
+                if (cb.checked) {
+                    removeTask(cb.dataset.name, cb.dataset.date);
+                    addTask(cb.dataset.name, inp.value);
+                }
+                cb.dataset.date = inp.value;
+            }
+        });
+    });
 });
