@@ -25,14 +25,16 @@
                         <tr th:each="task : ${tasks}">
                                 <td th:text="${task.taskName}"></td>
                                 <td th:text="${task.dueDate}"></td>
-								<td>
-                                    <input type="checkbox" th:checked="${task.confirmed}" disabled>
+                                <td>
+                                    <input type="checkbox" th:checked="${task.confirmed}" class="confirm-box"
+                                        th:data-name="${task.taskName}" th:data-date="${task.dueDate}">
                                 </td>
                         </tr>
                 </table>
         </div>
 
         <script th:src="@{/js/calende.js}"></script>
+        <script th:src="@{/js/tasks.js}"></script>
 		
 </body>
 </html>
