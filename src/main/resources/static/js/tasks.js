@@ -88,4 +88,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    document.querySelectorAll('.task-name-input').forEach(inp => {
+        inp.addEventListener('change', () => {
+            const data = {
+                oldTaskName: inp.dataset.oldName,
+                newTaskName: inp.value
+            };
+            fetch('/task-name', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const cb = document.querySelector('.task-confirm-box[data-name="' + inp.dataset.oldName + '"]');
+            if (cb) {
+                if (cb.checked) {
+                    removeTask(cb.dataset.name, cb.dataset.date);
+                    addTask(inp.value, cb.dataset.date);
+                }
+                cb.dataset.name = inp.value;
+            }
+
+            const dd = document.querySelector('.due-date-input[data-name="' + inp.dataset.oldName + '"]');
+            if (dd) {
+                dd.dataset.name = inp.value;
+            }
+
+            inp.dataset.oldName = inp.value;
+        });
+    });
 });

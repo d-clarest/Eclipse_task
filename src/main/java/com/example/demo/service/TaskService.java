@@ -10,4 +10,6 @@ public interface TaskService {
     void updateConfirmed(Task task);
 
     void updateDueDate(Task task);
+
+    void updateTaskName(String oldTaskName, String newTaskName);
 }

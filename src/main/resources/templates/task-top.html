@@ -23,7 +23,9 @@
                                 <th>Confirmed</th>
                         </tr>
                         <tr th:each="task : ${tasks}">
-                                <td th:text="${task.taskName}"></td>
+                                <td>
+                                    <input type="text" th:value="${task.taskName}" class="task-name-input" th:data-old-name="${task.taskName}">
+                                </td>
                                 <td>
                                     <input type="date" th:value="${task.dueDate}" class="due-date-input" th:data-name="${task.taskName}">
                                 </td>
