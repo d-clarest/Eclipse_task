@@ -27,9 +27,12 @@ public class ScheduleServiceImpl implements ScheduleService {
             long minutes = Duration.between(now, start).toMinutes();
             if (minutes < 0) minutes = 0;
             long rounded = (minutes / 5) * 5;
-            long hours = rounded / 60;
+
+            long days = rounded / (60 * 24);
+            long hours = (rounded % (60 * 24)) / 60;
             long mins = rounded % 60;
-            s.setTimeUntilStart(String.format("%d時間%d分", hours, mins));
+
+            s.setTimeUntilStart(String.format("%d日%d時間%d分", days, hours, mins));
         }
         return list;
     }
