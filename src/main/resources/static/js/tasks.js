@@ -1,9 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     const calendar = document.getElementById('calendar');
     let dayCells = {};
+    let currentYear = new Date().getFullYear();
+    let currentMonth = new Date().getMonth();
+
+    function updateCurrentYearMonth() {
+        const title = document.getElementById('calendar-title');
+        if (title) {
+            const m = title.textContent.match(/(\d+)年(\d+)月/);
+            if (m) {
+                currentYear = parseInt(m[1], 10);
+                currentMonth = parseInt(m[2], 10) - 1; // zero-based month
+            }
+        }
+    }
 
     function mapDayCells() {
         dayCells = {};
+        updateCurrentYearMonth();
         calendar.querySelectorAll('td').forEach(td => {
             const day = parseInt(td.textContent, 10);
             if (!isNaN(day)) {
@@ -23,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function addTask(name, dateStr) {
         const date = new Date(dateStr);
+        if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth) {
+            return;
+        }
         const cell = dayCells[date.getDate()];
         if (!cell) return;
         let wrapper = cell.querySelector('.tasks');
@@ -39,6 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function removeTask(name, dateStr) {
         const date = new Date(dateStr);
+        if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth) {
+            return;
+        }
         const cell = dayCells[date.getDate()];
         if (!cell) return;
         const wrapper = cell.querySelector('.tasks');
