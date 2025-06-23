@@ -49,7 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
             cell.appendChild(wrapper);
         }
         const item = document.createElement('div');
-        item.textContent = name;
+        item.textContent = name.slice(0, 4);
+        item.title = name;
         item.dataset.name = name;
         wrapper.appendChild(item);
     }
