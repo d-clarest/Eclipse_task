@@ -66,10 +66,10 @@
                                     <input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly>
                                 </td>
                                 <td>
-                                    <input type="time" th:value="${schedule.startTime}">
+                                    <input type="time" th:value="${schedule.startTime}" step="300">
                                 </td>
                                 <td>
-                                    <input type="time" th:value="${schedule.endTime}">
+                                    <input type="time" th:value="${schedule.endTime}" step="300">
                                 </td>
                                 <td>
                                     <input type="text" th:value="${schedule.location}">
