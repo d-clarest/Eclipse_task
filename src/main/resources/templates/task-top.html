@@ -14,27 +14,27 @@
         </div>
 		<div id="calendar" class="calendar-area"></div>
 
-        <div>
-                <table>
-                        <tr>
-                                <th>タスク名</th>
-                                <th>締切</th>
-                                <th>予定追加</th>
-                        </tr>
-                        <tr th:each="task : ${tasks}">
-                                <td>
-                                    <input type="text" th:value="${task.taskName}" class="task-name-input" th:data-old-name="${task.taskName}">
-                                </td>
-                                <td>
-                                    <input type="date" th:value="${task.dueDate}" class="due-date-input" th:data-name="${task.taskName}">
-                                </td>
-                                <td>
-                                    <input type="checkbox" th:checked="${task.confirmed}" class="task-confirm-box"
-                                        th:data-name="${task.taskName}" th:data-date="${task.dueDate}">
-                                </td>
-                        </tr>
-                </table>
-        </div>
+<!--        <div>-->
+<!--                <table>-->
+<!--                        <tr>-->
+<!--                                <th>タスク名</th>-->
+<!--                                <th>締切</th>-->
+<!--                                <th>予定追加</th>-->
+<!--                        </tr>-->
+<!--                        <tr th:each="task : ${tasks}">-->
+<!--                                <td>-->
+<!--                                    <input type="text" th:value="${task.taskName}" class="task-name-input" th:data-old-name="${task.taskName}">-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    <input type="date" th:value="${task.dueDate}" class="due-date-input" th:data-name="${task.taskName}">-->
+<!--                                </td>-->
+<!--                                <td>-->
+<!--                                    <input type="checkbox" th:checked="${task.confirmed}" class="task-confirm-box"-->
+<!--                                        th:data-name="${task.taskName}" th:data-date="${task.dueDate}">-->
+<!--                                </td>-->
+<!--                        </tr>-->
+<!--                </table>-->
+<!--        </div>-->
 		
 		
 		<div>
@@ -66,10 +66,10 @@
                                     <input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly>
                                 </td>
                                 <td>
-                                    <input type="time" th:value="${schedule.startTime}">
+                                     <input type="time" th:value="${schedule.startTime}" step="300">
                                 </td>
                                 <td>
-                                    <input type="time" th:value="${schedule.endTime}">
+                                    <input type="time" th:value="${schedule.endTime}" step="300">
                                 </td>
                                 <td>
                                     <input type="text" th:value="${schedule.location}">
