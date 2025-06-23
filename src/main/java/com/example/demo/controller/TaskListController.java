@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.example.demo.form.TaskNameUpdate;
+import com.example.demo.form.ScheduleUpdateForm;
 
 import com.example.demo.entity.Task;
 import com.example.demo.entity.Schedule;
@@ -50,6 +51,12 @@ public class TaskListController {
     @PostMapping("/schedule-complete")
     public ResponseEntity<Void> updateCompletedDay(@RequestBody Schedule schedule) {
         scheduleService.updateCompletedDay(schedule);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/schedule-update")
+    public ResponseEntity<Void> updateSchedule(@RequestBody ScheduleUpdateForm form) {
+        scheduleService.updateSchedule(form);
         return ResponseEntity.ok().build();
     }
 }

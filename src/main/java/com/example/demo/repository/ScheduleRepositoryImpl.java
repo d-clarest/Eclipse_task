@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Schedule;
+import com.example.demo.form.ScheduleUpdateForm;
 
 import lombok.RequiredArgsConstructor;
 
@@ -54,5 +55,28 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         String sql = "UPDATE schedules SET completed_day = ? WHERE title = ? AND schedule_date = ?";
         java.sql.Date day = schedule.getCompletedDay() != null ? java.sql.Date.valueOf(schedule.getCompletedDay()) : null;
         jdbcTemplate.update(sql, day, schedule.getTitle(), java.sql.Date.valueOf(schedule.getScheduleDate()));
+    }
+
+    @Override
+    public void updateSchedule(ScheduleUpdateForm form) {
+        String sql = "UPDATE schedules SET add_flag = ?, title = ?, day_of_week = ?, schedule_date = ?, start_time = ?, end_time = ?, location = ?, detail = ?, feedback = ?, point = ?, completed_day = ? WHERE title = ? AND schedule_date = ?";
+        java.sql.Date schedDate = java.sql.Date.valueOf(form.getScheduleDate());
+        java.sql.Time start = java.sql.Time.valueOf(form.getStartTime());
+        java.sql.Time end = java.sql.Time.valueOf(form.getEndTime());
+        java.sql.Date completed = form.getCompletedDay() != null ? java.sql.Date.valueOf(form.getCompletedDay()) : null;
+        jdbcTemplate.update(sql,
+                form.isAddFlag(),
+                form.getTitle(),
+                form.getDayOfWeek(),
+                schedDate,
+                start,
+                end,
+                form.getLocation(),
+                form.getDetail(),
+                form.getFeedback(),
+                form.getPoint(),
+                completed,
+                form.getOldTitle(),
+                java.sql.Date.valueOf(form.getOldScheduleDate()));
     }
 }
