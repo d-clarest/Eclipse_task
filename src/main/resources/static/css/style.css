@@ -179,3 +179,18 @@ td {
 .calendar-area .today {
     border: 2px solid red;
 }
+
+/* navigation buttons */
+.calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.calendar-nav button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
