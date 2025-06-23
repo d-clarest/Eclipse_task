@@ -66,11 +66,11 @@
                                     <input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly>
                                 </td>
                                 <td>
-                                     <input type="time" th:value="${schedule.startTime}" step="300">
-                                </td>
-                                <td>
-                                    <input type="time" th:value="${schedule.endTime}" step="300">
-                                </td>
+                                     <input type="time" th:value="${schedule.startTime}" step="300" list="time-5min">
+                                 </td>
+                                 <td>
+                                    <input type="time" th:value="${schedule.endTime}" step="300" list="time-5min">
+                                 </td>
                                 <td>
                                     <input type="text" th:value="${schedule.location}">
                                 </td>
@@ -83,6 +83,7 @@
         <script th:src="@{/js/calende.js}"></script>
         <script th:src="@{/js/tasks.js}"></script>
         <script th:src="@{/js/schedule.js}"></script>
-		
+        <datalist id="time-5min"></datalist>
+
 </body>
 </html>
