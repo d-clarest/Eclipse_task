@@ -14,27 +14,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const list = document.getElementById('time-5min');
-    if (list) {
+    function initTimeSelects(hourSel, minuteSel, time) {
         for (let h = 0; h < 24; h++) {
-            for (let m = 0; m < 60; m += 5) {
-                const option = document.createElement('option');
-                option.value = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-                list.appendChild(option);
-            }
+            const opt = document.createElement('option');
+            opt.value = String(h).padStart(2, '0');
+            opt.textContent = opt.value;
+            hourSel.appendChild(opt);
+        }
+        for (let m = 0; m < 60; m += 5) {
+            const opt = document.createElement('option');
+            opt.value = String(m).padStart(2, '0');
+            opt.textContent = opt.value;
+            minuteSel.appendChild(opt);
+        }
+        if (time) {
+            const [h, m] = time.split(':');
+            hourSel.value = h;
+            minuteSel.value = m.padStart(2, '0');
         }
     }
 
-    document.querySelectorAll('input[type="time"]').forEach(inp => {
-        inp.addEventListener('change', () => {
-            if (!inp.value) return;
-            let [h, m] = inp.value.split(':').map(Number);
-            m = Math.round(m / 5) * 5;
-            if (m === 60) {
-                m = 0;
-                h = (h + 1) % 24;
-            }
-            inp.value = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-        });
+    document.querySelectorAll('.start-hour').forEach(sel => {
+        const minuteSel = sel.parentElement.querySelector('.start-minute');
+        initTimeSelects(sel, minuteSel, sel.dataset.time);
+    });
+
+    document.querySelectorAll('.end-hour').forEach(sel => {
+        const minuteSel = sel.parentElement.querySelector('.end-minute');
+        initTimeSelects(sel, minuteSel, sel.dataset.time);
     });
 });
