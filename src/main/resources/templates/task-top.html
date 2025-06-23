@@ -52,7 +52,7 @@
 								<th>フィードバック</th>
 								<th>ポイント</th>
 								<th>完了日</th>
-								<th>開始時刻まで</th>
+								<th>開始まで</th>
                         </tr>
                         <tr th:each="schedule : ${schedules}">
                                 <td>
@@ -84,7 +84,9 @@
                                 <td>
                                     <input type="text" th:value="${schedule.detail}">
                                 </td>
-                                <td></td>
+								<td>
+                                    <input type="text" th:value="${schedule.feedback}">
+                                </td>
                                 <td>
                                     <input type="number" th:value="${schedule.point}">
                                 </td>

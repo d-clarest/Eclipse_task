@@ -22,7 +22,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
     @Override
     public List<Schedule> findAll() {
-        String sql = "SELECT add_flag, title, day_of_week, schedule_date, start_time, end_time, location, detail, point, completed_day FROM schedules";
+        String sql = "SELECT add_flag, title, day_of_week, schedule_date, start_time, end_time, location, detail, feedback,point, completed_day FROM schedules";
         return jdbcTemplate.query(sql, new RowMapper<Schedule>() {
             @Override
             public Schedule mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -38,6 +38,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 s.setEndTime(et);
                 s.setLocation(rs.getString("location"));
                 s.setDetail(rs.getString("detail"));
+                s.setFeedback(rs.getString("feedback"));
                 s.setPoint(rs.getInt("point"));
                 java.sql.Date comp = rs.getDate("completed_day");
                 if (comp != null) {
