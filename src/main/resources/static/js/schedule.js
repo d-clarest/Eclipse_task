@@ -258,6 +258,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    const newButton = document.getElementById('new-schedule-button');
+    if (newButton) {
+        newButton.addEventListener('click', () => {
+            const today = new Date();
+            const dateStr = today.toISOString().split('T')[0];
+            const dow = today.toLocaleDateString('ja-JP', { weekday: 'short' });
+            const data = {
+                addFlag: false,
+                title: '',
+                dayOfWeek: dow,
+                scheduleDate: dateStr,
+                startTime: '00:00',
+                endTime: '01:00',
+                location: '',
+                detail: '',
+                feedback: '',
+                point: 0,
+                completedDay: null
+            };
+            fetch('/schedule-add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(() => {
+                location.reload();
+            });
+        });
+    }
+
     initSchedules();
     document.addEventListener('calendarRendered', initSchedules);
 });

@@ -47,4 +47,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void updateSchedule(ScheduleUpdateForm form) {
         repository.updateSchedule(form);
     }
+
+    @Override
+    public void addSchedule(Schedule schedule) {
+        repository.insertSchedule(schedule);
+    }
 }

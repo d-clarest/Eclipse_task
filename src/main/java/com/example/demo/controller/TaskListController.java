@@ -59,4 +59,10 @@ public class TaskListController {
         scheduleService.updateSchedule(form);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/schedule-add")
+    public ResponseEntity<Void> addSchedule(@RequestBody Schedule schedule) {
+        scheduleService.addSchedule(schedule);
+        return ResponseEntity.ok().build();
+    }
 }
