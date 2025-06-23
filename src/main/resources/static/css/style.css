@@ -181,6 +181,10 @@ td {
 
 .calendar-area td .tasks div {
     font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 4ch;
 }
 
 /* 本日の日付を赤枠で強調 */
