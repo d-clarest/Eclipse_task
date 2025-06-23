@@ -17,4 +17,5 @@ public class Schedule {
     private String detail;           // 詳細
     private int point;               // ポイント
     private LocalDate completedDay;  // 完了日（null 可）
+    private String timeUntilStart;   // 開始時刻までを表す文字列
 }
