@@ -1,12 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
     const calendar = document.getElementById('calendar');
-    const dayCells = {};
-    calendar.querySelectorAll('td').forEach(td => {
-        const day = parseInt(td.textContent, 10);
-        if (!isNaN(day)) {
-            dayCells[day] = td;
-        }
-    });
+    let dayCells = {};
+
+    function mapDayCells() {
+        dayCells = {};
+        calendar.querySelectorAll('td').forEach(td => {
+            const day = parseInt(td.textContent, 10);
+            if (!isNaN(day)) {
+                dayCells[day] = td;
+            }
+        });
+    }
+
+    function initTasks() {
+        mapDayCells();
+        document.querySelectorAll('.task-confirm-box').forEach(cb => {
+            if (cb.checked) {
+                addTask(cb.dataset.name, cb.dataset.date);
+            }
+        });
+    }
 
     function addTask(name, dateStr) {
         const date = new Date(dateStr);
@@ -120,4 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
             inp.dataset.oldName = inp.value;
         });
     });
+
+    initTasks();
+    document.addEventListener('calendarRendered', initTasks);
 });
+
