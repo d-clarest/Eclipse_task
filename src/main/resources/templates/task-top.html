@@ -13,7 +13,6 @@
                 <a href="task-box.html">タスクボックス</a>
         </div>
 		<div id="calendar" class="calendar-area"></div>
-        <p><b>トップ画面</b></p>
 
         <div>
                 <table>
@@ -36,6 +35,30 @@
                         </tr>
                 </table>
         </div>
+		
+		
+		<div>
+                <table>
+                        <tr>
+                                <th>完了ボタン</th>
+                                <th>予定追加</th>
+                                <th>予定名</th>
+                        </tr>
+                        <tr th:each="schedule : ${schedules}">
+                                <td>
+                                    <input type="button" value="完了">
+                                </td>
+                                <td>
+                                    <input type="checkbox" th:checked="${schedule.addFlag}" >
+                                </td>
+                                <td>
+                                    <input type="text" th:value="${schedule.title}">
+                                </td>
+                        </tr>
+                </table>
+        </div>
+		
+		
 
         <script th:src="@{/js/calende.js}"></script>
         <script th:src="@{/js/tasks.js}"></script>
