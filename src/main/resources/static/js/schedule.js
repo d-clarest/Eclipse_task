@@ -45,23 +45,44 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.querySelectorAll('.complete-button').forEach(btn => {
+        const row = btn.closest('tr');
+        const comp = row ? row.querySelector('.completed-day-input') : null;
+        if (comp && comp.value) {
+            btn.value = '取消';
+        }
+
         btn.addEventListener('click', () => {
-            const row = btn.closest('tr');
             if (!row) return;
             const title = row.querySelector('.schedule-title-input');
             const date = row.querySelector('.schedule-date-input');
-            const comp = row.querySelector('.completed-day-input');
-            const today = new Date().toISOString().split('T')[0];
-            if (comp) comp.value = today;
-            fetch('/schedule-complete', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: title ? title.value : '',
-                    scheduleDate: date ? date.value : '',
-                    completedDay: today
-                })
-            });
+            if (!comp) return;
+
+            if (btn.value === '完了') {
+                const today = new Date().toISOString().split('T')[0];
+                comp.value = today;
+                btn.value = '取消';
+                fetch('/schedule-complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: title ? title.value : '',
+                        scheduleDate: date ? date.value : '',
+                        completedDay: today
+                    })
+                });
+            } else {
+                comp.value = '';
+                btn.value = '完了';
+                fetch('/schedule-complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: title ? title.value : '',
+                        scheduleDate: date ? date.value : '',
+                        completedDay: null
+                    })
+                });
+            }
         });
     });
 });
