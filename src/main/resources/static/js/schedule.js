@@ -27,6 +27,79 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const calendar = document.getElementById('calendar');
+    let dayCells = {};
+    let currentYear = new Date().getFullYear();
+    let currentMonth = new Date().getMonth();
+
+    function updateCurrentYearMonth() {
+        const title = document.getElementById('calendar-title');
+        if (title) {
+            const m = title.textContent.match(/(\d+)年(\d+)月/);
+            if (m) {
+                currentYear = parseInt(m[1], 10);
+                currentMonth = parseInt(m[2], 10) - 1;
+            }
+        }
+    }
+
+    function mapDayCells() {
+        dayCells = {};
+        updateCurrentYearMonth();
+        calendar.querySelectorAll('td').forEach(td => {
+            const day = parseInt(td.textContent, 10);
+            if (!isNaN(day)) {
+                dayCells[day] = td;
+            }
+        });
+    }
+
+    function addSchedule(name, dateStr) {
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return;
+        if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth) return;
+        const cell = dayCells[date.getDate()];
+        if (!cell) return;
+        let wrapper = cell.querySelector('.tasks');
+        if (!wrapper) {
+            wrapper = document.createElement('div');
+            wrapper.className = 'tasks';
+            cell.appendChild(wrapper);
+        }
+        const item = document.createElement('div');
+        item.textContent = name;
+        item.dataset.name = name;
+        item.dataset.date = dateStr;
+        wrapper.appendChild(item);
+    }
+
+    function removeSchedule(name, dateStr) {
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return;
+        if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth) return;
+        const cell = dayCells[date.getDate()];
+        if (!cell) return;
+        const wrapper = cell.querySelector('.tasks');
+        if (!wrapper) return;
+        wrapper.querySelectorAll('div').forEach(div => {
+            if (div.dataset.name === name && div.dataset.date === dateStr) {
+                div.remove();
+            }
+        });
+    }
+
+    function initSchedules() {
+        mapDayCells();
+        document.querySelectorAll('.schedule-row').forEach(row => {
+            const cb = row.querySelector('.schedule-add-flag');
+            if (cb && cb.checked) {
+                const name = row.querySelector('.schedule-title-input').value;
+                const date = row.querySelector('.schedule-date-input').value;
+                addSchedule(name, date);
+            }
+        });
+    }
+
     document.querySelectorAll('.schedule-date-input').forEach(inp => {
         inp.addEventListener('change', () => {
             const date = new Date(inp.value);
@@ -37,6 +110,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dayField = row.querySelector('.schedule-day-of-week');
                 if (dayField) {
                     dayField.value = dow;
+                }
+                const cb = row.querySelector('.schedule-add-flag');
+                if (cb && cb.checked) {
+                    removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
+                    addSchedule(row.querySelector('.schedule-title-input').value, inp.value);
                 }
                 sendUpdate(row);
             }
@@ -96,14 +174,29 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.schedule-add-flag').forEach(cb => {
         cb.addEventListener('change', () => {
             const row = cb.closest('tr');
-            if (row) sendUpdate(row);
+            if (!row) return;
+            const title = row.querySelector('.schedule-title-input').value;
+            const date = row.querySelector('.schedule-date-input').value;
+            if (cb.checked) {
+                addSchedule(title, date);
+            } else {
+                removeSchedule(title, date);
+            }
+            sendUpdate(row);
         });
     });
 
     document.querySelectorAll('.schedule-title-input').forEach(inp => {
         inp.addEventListener('change', () => {
             const row = inp.closest('tr');
-            if (row) sendUpdate(row);
+            if (row) {
+                const cb = row.querySelector('.schedule-add-flag');
+                if (cb && cb.checked) {
+                    removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
+                    addSchedule(inp.value, row.querySelector('.schedule-date-input').value);
+                }
+                sendUpdate(row);
+            }
         });
     });
 
@@ -163,4 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sendUpdate(row);
         });
     });
+
+    initSchedules();
+    document.addEventListener('calendarRendered', initSchedules);
 });
