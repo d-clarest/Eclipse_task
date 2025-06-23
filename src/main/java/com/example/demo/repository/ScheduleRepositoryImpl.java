@@ -48,4 +48,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
             }
         });
     }
+
+    @Override
+    public void updateCompletedDay(Schedule schedule) {
+        String sql = "UPDATE schedules SET completed_day = ? WHERE title = ? AND schedule_date = ?";
+        java.sql.Date day = schedule.getCompletedDay() != null ? java.sql.Date.valueOf(schedule.getCompletedDay()) : null;
+        jdbcTemplate.update(sql, day, schedule.getTitle(), java.sql.Date.valueOf(schedule.getScheduleDate()));
+    }
 }
