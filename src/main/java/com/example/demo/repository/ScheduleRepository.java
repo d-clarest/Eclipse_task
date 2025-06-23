@@ -11,4 +11,6 @@ public interface ScheduleRepository {
     void updateCompletedDay(Schedule schedule);
 
     void updateSchedule(ScheduleUpdateForm form);
+
+    void insertSchedule(Schedule schedule);
 }
