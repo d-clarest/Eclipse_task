@@ -68,7 +68,7 @@
                                     <input type="date" th:value="${schedule.scheduleDate}" class="schedule-date-input">
                                 </td>
                                 <td>
-                                    <input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly>
+                                    <input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly size="2">
                                 </td>
                                 <td>
                                     <select class="start-hour" th:data-time="${schedule.startTime}"></select> :
@@ -79,7 +79,7 @@
                                     <select class="end-minute" th:data-time="${schedule.endTime}"></select>
                                 </td>
                                 <td>
-                                    <input type="text" th:value="${schedule.location}">
+                                    <input type="text" th:value="${schedule.location}" size="5">
                                 </td>
                                 <td>
                                     <input type="text" th:value="${schedule.detail}">
@@ -88,7 +88,7 @@
                                     <input type="text" th:value="${schedule.feedback}">
                                 </td>
                                 <td>
-                                    <input type="number" th:value="${schedule.point}">
+                                    <input type="number" th:value="${schedule.point}" size="2">
                                 </td>
                                 <td>
                                     <input type="date" th:value="${schedule.completedDay}">
