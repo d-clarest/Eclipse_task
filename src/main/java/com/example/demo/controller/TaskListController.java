@@ -10,6 +10,7 @@ import com.example.demo.form.TaskNameUpdate;
 
 import com.example.demo.entity.Task;
 import com.example.demo.service.TaskService;
+import com.example.demo.service.ScheduleService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,10 +19,12 @@ import lombok.RequiredArgsConstructor;
 public class TaskListController {
 
     private final TaskService service;
+    private final ScheduleService scheduleService;
 
     @GetMapping("/task-top")
     public String showTaskTop(Model model) {
         model.addAttribute("tasks", service.getAllTasks());
+        model.addAttribute("schedules", scheduleService.getAllSchedules());
         return "task-top";
     }
 
