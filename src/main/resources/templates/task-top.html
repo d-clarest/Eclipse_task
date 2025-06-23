@@ -49,7 +49,7 @@
 								<th>終了時刻</th>
 								<th>場所</th>
 								<th>詳細</th>
-								<th>フィードバック</th>
+								<th>feedback</th>
 								<th>point</th>
 								<th>完了日</th>
 								<th>開始まで</th>
@@ -62,7 +62,7 @@
                                     <input type="checkbox" th:checked="${schedule.addFlag}" >
                                 </td>
                                 <td>
-                                    <input type="text" th:value="${schedule.title}">
+                                    <input type="text" th:value="${schedule.title}" size="8">
                                 </td>
                                 <td>
                                     <input type="date" th:value="${schedule.scheduleDate}" class="schedule-date-input">
