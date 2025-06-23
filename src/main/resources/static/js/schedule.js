@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.querySelectorAll('.schedule-date-input').forEach(inp => {
-        inp.addEventListener('change', () => {
+        const handler = () => {
             const date = new Date(inp.value);
             if (isNaN(date.getTime())) return;
             const dow = date.toLocaleDateString('ja-JP', { weekday: 'short' });
@@ -119,7 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 sendUpdate(row);
             }
-        });
+        };
+        inp.addEventListener('change', handler);
+        inp.addEventListener('input', handler);
     });
 
     function initTimeSelects(hourSel, minuteSel, time) {
@@ -188,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.querySelectorAll('.schedule-title-input').forEach(inp => {
-        inp.addEventListener('change', () => {
+        const handler = () => {
             const row = inp.closest('tr');
             if (row) {
                 const cb = row.querySelector('.schedule-add-flag');
@@ -198,42 +200,54 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 sendUpdate(row);
             }
-        });
+        };
+        inp.addEventListener('change', handler);
+        inp.addEventListener('input', handler);
     });
 
     document.querySelectorAll('.schedule-location-input').forEach(inp => {
-        inp.addEventListener('change', () => {
+        const handler = () => {
             const row = inp.closest('tr');
             if (row) sendUpdate(row);
-        });
+        };
+        inp.addEventListener('change', handler);
+        inp.addEventListener('input', handler);
     });
 
     document.querySelectorAll('.schedule-detail-input').forEach(inp => {
-        inp.addEventListener('change', () => {
+        const handler = () => {
             const row = inp.closest('tr');
             if (row) sendUpdate(row);
-        });
+        };
+        inp.addEventListener('change', handler);
+        inp.addEventListener('input', handler);
     });
 
     document.querySelectorAll('.schedule-feedback-input').forEach(inp => {
-        inp.addEventListener('change', () => {
+        const handler = () => {
             const row = inp.closest('tr');
             if (row) sendUpdate(row);
-        });
+        };
+        inp.addEventListener('change', handler);
+        inp.addEventListener('input', handler);
     });
 
     document.querySelectorAll('.point-input').forEach(inp => {
-        inp.addEventListener('change', () => {
+        const handler = () => {
             const row = inp.closest('tr');
             if (row) sendUpdate(row);
-        });
+        };
+        inp.addEventListener('change', handler);
+        inp.addEventListener('input', handler);
     });
 
     document.querySelectorAll('.completed-day-input').forEach(inp => {
-        inp.addEventListener('change', () => {
+        const handler = () => {
             const row = inp.closest('tr');
             if (row) sendUpdate(row);
-        });
+        };
+        inp.addEventListener('change', handler);
+        inp.addEventListener('input', handler);
     });
 
     document.querySelectorAll('.complete-button').forEach(btn => {
