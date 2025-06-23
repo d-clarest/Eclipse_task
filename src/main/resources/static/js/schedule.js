@@ -13,4 +13,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    const list = document.getElementById('time-5min');
+    if (list) {
+        for (let h = 0; h < 24; h++) {
+            for (let m = 0; m < 60; m += 5) {
+                const option = document.createElement('option');
+                option.value = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                list.appendChild(option);
+            }
+        }
+    }
+
+    document.querySelectorAll('input[type="time"]').forEach(inp => {
+        inp.addEventListener('change', () => {
+            if (!inp.value) return;
+            let [h, m] = inp.value.split(':').map(Number);
+            m = Math.round(m / 5) * 5;
+            if (m === 60) {
+                m = 0;
+                h = (h + 1) % 24;
+            }
+            inp.value = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        });
+    });
 });
