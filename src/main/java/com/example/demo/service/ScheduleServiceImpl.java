@@ -36,4 +36,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
         return list;
     }
+
+    @Override
+    public void updateCompletedDay(Schedule schedule) {
+        repository.updateCompletedDay(schedule);
+    }
 }

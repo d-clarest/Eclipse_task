@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.example.demo.form.TaskNameUpdate;
 
 import com.example.demo.entity.Task;
+import com.example.demo.entity.Schedule;
 import com.example.demo.service.TaskService;
 import com.example.demo.service.ScheduleService;
 
@@ -43,6 +44,12 @@ public class TaskListController {
     @PostMapping("/task-name")
     public ResponseEntity<Void> updateTaskName(@RequestBody TaskNameUpdate req) {
         service.updateTaskName(req.getOldTaskName(), req.getNewTaskName());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/schedule-complete")
+    public ResponseEntity<Void> updateCompletedDay(@RequestBody Schedule schedule) {
+        scheduleService.updateCompletedDay(schedule);
         return ResponseEntity.ok().build();
     }
 }

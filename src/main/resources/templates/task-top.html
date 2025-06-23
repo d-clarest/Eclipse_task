@@ -56,13 +56,13 @@
                         </tr>
                         <tr th:each="schedule : ${schedules}">
                                 <td>
-                                    <input type="button" value="完了">
+                                    <input type="button" value="完了" class="complete-button">
                                 </td>
                                 <td>
                                     <input type="checkbox" th:checked="${schedule.addFlag}" >
                                 </td>
                                 <td>
-                                    <input type="text" th:value="${schedule.title}" size="8">
+                                    <input type="text" th:value="${schedule.title}" size="8" class="schedule-title-input">
                                 </td>
                                 <td>
                                     <input type="date" th:value="${schedule.scheduleDate}" class="schedule-date-input">
@@ -91,7 +91,7 @@
                                     <input type="number" th:value="${schedule.point}" size="2" class="point-input">
                                 </td>
                                 <td>
-                                    <input type="date" th:value="${schedule.completedDay}">
+                                    <input type="date" th:value="${schedule.completedDay}" class="completed-day-input">
                                 </td>
                                 <td>
                                     <span th:text="${schedule.timeUntilStart}"></span>

@@ -6,4 +6,6 @@ import com.example.demo.entity.Schedule;
 
 public interface ScheduleService {
     List<Schedule> getAllSchedules();
+
+    void updateCompletedDay(Schedule schedule);
 }
