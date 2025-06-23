@@ -60,7 +60,12 @@ h2 {
 
 /* コメント入力の幅 */
 input.comment {
-	width: 400px;
+        width: 400px;
+}
+
+/* narrow width for point input */
+.point-input {
+    width: 2em;
 }
 
 .error-msg {
