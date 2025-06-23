@@ -14,16 +14,20 @@ document.addEventListener('DOMContentLoaded', () => {
             location: row.querySelector('.schedule-location-input').value,
             detail: row.querySelector('.schedule-detail-input').value,
             feedback: row.querySelector('.schedule-feedback-input').value,
-            point: row.querySelector('.point-input').value,
+            point: parseInt(row.querySelector('.point-input').value || '0', 10),
             completedDay: row.querySelector('.completed-day-input').value || null
         };
         fetch('/schedule-update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        }).then(() => {
-            row.dataset.oldTitle = data.title;
-            row.dataset.oldDate = data.scheduleDate;
+        }).then(res => {
+            if (res.ok) {
+                row.dataset.oldTitle = data.title;
+                row.dataset.oldDate = data.scheduleDate;
+            } else {
+                console.error('Schedule update failed');
+            }
         });
     }
 
