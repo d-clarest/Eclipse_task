@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -17,6 +20,17 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public List<Schedule> getAllSchedules() {
-        return repository.findAll();
+        List<Schedule> list = repository.findAll();
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        for (Schedule s : list) {
+            LocalDateTime start = LocalDateTime.of(s.getScheduleDate(), s.getStartTime());
+            long minutes = Duration.between(now, start).toMinutes();
+            if (minutes < 0) minutes = 0;
+            long rounded = (minutes / 5) * 5;
+            long hours = rounded / 60;
+            long mins = rounded % 60;
+            s.setTimeUntilStart(String.format("%d時間%d分", hours, mins));
+        }
+        return list;
     }
 }
