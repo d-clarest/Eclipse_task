@@ -54,12 +54,13 @@
 								<th>完了日</th>
 								<th>開始まで</th>
                         </tr>
-                        <tr th:each="schedule : ${schedules}">
+                        <tr th:each="schedule : ${schedules}" class="schedule-row"
+                            th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
                                 <td>
                                     <input type="button" value="完了" class="complete-button">
                                 </td>
                                 <td>
-                                    <input type="checkbox" th:checked="${schedule.addFlag}" >
+                                    <input type="checkbox" th:checked="${schedule.addFlag}" class="schedule-add-flag">
                                 </td>
                                 <td>
                                     <input type="text" th:value="${schedule.title}" size="8" class="schedule-title-input">
@@ -79,13 +80,13 @@
                                     <select class="end-minute" th:data-time="${schedule.endTime}"></select>
                                 </td>
                                 <td>
-                                    <input type="text" th:value="${schedule.location}" size="5">
+                                    <input type="text" th:value="${schedule.location}" size="5" class="schedule-location-input">
                                 </td>
                                 <td>
-                                    <input type="text" th:value="${schedule.detail}" size="8">
+                                    <input type="text" th:value="${schedule.detail}" size="8" class="schedule-detail-input">
                                 </td>
-								<td>
-                                    <input type="text" th:value="${schedule.feedback}" size="8">
+                                                                <td>
+                                    <input type="text" th:value="${schedule.feedback}" size="8" class="schedule-feedback-input">
                                 </td>
                                 <td>
                                     <input type="number" th:value="${schedule.point}" size="2" class="point-input">

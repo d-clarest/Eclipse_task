@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Schedule;
+import com.example.demo.form.ScheduleUpdateForm;
 import com.example.demo.repository.ScheduleRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void updateCompletedDay(Schedule schedule) {
         repository.updateCompletedDay(schedule);
+    }
+
+    @Override
+    public void updateSchedule(ScheduleUpdateForm form) {
+        repository.updateSchedule(form);
     }
 }
