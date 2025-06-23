@@ -12,15 +12,18 @@ import com.example.demo.form.ScheduleUpdateForm;
 import com.example.demo.repository.ScheduleRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository repository;
 
     @Override
     public List<Schedule> getAllSchedules() {
+        log.debug("Fetching all schedules");
         List<Schedule> list = repository.findAll();
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         for (Schedule s : list) {
@@ -40,16 +43,19 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void updateCompletedDay(Schedule schedule) {
+        log.debug("Updating completed day for {} to {}", schedule.getTitle(), schedule.getCompletedDay());
         repository.updateCompletedDay(schedule);
     }
 
     @Override
     public void updateSchedule(ScheduleUpdateForm form) {
+        log.debug("Updating schedule {} on {}", form.getTitle(), form.getScheduleDate());
         repository.updateSchedule(form);
     }
 
     @Override
     public void addSchedule(Schedule schedule) {
+        log.debug("Adding schedule {} on {}", schedule.getTitle(), schedule.getScheduleDate());
         repository.insertSchedule(schedule);
     }
 }

@@ -11,31 +11,37 @@ import com.example.demo.form.NewRegistForm;
 import com.example.demo.service.LoginRegistService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class LoginController {
 
         private final LoginRegistService loginService;
 	
 	
 	
-	@GetMapping("/log-in")
-	public String showLogInForm() {
-		return "log-in";
-	}
+        @GetMapping("/log-in")
+        public String showLogInForm() {
+                log.debug("Displaying login form");
+                return "log-in";
+        }
 	
-	@GetMapping("/new-regist")
-	public String newRsgistForm() {
-		return "new-regist";
-	}
+        @GetMapping("/new-regist")
+        public String newRsgistForm() {
+                log.debug("Displaying registration form");
+                return "new-regist";
+        }
 	
     @PostMapping("/log-in")
     public String reShowLogInForm(NewRegistForm form) {
+            log.debug("Registering new user: {}", form.getNewUsername());
             User u=new User();
             u.setUsername(form.getNewUsername());
             u.setPassword(form.getNewPassword());
             loginService.userRegist(u);
+            log.debug("Registration successful, returning to login form");
             return "log-in";
     }
 	
@@ -44,9 +50,12 @@ public class LoginController {
             User u = new User();
             u.setUsername(form.getUsername());
             u.setPassword(form.getPassword());
+            log.debug("Attempting login for user: {}", form.getUsername());
             if (loginService.login(u)) {
+                    log.debug("Login success for user: {}", form.getUsername());
                     return "redirect:/task-top";
             } else {
+                    log.debug("Login failed for user: {}", form.getUsername());
                     model.addAttribute("errorMessage", "ログイン失敗");
                     return "log-in";
             }

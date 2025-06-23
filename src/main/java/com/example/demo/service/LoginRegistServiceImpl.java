@@ -9,24 +9,30 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.LoginRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LoginRegistServiceImpl implements LoginRegistService {
 	
         private final LoginRepository repository;
 
         @Override
         public void userRegist(User user) {
+                log.debug("Registering user {}", user.getUsername());
                 user.setPassword(hashPassword(user.getPassword()));
                 repository.add(user);
         }
 
         @Override
         public boolean login(User user) {
+                log.debug("Logging in user {}", user.getUsername());
                 String hashed = hashPassword(user.getPassword());
                 User found = repository.findByUsernameAndPassword(user.getUsername(), hashed);
-                return found != null;
+                boolean success = found != null;
+                log.debug("Login {} for user {}", success ? "succeeded" : "failed", user.getUsername());
+                return success;
         }
 
         private String hashPassword(String password) {
