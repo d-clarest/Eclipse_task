@@ -15,9 +15,11 @@ import com.example.demo.service.TaskService;
 import com.example.demo.service.ScheduleService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class TaskListController {
 
     private final TaskService service;
@@ -25,6 +27,7 @@ public class TaskListController {
 
     @GetMapping("/task-top")
     public String showTaskTop(Model model) {
+        log.debug("Displaying task top page");
         model.addAttribute("tasks", service.getAllTasks());
         model.addAttribute("schedules", scheduleService.getAllSchedules());
         return "task-top";
@@ -32,36 +35,42 @@ public class TaskListController {
 
     @PostMapping("/task-confirm")
     public ResponseEntity<Void> updateConfirmed(@RequestBody Task task) {
+        log.debug("Updating task confirm: {} {}", task.getTaskName(), task.isConfirmed());
         service.updateConfirmed(task);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/task-due-date")
     public ResponseEntity<Void> updateDueDate(@RequestBody Task task) {
+        log.debug("Updating due date for {} to {}", task.getTaskName(), task.getDueDate());
         service.updateDueDate(task);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/task-name")
     public ResponseEntity<Void> updateTaskName(@RequestBody TaskNameUpdate req) {
+        log.debug("Updating task name from {} to {}", req.getOldTaskName(), req.getNewTaskName());
         service.updateTaskName(req.getOldTaskName(), req.getNewTaskName());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/schedule-complete")
     public ResponseEntity<Void> updateCompletedDay(@RequestBody Schedule schedule) {
+        log.debug("Updating schedule completed day {} {}", schedule.getTitle(), schedule.getCompletedDay());
         scheduleService.updateCompletedDay(schedule);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/schedule-update")
     public ResponseEntity<Void> updateSchedule(@RequestBody ScheduleUpdateForm form) {
+        log.debug("Updating schedule {} on {}", form.getTitle(), form.getScheduleDate());
         scheduleService.updateSchedule(form);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/schedule-add")
     public ResponseEntity<Void> addSchedule(@RequestBody Schedule schedule) {
+        log.debug("Adding schedule {} on {}", schedule.getTitle(), schedule.getScheduleDate());
         scheduleService.addSchedule(schedule);
         return ResponseEntity.ok().build();
     }
