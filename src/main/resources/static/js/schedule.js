@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     function sendUpdate(row) {
         const data = {
+            id: parseInt(row.dataset.id, 10),
             oldTitle: row.dataset.oldTitle,
             oldScheduleDate: row.dataset.oldDate,
             addFlag: row.querySelector('.schedule-add-flag').checked,
