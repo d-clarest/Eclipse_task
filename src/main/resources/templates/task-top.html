@@ -41,6 +41,7 @@
                 <table>
                         <tr>
                                 <th>完了</th>
+								<th>削除</th>
                                 <th>add</th>
                                 <th>予定名</th>
 								<th>予定日</th>
@@ -58,6 +59,9 @@
                             th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
                                 <td>
                                     <input type="button" value="完了" class="complete-button">
+                                </td>
+								<td>
+                                    <input type="button" value="削除" class="delete-button">
                                 </td>
                                 <td>
                                     <input type="checkbox" th:checked="${schedule.addFlag}" class="schedule-add-flag">
