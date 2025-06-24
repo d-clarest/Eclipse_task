@@ -33,6 +33,12 @@ public class TaskListController {
         return "task-top";
     }
 
+    @GetMapping("/task-box")
+    public String showTaskBox() {
+        log.debug("Displaying task box page");
+        return "task-box";
+    }
+
     @PostMapping("/task-confirm")
     public ResponseEntity<Void> updateConfirmed(@RequestBody Task task) {
         log.debug("Updating task confirm: {} {}", task.getTaskName(), task.isConfirmed());
