@@ -303,8 +303,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const span = row.querySelector('td:last-child span');
                     if (span) span.textContent = '';
                 } else {
-                    row.style.display = '';
-                    updateTimeUntilStart(row);
+                    if (location.pathname.includes('task-box')) {
+                        row.style.display = 'none';
+                    } else {
+                        row.style.display = '';
+                        updateTimeUntilStart(row);
+                    }
                 }
             }
         };
@@ -335,8 +339,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.style.display = 'none';
                 if (span) span.textContent = '';
             } else {
-                row.style.display = '';
-                updateTimeUntilStart(row);
+                if (location.pathname.includes('task-box')) {
+                    row.style.display = 'none';
+                } else {
+                    row.style.display = '';
+                    updateTimeUntilStart(row);
+                }
             }
             sendUpdate(row);
         });
