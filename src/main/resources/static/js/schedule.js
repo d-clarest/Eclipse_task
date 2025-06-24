@@ -300,8 +300,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateStr = today.toISOString().split('T')[0];
             const dow = today.toLocaleDateString('ja-JP', { weekday: 'short' });
             const data = {
-                addFlag: false,
-                title: 'あ',
+                addFlag: true,
+                title: '',
                 dayOfWeek: dow,
                 scheduleDate: dateStr,
                 startTime: '00:00',
