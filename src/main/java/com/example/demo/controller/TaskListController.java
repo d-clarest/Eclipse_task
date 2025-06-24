@@ -74,4 +74,11 @@ public class TaskListController {
         scheduleService.addSchedule(schedule);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/schedule-delete")
+    public ResponseEntity<Void> deleteSchedule(@RequestBody Schedule schedule) {
+        log.debug("Deleting schedule id {}", schedule.getId());
+        scheduleService.deleteScheduleById(schedule.getId());
+        return ResponseEntity.ok().build();
+    }
 }

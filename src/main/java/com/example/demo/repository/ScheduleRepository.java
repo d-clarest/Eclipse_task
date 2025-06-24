@@ -13,4 +13,6 @@ public interface ScheduleRepository {
     void updateSchedule(ScheduleUpdateForm form);
 
     void insertSchedule(Schedule schedule);
+
+    void deleteById(int id);
 }

@@ -23,11 +23,12 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
     @Override
     public List<Schedule> findAll() {
-        String sql = "SELECT add_flag, title, day_of_week, schedule_date, start_time, end_time, location, detail, feedback,point, completed_day FROM schedules";
+        String sql = "SELECT id, add_flag, title, day_of_week, schedule_date, start_time, end_time, location, detail, feedback, point, completed_day FROM schedules";
         return jdbcTemplate.query(sql, new RowMapper<Schedule>() {
             @Override
             public Schedule mapRow(ResultSet rs, int rowNum) throws SQLException {
                 Schedule s = new Schedule();
+                s.setId(rs.getInt("id"));
                 s.setAddFlag(rs.getBoolean("add_flag"));
                 s.setTitle(rs.getString("title"));
                 s.setDayOfWeek(rs.getString("day_of_week"));
@@ -99,5 +100,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 schedule.getFeedback(),
                 schedule.getPoint(),
                 completed);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        String sql = "DELETE FROM schedules WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
