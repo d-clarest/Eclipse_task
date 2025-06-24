@@ -133,13 +133,14 @@ td {
 
 /* リンクエリアを画面左上に配置 */
 .link-area {
-    position: absolute;
+    position: fixed;
     top: 10px;
     left: 10px;
     border: 2px solid #5e696c;
     padding: 10px;
     background-color: #fff;
     border-radius: 8px;
+    z-index: 1000;
 }
 
 .link-area a {
@@ -212,6 +213,7 @@ body.task-body {
     height: auto;
     justify-content: flex-start;
     align-items: flex-start;
+    margin-top: 80px; /* space for link and calendar */
 }
 
 /* overlay for daily schedule detail */
