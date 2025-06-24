@@ -148,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
         inp.addEventListener('change', handler);
-        inp.addEventListener('input', handler);
     });
 
     function initTimeSelects(hourSel, minuteSel, time) {
