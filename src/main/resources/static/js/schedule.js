@@ -296,7 +296,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.completed-day-input').forEach(inp => {
         const handler = () => {
             const row = inp.closest('tr');
-            if (row) sendUpdate(row);
+            if (row) {
+                sendUpdate(row);
+                if (inp.value) {
+                    row.style.display = 'none';
+                    const span = row.querySelector('td:last-child span');
+                    if (span) span.textContent = '';
+                } else {
+                    row.style.display = '';
+                    updateTimeUntilStart(row);
+                }
+            }
         };
         inp.addEventListener('change', handler);
         inp.addEventListener('input', handler);
@@ -319,6 +329,14 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 comp.value = '';
                 btn.value = '完了';
+            }
+            const span = row.querySelector('td:last-child span');
+            if (comp.value) {
+                row.style.display = 'none';
+                if (span) span.textContent = '';
+            } else {
+                row.style.display = '';
+                updateTimeUntilStart(row);
             }
             sendUpdate(row);
         });
