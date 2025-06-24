@@ -34,8 +34,12 @@ public class TaskListController {
     }
 
     @GetMapping("/task-box")
-    public String showTaskBox() {
+    public String showTaskBox(Model model) {
         log.debug("Displaying task box page");
+        var list = scheduleService.getAllSchedules().stream()
+                .filter(s -> s.getCompletedDay() != null)
+                .toList();
+        model.addAttribute("schedules", list);
         return "task-box";
     }
 
