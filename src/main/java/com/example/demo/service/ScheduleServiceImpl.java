@@ -27,6 +27,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         List<Schedule> list = repository.findAll();
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         for (Schedule s : list) {
+            // When a schedule is completed, the remaining time should no longer be displayed
+            if (s.getCompletedDay() != null) {
+                s.setTimeUntilStart(null);
+                continue;
+            }
+
             LocalDateTime start = LocalDateTime.of(s.getScheduleDate(), s.getStartTime());
             long minutes = Duration.between(now, start).toMinutes();
             if (minutes < 0) minutes = 0;
