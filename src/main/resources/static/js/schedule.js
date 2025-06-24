@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 location: '',
                 detail: '',
                 feedback: '',
-                point: 0,
+                point: 1,
                 completedDay: null
             };
             fetch('/schedule-add', {

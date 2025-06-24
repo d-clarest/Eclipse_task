@@ -20,8 +20,6 @@ public class LoginController {
 
         private final LoginRegistService loginService;
 	
-	
-	
         @GetMapping("/log-in")
         public String showLogInForm() {
                 log.debug("Displaying login form");
