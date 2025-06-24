@@ -56,7 +56,7 @@
 								<th>開始まで</th>
                         </tr>
                         <tr th:each="schedule : ${schedules}" class="schedule-row"
-                            th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
+                            th:data-id="${schedule.id}" th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
                                 <td>
                                     <input type="button" value="完了" class="complete-button">
                                 </td>

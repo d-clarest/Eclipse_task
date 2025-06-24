@@ -276,6 +276,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.querySelectorAll('.delete-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const row = btn.closest('tr');
+            if (!row) return;
+            const id = row.dataset.id;
+            if (!id) return;
+            fetch('/schedule-delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: parseInt(id, 10) })
+            }).then(() => {
+                location.reload();
+            });
+        });
+    });
+
     const newButton = document.getElementById('new-schedule-button');
     if (newButton) {
         newButton.addEventListener('click', () => {

@@ -13,4 +13,6 @@ public interface ScheduleService {
     void updateSchedule(ScheduleUpdateForm form);
 
     void addSchedule(Schedule schedule);
+
+    void deleteScheduleById(int id);
 }

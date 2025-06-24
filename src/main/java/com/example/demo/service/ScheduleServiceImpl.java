@@ -58,4 +58,10 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.debug("Adding schedule {} on {}", schedule.getTitle(), schedule.getScheduleDate());
         repository.insertSchedule(schedule);
     }
+
+    @Override
+    public void deleteScheduleById(int id) {
+        log.debug("Deleting schedule with id {}", id);
+        repository.deleteById(id);
+    }
 }

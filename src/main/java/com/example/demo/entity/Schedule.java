@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class Schedule {
+    private int id;                  // ID
     private boolean addFlag;         // 予定追加 ON/OFF
     private String title;            // 予定名
     private String dayOfWeek;        // 曜日
