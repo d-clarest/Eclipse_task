@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const dow = today.toLocaleDateString('ja-JP', { weekday: 'short' });
             const data = {
                 addFlag: false,
-                title: '',
+                title: 'あ',
                 dayOfWeek: dow,
                 scheduleDate: dateStr,
                 startTime: '00:00',
