@@ -49,7 +49,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void updateSchedule(ScheduleUpdateForm form) {
-        log.debug("Updating schedule {} on {}", form.getTitle(), form.getScheduleDate());
+        log.debug("Updating schedule id {} - {} on {}", form.getId(), form.getTitle(), form.getScheduleDate());
         repository.updateSchedule(form);
     }
 

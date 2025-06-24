@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class ScheduleUpdateForm {
+    private int id;
     private String oldTitle;
     private LocalDate oldScheduleDate;
 

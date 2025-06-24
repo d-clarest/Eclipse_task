@@ -60,7 +60,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
     @Override
     public void updateSchedule(ScheduleUpdateForm form) {
-        String sql = "UPDATE schedules SET add_flag = ?, title = ?, day_of_week = ?, schedule_date = ?, start_time = ?, end_time = ?, location = ?, detail = ?, feedback = ?, point = ?, completed_day = ? WHERE title = ? AND schedule_date = ?";
+        String sql = "UPDATE schedules SET add_flag = ?, title = ?, day_of_week = ?, schedule_date = ?, start_time = ?, end_time = ?, location = ?, detail = ?, feedback = ?, point = ?, completed_day = ? WHERE id = ?";
         java.sql.Date schedDate = java.sql.Date.valueOf(form.getScheduleDate());
         java.sql.Time start = java.sql.Time.valueOf(form.getStartTime());
         java.sql.Time end = java.sql.Time.valueOf(form.getEndTime());
@@ -77,8 +77,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 form.getFeedback(),
                 form.getPoint(),
                 completed,
-                form.getOldTitle(),
-                java.sql.Date.valueOf(form.getOldScheduleDate()));
+                form.getId());
     }
 
     @Override
