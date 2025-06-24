@@ -95,9 +95,19 @@ td {
     white-space: nowrap;                /* 折り返さない */
 }
 
-/* position the database table slightly to the right */
-.database-table {
+/* position the database table slightly to the right and adjust vertical offset */
+.database-container {
     margin-left: 200px;
+    margin-top: -50px;
+}
+
+.database-table {
+    margin-left: 0;
+}
+
+#new-schedule-button {
+    display: block;
+    margin-top: 10px;
 }
 
 .restaurant-list {
