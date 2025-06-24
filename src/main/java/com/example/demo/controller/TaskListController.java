@@ -29,7 +29,10 @@ public class TaskListController {
     public String showTaskTop(Model model) {
         log.debug("Displaying task top page");
         model.addAttribute("tasks", service.getAllTasks());
-        model.addAttribute("schedules", scheduleService.getAllSchedules());
+        var list = scheduleService.getAllSchedules().stream()
+                .filter(s -> s.getCompletedDay() == null)
+                .toList();
+        model.addAttribute("schedules", list);
         return "task-top";
     }
 
