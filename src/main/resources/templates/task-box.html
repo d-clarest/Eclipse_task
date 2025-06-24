@@ -15,7 +15,7 @@
 	
 	
     <div class="database-container">
-		<p>予定完了済み</p>
+                <p>予定完了済み</p>
         <table class="database-table">
             <tr>
                 <th>完了</th>
@@ -33,7 +33,7 @@
                 <th>完了日</th>
                 <th>開始まで</th>
             </tr>
-            <tr th:each="schedule : ${schedules}" class="schedule-row"
+            <tr th:each="schedule : ${completedSchedules}" class="schedule-row"
                 th:data-id="${schedule.id}" th:data-old-title="${schedule.title}"
                 th:data-old-date="${schedule.scheduleDate}">
                 <td><input type="button" value="完了" class="complete-button"></td>
@@ -61,8 +61,8 @@
     </div>
 	
 	
-	<div class="database-container">
-		<p>これからの予定</p>
+        <div class="database-container">
+                <p>これからの予定</p>
             <table class="database-table">
                     <tr>
                             <th>完了</th>
@@ -80,7 +80,7 @@
 							<th>完了日</th>
 							<th>開始まで</th>
                     </tr>
-                    <tr th:each="schedule : ${schedules}" class="schedule-row"
+                    <tr th:each="schedule : ${upcomingSchedules}" class="schedule-row"
                         th:data-id="${schedule.id}" th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
                             <td>
                                 <input type="button" value="完了" class="complete-button">

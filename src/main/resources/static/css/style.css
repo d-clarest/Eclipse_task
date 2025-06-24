@@ -101,6 +101,11 @@ td {
     margin-top: -50px;
 }
 
+/* ensure spacing when multiple tables are stacked */
+.database-container + .database-container {
+    margin-top: 40px;
+}
+
 .database-table {
     margin-left: 0;
 }
