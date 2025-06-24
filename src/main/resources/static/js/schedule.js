@@ -1,4 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
+    function sortScheduleTable() {
+        const firstRow = document.querySelector('tr.schedule-row');
+        if (!firstRow) return;
+        const table = firstRow.closest('table');
+        if (!table) return;
+        const tbody = table.tBodies[0] || table;
+        const rows = Array.from(tbody.querySelectorAll('tr.schedule-row'));
+        rows.sort((a, b) => {
+            const dateA = a.querySelector('.schedule-date-input').value;
+            const dateB = b.querySelector('.schedule-date-input').value;
+            if (dateA < dateB) return -1;
+            if (dateA > dateB) return 1;
+            const tA = a.querySelector('.start-hour').value.padStart(2, '0') + ':' +
+                      a.querySelector('.start-minute').value.padStart(2, '0');
+            const tB = b.querySelector('.start-hour').value.padStart(2, '0') + ':' +
+                      b.querySelector('.start-minute').value.padStart(2, '0');
+            return tA.localeCompare(tB);
+        });
+        rows.forEach(r => tbody.appendChild(r));
+    }
+
     function sendUpdate(row) {
         const data = {
             id: parseInt(row.dataset.id, 10),
@@ -123,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     addSchedule(row.querySelector('.schedule-title-input').value, inp.value);
                 }
                 sendUpdate(row);
+                sortScheduleTable();
             }
         };
         inp.addEventListener('change', handler);
@@ -154,12 +176,18 @@ document.addEventListener('DOMContentLoaded', () => {
         initTimeSelects(sel, minuteSel, sel.dataset.time);
         sel.addEventListener('change', () => {
             const row = sel.closest('tr');
-            if (row) sendUpdate(row);
+            if (row) {
+                sendUpdate(row);
+                sortScheduleTable();
+            }
         });
         if (minuteSel) {
             minuteSel.addEventListener('change', () => {
                 const row = sel.closest('tr');
-                if (row) sendUpdate(row);
+                if (row) {
+                    sendUpdate(row);
+                    sortScheduleTable();
+                }
             });
         }
     });
@@ -322,6 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    sortScheduleTable();
     initSchedules();
     document.addEventListener('calendarRendered', initSchedules);
 });
