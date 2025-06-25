@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    function sortScheduleTable() {
-        const firstRow = document.querySelector('tr.schedule-row');
-        if (!firstRow) return;
-        const table = firstRow.closest('table');
+    function sortScheduleTable(table) {
         if (!table) return;
         const tbody = table.tBodies[0] || table;
         const rows = Array.from(tbody.querySelectorAll('tr.schedule-row'));
@@ -18,6 +15,25 @@ document.addEventListener('DOMContentLoaded', () => {
             return tA.localeCompare(tB);
         });
         rows.forEach(r => tbody.appendChild(r));
+    }
+
+    function sortAllTables() {
+        document.querySelectorAll('.database-table').forEach(sortScheduleTable);
+    }
+
+    const completedTable = document.getElementById('completed-table');
+    const upcomingTable = document.getElementById('upcoming-table');
+
+    function moveRow(row, table) {
+        if (!row || !table) return;
+        const tbody = table.tBodies[0] || table;
+        tbody.appendChild(row);
+    }
+
+    function moveRowBasedOnCompletion(row, completed) {
+        const target = completed ? completedTable : upcomingTable;
+        moveRow(row, target);
+        sortScheduleTable(target);
     }
 
     function sendUpdate(row) {
@@ -162,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 sendUpdate(row);
                 updateTimeUntilStart(row);
-                sortScheduleTable();
+                sortAllTables();
             }
         };
         inp.addEventListener('change', handler);
@@ -196,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (row) {
                 sendUpdate(row);
                 updateTimeUntilStart(row);
-                sortScheduleTable();
+                sortAllTables();
             }
         });
         if (minuteSel) {
@@ -205,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (row) {
                     sendUpdate(row);
                     updateTimeUntilStart(row);
-                    sortScheduleTable();
+                    sortAllTables();
                 }
             });
         }
@@ -296,20 +312,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.completed-day-input').forEach(inp => {
         const handler = () => {
             const row = inp.closest('tr');
-            if (row) {
-                sendUpdate(row);
-                if (inp.value) {
-                    row.style.display = 'none';
-                    const span = row.querySelector('td:last-child span');
-                    if (span) span.textContent = '';
-                } else {
-                    if (location.pathname.includes('task-box')) {
-                        row.style.display = 'none';
-                    } else {
-                        row.style.display = '';
-                        updateTimeUntilStart(row);
-                    }
-                }
+            if (!row) return;
+            const completed = !!inp.value;
+            sendUpdate(row);
+            moveRowBasedOnCompletion(row, completed);
+            if (completed) {
+                const span = row.querySelector('td:last-child span');
+                if (span) span.textContent = '';
+            } else {
+                updateTimeUntilStart(row);
             }
         };
         inp.addEventListener('change', handler);
@@ -330,21 +341,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const today = new Date().toISOString().split('T')[0];
                 comp.value = today;
                 btn.value = '取消';
+                moveRowBasedOnCompletion(row, true);
+                const span = row.querySelector('td:last-child span');
+                if (span) span.textContent = '';
             } else {
                 comp.value = '';
                 btn.value = '完了';
-            }
-            const span = row.querySelector('td:last-child span');
-            if (comp.value) {
-                row.style.display = 'none';
-                if (span) span.textContent = '';
-            } else {
-                if (location.pathname.includes('task-box')) {
-                    row.style.display = 'none';
-                } else {
-                    row.style.display = '';
-                    updateTimeUntilStart(row);
-                }
+                moveRowBasedOnCompletion(row, false);
+                updateTimeUntilStart(row);
             }
             sendUpdate(row);
         });
@@ -395,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    sortScheduleTable();
+    sortAllTables();
     initSchedules();
     document.addEventListener('calendarRendered', initSchedules);
 });
