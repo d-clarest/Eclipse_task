@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import com.example.demo.form.TaskNameUpdate;
 import com.example.demo.form.ScheduleUpdateForm;
 
@@ -39,8 +38,8 @@ public class TaskListController {
         return "task-top";
     }
 
-    @GetMapping("/task-box")
-    public String showTaskBox(@RequestParam(value = "username", required = false) String username, Model model) {
+    @GetMapping("/{username}/task-top/task-box")
+    public String showTaskBox(@PathVariable String username, Model model) {
         log.debug("Displaying task box page");
         var all = scheduleService.getAllSchedules();
         var completed = all.stream()
@@ -51,9 +50,7 @@ public class TaskListController {
                 .toList();
         model.addAttribute("completedSchedules", completed);
         model.addAttribute("upcomingSchedules", upcoming);
-        if (username != null) {
-            model.addAttribute("username", username);
-        }
+        model.addAttribute("username", username);
         return "task-box";
     }
 
