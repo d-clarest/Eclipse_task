@@ -1,5 +1,121 @@
 @charset "UTF-8";
 
+/* 共通処理 (task-top.html，task-box.html)*/
+body.task-body {
+    display: block; /* 表示するという意味，noneにすると表示しないようにできる，HTMLのデフォルトでbodyはblockにもともとなっているので不要 */
+    height: auto;/* HTMLの要素数が多くなったときにはみ出さないように */
+    margin-top: 80px; /* ページ上部のURLと被らないように */
+}
+
+.link-area {
+    position: fixed;/* 画面に固定，以下で指定ているtop,leftの絶対位置 ，どれだけ下にスクロールしても左上に必ず表示される*/
+    top: 10px;
+    left: 10px;
+    border: 2px solid #5e696c;/* 枠線の太さ，色の指定 */
+    padding: 10px;/* 内側に余白*/
+    background-color: #fff;
+    border-radius: 8px;/* 枠線の角を丸く */
+    z-index: 1000;/* 1000に特別な意味はないが，数字を大きくすればするほど他よりも全面表示 */
+}
+
+.link-area a {
+    display: block;/* リンクが縦並びになる */
+    margin-bottom: 5px;/* 各リンクの下に5pxの余白を入れて、間隔を空ける */
+    color: steelblue;
+    text-decoration: none;/* リンクに下線を表示しない */
+    font-weight: bold;
+}
+
+.link-area a:hover {
+    text-decoration: underline;/* ホバーした時にリンクに下線を表示 */
+}
+
+.database-container {
+    margin-left: 200px;
+    margin-top: -60px;
+}
+
+#new-schedule-button {/* 新規ボタン */
+    /* margin-top: 10px; 相対位置*/
+    position: fixed;
+    top: 200px;
+    left: 50px;
+}
+
+
+/* task-top.html だけの処理*/
+.calendar-area {
+    position: absolute;/* 画面に固定，絶対位置，下にスクロールすると見えなくなる*/
+    top: 10px;
+    right: 10px;
+    border: 2px solid #5e696c;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.calendar-area table {
+    border-collapse: collapse;/* デフォルトはseparateであり，セルの間に隙間ができ，境界線が2本になる．それを1本にすることができる*/
+}
+
+.calendar-area th,       /* 表の見出し,文字が太字＋中央揃えになる */
+.calendar-area td {      /* 表のデータ,左揃え＋通常文字 */
+    border: 1px solid #5e696c;
+    width: 40px; /* 各セルの横幅 */
+    height: 32px; /* 各セルの縦幅 */
+    text-align: center; /* テキスト（日付）を中央揃え */
+    vertical-align: top;/* テキスト(日付)をセルの上に寄せて表示，予定が増えても日付の位置が上下しない */
+}
+
+.calendar-area td .tasks div {
+    font-size: 6px;
+    white-space: nowrap;/* テキスト（予定）が長くても折り返さない，1行で必ず表示 */
+/*    overflow: hidden; セルの幅を超えた文字は見えないように隠す */
+/*    text-overflow: ellipsis; 隠れた文字の代わりに「...」を表示する */
+    /* width: 5ch;幅を「文字4個分」に固定する（例: "予定1"），これなくても4文字固定で表示されるのはなぜ？ */
+}
+
+.calendar-area .today {
+    border: 2px solid red;/* 今日の日付を赤枠線で */
+}
+
+.schedule-overlay {
+    display: none;                /* 初期状態では非表示。JSで必要なときだけ表示 */
+    position: fixed;              /* 画面全体に重ねるために固定配置 */
+    top: 0;                       /* 画面の最上部から配置開始 */
+    left: 0;                      /* 画面の最左端から配置開始 */
+    width: 100%;                  /* 画面の横幅すべてに広がる */
+    height: 100%;                 /* 画面の高さすべてに広がる */
+    background: rgba(0, 0, 0, 0.3); /* 半透明の黒背景（R=0, G=0, B=0, 30%の不透明度） */
+    z-index: 999;                 /* z-indexが999以下のものに適用 */
+}
+
+.schedule-popup {
+    display: none;                        /* 初期は非表示（必要時に表示） */
+    position: fixed;                      /* 画面内に固定（スクロールしても動かない） */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);     /* 中央寄せ：中央を基準に表示位置を調整,必ずいる．無いとポップアップの左上が中央にくる */
+    background: #fff;                     /* 背景色：白 */
+    border: 2px solid #5e696c;            /* 灰色系の外枠 */
+    padding: 10px;                        /* 内側の余白 */
+    border-radius: 8px;                   /* 角を丸くする（柔らかい印象） */
+    z-index: 1000;                        /* オーバーレイより上に表示（999より上） */
+    min-width: 200px;                     /* 最小幅を指定：小さすぎて崩れるのを防止 */
+}
+
+.schedule-popup button {
+    float: right;/*デフォルトが左上なので，右上に表示されるように */
+    cursor: pointer;/*マウスカーソルをボタンの上に置いたときに「指マーク（ポインター）」になる*/
+}
+
+.schedule-popup ul {
+    list-style: none;/*デフォルトのリストマーカー（黒い点など）を非表示にする */
+    padding-left: 0;
+    margin-top: 10px;/*ulの前に何か他の要素がある場合、少しスペースを空けて見やすくする,日付とのスペース */
+}
+
+
 
 .login {
   display: flex;
@@ -95,25 +211,14 @@ td {
     white-space: nowrap;                /* 折り返さない */
 }
 
-/* position the database table slightly to the right and adjust vertical offset */
-.database-container {
-    margin-left: 200px;
-    margin-top: -50px;
-}
 
 /* ensure spacing when multiple tables are stacked */
 .database-container + .database-container {
     margin-top: 40px;
 }
 
-.database-table {
-    margin-left: 0;
-}
 
-#new-schedule-button {
-    display: block;
-    margin-top: 10px;
-}
+
 
 .restaurant-list {
     background-color: #eee8aa;
@@ -151,67 +256,6 @@ td {
     background-color: #afeeee;
 }
 
-/* リンクエリアを画面左上に配置 */
-.link-area {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    border: 2px solid #5e696c;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 8px;
-    z-index: 1000;
-}
-
-.link-area a {
-    display: block;
-    margin-bottom: 5px;
-    color: steelblue;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.link-area a:hover {
-    text-decoration: underline;
-}
-
-/* カレンダーを画面右上に配置 */
-.calendar-area {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    border: 2px solid #5e696c;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 8px;
-}
-
-.calendar-area table {
-    border-collapse: collapse;
-}
-
-.calendar-area th,
-.calendar-area td {
-    border: 1px solid #5e696c;
-    width: 40px;
-    height: 32px;
-    white-space: nowrap;                /* 折り返さない */
-    text-align: center;
-    vertical-align: top;
-}
-
-.calendar-area td .tasks div {
-    font-size: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 4ch;
-}
-
-/* 本日の日付を赤枠で強調 */
-.calendar-area .today {
-    border: 2px solid red;
-}
 
 /* navigation buttons */
 .calendar-nav {
@@ -228,47 +272,4 @@ td {
     cursor: pointer;
 }
 
-body.task-body {
-    display: block;
-    height: auto;
-    justify-content: flex-start;
-    align-items: flex-start;
-    margin-top: 80px; /* space for link and calendar */
-}
 
-/* overlay for daily schedule detail */
-.schedule-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 999;
-}
-
-.schedule-popup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    border: 2px solid #5e696c;
-    padding: 10px;
-    border-radius: 8px;
-    z-index: 1000;
-    min-width: 200px;
-}
-
-.schedule-popup button {
-    float: right;
-    cursor: pointer;
-}
-
-.schedule-popup ul {
-    list-style: none;
-    padding-left: 0;
-    margin-top: 10px;
-}
