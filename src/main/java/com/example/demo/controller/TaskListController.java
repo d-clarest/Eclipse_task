@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.example.demo.form.TaskNameUpdate;
 import com.example.demo.form.ScheduleUpdateForm;
 
@@ -25,19 +27,20 @@ public class TaskListController {
     private final TaskService service;
     private final ScheduleService scheduleService;
 
-    @GetMapping("/task-top")
-    public String showTaskTop(Model model) {
+    @GetMapping("/{username}/task-top")
+    public String showTaskTop(@PathVariable String username, Model model) {
         log.debug("Displaying task top page");
         model.addAttribute("tasks", service.getAllTasks());
         var list = scheduleService.getAllSchedules().stream()
                 .filter(s -> s.getCompletedDay() == null)
                 .toList();
         model.addAttribute("schedules", list);
+        model.addAttribute("username", username);
         return "task-top";
     }
 
     @GetMapping("/task-box")
-    public String showTaskBox(Model model) {
+    public String showTaskBox(@RequestParam(value = "username", required = false) String username, Model model) {
         log.debug("Displaying task box page");
         var all = scheduleService.getAllSchedules();
         var completed = all.stream()
@@ -48,6 +51,9 @@ public class TaskListController {
                 .toList();
         model.addAttribute("completedSchedules", completed);
         model.addAttribute("upcomingSchedules", upcoming);
+        if (username != null) {
+            model.addAttribute("username", username);
+        }
         return "task-box";
     }
 
