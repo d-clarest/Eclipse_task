@@ -116,6 +116,24 @@ body.task-body {
 }
 
 
+/* calende.js だけの処理*/
+.calendar-nav {
+    display: flex;/* 横並び*/
+    justify-content: space-between;/* 横並びにしたアイテムの左右にできるだけ広く間を空けて配置する*/
+    align-items: center;/* task-top.html だけの処理*/
+    margin-bottom: 4px;
+}
+
+.calendar-nav button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;/*マウスカーソルをボタンの上に置いたときに「指マーク（ポインター）」になる*/
+}
+
+
+
+
 
 .login {
   display: flex;
@@ -257,19 +275,5 @@ td {
 }
 
 
-/* navigation buttons */
-.calendar-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-}
-
-.calendar-nav button {
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-}
 
 

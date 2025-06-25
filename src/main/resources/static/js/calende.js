@@ -1,8 +1,8 @@
 // Calendar with month navigation
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {//ページが全部読み込まれたら、中の処理を始める
     const container = document.getElementById('calendar');
-
+    //innerHTML で HTMLの中身を上書きする
     container.innerHTML = `
         <div class="calendar-nav">
             <button id="prev-month">\u2190</button>
@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableWrap = container.querySelector('#calendar-table');
     let current = new Date();
 
+    //カレンダーを表示する処理,例えば renderCalendar(2025, 5) なら、「2025年6月」のカレンダーを作ります
     function renderCalendar(year, month) {
         const today = new Date();
         const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
