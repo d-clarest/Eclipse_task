@@ -53,11 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {//ページが全部読み�
         document.dispatchEvent(new Event('calendarRendered'));
     }
 
+    //月を変更する関数
     function changeMonth(offset) {
         current.setMonth(current.getMonth() + offset);
         renderCalendar(current.getFullYear(), current.getMonth());
     }
 
+    //ボタンクリック処理
     container.addEventListener('click', (e) => {
         if (e.target.id === 'prev-month') {
             changeMonth(-1);
@@ -66,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {//ページが全部読み�
         }
     });
 
+    //初期化
     renderCalendar(current.getFullYear(), current.getMonth());
 });
 
