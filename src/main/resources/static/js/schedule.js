@@ -31,9 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function moveRowBasedOnCompletion(row, completed) {
-        const target = completed ? completedTable : upcomingTable;
-        moveRow(row, target);
-        sortScheduleTable(target);
+        if (completedTable && upcomingTable) {
+            const target = completed ? completedTable : upcomingTable;
+            moveRow(row, target);
+            sortScheduleTable(target);
+        } else {
+            // When tables are not separated, simply hide or show the row
+            row.style.display = completed ? 'none' : '';
+        }
     }
 
     function sendUpdate(row) {
