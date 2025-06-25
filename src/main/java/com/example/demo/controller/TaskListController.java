@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+import jakarta.servlet.http.HttpSession;
 import com.example.demo.form.TaskNameUpdate;
 import com.example.demo.form.ScheduleUpdateForm;
 
@@ -27,7 +28,11 @@ public class TaskListController {
     private final ScheduleService scheduleService;
 
     @GetMapping("/{username}/task-top")
-    public String showTaskTop(@PathVariable String username, Model model) {
+    public String showTaskTop(@PathVariable String username, Model model, HttpSession session) {
+        String loginUser = (String) session.getAttribute("loginUser");
+        if (loginUser == null || !loginUser.equals(username)) {
+            return "redirect:/log-in";
+        }
         log.debug("Displaying task top page");
         model.addAttribute("tasks", service.getAllTasks());
         var list = scheduleService.getAllSchedules().stream()
@@ -39,7 +44,11 @@ public class TaskListController {
     }
 
     @GetMapping("/{username}/task-top/task-box")
-    public String showTaskBox(@PathVariable String username, Model model) {
+    public String showTaskBox(@PathVariable String username, Model model, HttpSession session) {
+        String loginUser = (String) session.getAttribute("loginUser");
+        if (loginUser == null || !loginUser.equals(username)) {
+            return "redirect:/log-in";
+        }
         log.debug("Displaying task box page");
         var all = scheduleService.getAllSchedules();
         var completed = all.stream()
