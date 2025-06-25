@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import jakarta.servlet.http.HttpSession;
 
 import com.example.demo.entity.User;
 import com.example.demo.form.LogInForm;
@@ -44,13 +45,14 @@ public class LoginController {
     }
 	
     @PostMapping("/task-top")
-    public String showTop(LogInForm form, Model model) {
+    public String showTop(LogInForm form, Model model, HttpSession session) {
         User u = new User();
         u.setUsername(form.getUsername());
         u.setPassword(form.getPassword());
         log.debug("Attempting login for user: {}", form.getUsername());
         if (loginService.login(u)) {
             log.debug("Login success for user: {}", form.getUsername());
+            session.setAttribute("loginUser", form.getUsername());
             return "redirect:/" + form.getUsername() + "/task-top";
         } else {
             log.debug("Login failed for user: {}", form.getUsername());
