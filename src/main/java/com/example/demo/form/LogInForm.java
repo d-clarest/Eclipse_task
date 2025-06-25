@@ -25,4 +25,5 @@ public class LogInForm {
 //	private String comment;
 	private String username;
 	private String password;
+	private int userid;
 }
