@@ -8,8 +8,8 @@
 <body class="task-body">
     <div id="calendar" style="display:none;"></div>
 	
-	<div class="link-area">
-            <a th:href="@{/task-top}">TOPへ</a>
+        <div class="link-area">
+            <a th:href="@{'/' + ${username} + '/task-top'}">TOPへ</a>
     </div>
 	
 
