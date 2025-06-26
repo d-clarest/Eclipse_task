@@ -43,6 +43,12 @@ body.task-body {
   left: 50px;
 }
 
+#toggle-completed-button {
+  position: fixed;
+  top: 240px;
+  left: 50px;
+}
+
 /* task-top.html だけの処理*/
 .calendar-area {
   position: absolute; /* 画面に固定，絶対位置，下にスクロールすると見えなくなる*/

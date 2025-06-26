@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function addSchedule(name, dateStr) {
+  function addSchedule(name, dateStr, opts = {}) {
     const date = new Date(dateStr);//文字列をDate型に変換
     if (isNaN(date.getTime())) return;//日付をミリ秒に変換して，変な数字じゃないか判定
     if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth)//現在表示されているカレンダーの年月とデータベースの予定テーブルの年月が一致しているやつだけ追加．一致してないのは入れない．
@@ -156,7 +156,11 @@ document.addEventListener('DOMContentLoaded', () => {
     item.title = name;//カレンダー表示用
     item.dataset.name = name;//属性値
     item.dataset.date = dateStr;//属性値
+    if (opts.completed) {
+      item.style.color = 'red';
+    }
     wrapper.appendChild(item);//<div>name</div>をwrapperの子要素に
+    return item;
   }
 
   function removeSchedule(name, dateStr) {
@@ -434,6 +438,51 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // ----- completed schedule display toggle -----
+  const toggleBtn = document.getElementById('toggle-completed-button');
+  let completedShown = false;
+  let displayedCompleted = [];
+
+  function fetchCompletedAndShow() {
+    mapDayCells();
+    const year = currentYear;
+    const month = currentMonth + 1;
+    fetch(`/completed-schedules?year=${year}&month=${month}`)
+      .then((res) => res.json())
+      .then((list) => {
+        list.forEach((s) => {
+          addSchedule(s.title, s.scheduleDate, { completed: true });
+          displayedCompleted.push({ name: s.title, date: s.scheduleDate });
+        });
+      });
+  }
+
+  function removeDisplayedCompleted() {
+    displayedCompleted.forEach((d) => removeSchedule(d.name, d.date));
+    displayedCompleted = [];
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      if (completedShown) {
+        removeDisplayedCompleted();
+        toggleBtn.textContent = '表示';
+        completedShown = false;
+      } else {
+        fetchCompletedAndShow();
+        toggleBtn.textContent = '非表示';
+        completedShown = true;
+      }
+    });
+  }
+
+  document.addEventListener('calendarRendered', () => {
+    if (completedShown) {
+      removeDisplayedCompleted();
+      fetchCompletedAndShow();
+    }
+  });
 
   sortAllTables(); //予定データベーステーブルを日付と時間の昇順に並べ替える,初期化
   initSchedules();//今表示されているカレンダーに予定を埋め込む
