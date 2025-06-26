@@ -62,7 +62,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void addSchedule(Schedule schedule) {
         log.debug("Adding schedule {} on {}", schedule.getTitle(), schedule.getScheduleDate());
-        repository.insertSchedule(schedule);
+        repository.insertSchedule(schedule);//scheduleService.addSchedule(schedule)
     }
 
     @Override

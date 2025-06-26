@@ -103,7 +103,7 @@ public class TaskListController {
     @PostMapping("/schedule-add")
     public ResponseEntity<Void> addSchedule(@RequestBody Schedule schedule) {
         log.debug("Adding schedule {} on {}", schedule.getTitle(), schedule.getScheduleDate());
-        scheduleService.addSchedule(schedule);
+        scheduleService.addSchedule(schedule);//repository.insertSchedule(schedule)
         return ResponseEntity.ok().build();
     }
 

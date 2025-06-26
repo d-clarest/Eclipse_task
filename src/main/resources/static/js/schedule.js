@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cell.appendChild(wrapper);//<div class="schedules"></div>をcellの子要素に
     }
     const item = document.createElement('div');
-    item.textContent = name.slice(0, 6);//予定名を4文字まで表示
+    item.textContent = name.slice(0, 6);//予定名を6文字まで表示
     item.title = name;//カレンダー表示用
     item.dataset.name = name;//属性値
     item.dataset.date = dateStr;//属性値
@@ -409,13 +409,15 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   });
+  
 
   const newButton = document.getElementById('new-schedule-button');
+  //このif文はnewButtonがnullの時の可能性もあるので必要，nullの時，newButton.addEventListenerでエラーになる
   if (newButton) {
     newButton.addEventListener('click', () => {
-      const today = new Date();
-      const dateStr = today.toISOString().split('T')[0];
-      const dow = today.toLocaleDateString('ja-JP', { weekday: 'short' });
+      const today = new Date();//年・月・日・時・分・秒 などの情報がすべて入っている
+      const dateStr = today.toISOString().split('T')[0];//toISOString() → 2025-06-26T10:30:00.000Z のような文字列になる,.split('T')[0] → "2025-06-26" の部分だけ取り出す
+      const dow = today.toLocaleDateString('ja-JP', { weekday: 'short' });//今日の曜日を日本語で取得，火，木みたいな
       const data = {
         addFlag: true,
         title: '',
@@ -429,12 +431,13 @@ document.addEventListener('DOMContentLoaded', () => {
         point: 1,
         completedDay: null,
       };
+      //'/schedule-add' というURLにJSON形式でdataを文字列に変換してPOST，データの送信が成功したら，ページ再読み込み
       fetch('/schedule-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data),//@RequestBodyでjava側でjsonをjavaに変換
       }).then(() => {
-        location.reload();
+        location.reload();//dataの中のlocationとは全く関係のない
       });
     });
   }

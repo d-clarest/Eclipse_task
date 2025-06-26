@@ -83,10 +83,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public void insertSchedule(Schedule schedule) {
         String sql = "INSERT INTO schedules (add_flag, title, day_of_week, schedule_date, start_time, end_time, location, detail, feedback, point, completed_day) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        java.sql.Date schedDate = java.sql.Date.valueOf(schedule.getScheduleDate());
-        java.sql.Time start = java.sql.Time.valueOf(schedule.getStartTime());
-        java.sql.Time end = java.sql.Time.valueOf(schedule.getEndTime());
-        java.sql.Date completed = schedule.getCompletedDay() != null ? java.sql.Date.valueOf(schedule.getCompletedDay()) : null;
+        java.sql.Date schedDate = java.sql.Date.valueOf(schedule.getScheduleDate());//Javaの日時をSQL用に変換
+        java.sql.Time start = java.sql.Time.valueOf(schedule.getStartTime());//Javaの日時をSQL用に変換
+        java.sql.Time end = java.sql.Time.valueOf(schedule.getEndTime());//Javaの日時をSQL用に変換
+        java.sql.Date completed = schedule.getCompletedDay() != null ? java.sql.Date.valueOf(schedule.getCompletedDay()) : null;//完了日がnullでなければSQL用に変換，nullならnull
         jdbcTemplate.update(sql,
                 schedule.isAddFlag(),
                 schedule.getTitle(),
