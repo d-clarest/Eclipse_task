@@ -484,6 +484,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  const pointDisplay = document.getElementById('total-point-display');
+  if (pointDisplay) {
+    fetch('/total-point')
+      .then((res) => res.json())
+      .then((pt) => {
+        pointDisplay.textContent = `${pt}P`;
+      });
+  }
+
   sortAllTables(); //予定データベーステーブルを日付と時間の昇順に並べ替える,初期化
   initSchedules();//今表示されているカレンダーに予定を埋め込む
   document.addEventListener('calendarRendered', initSchedules);//calendarRendered というイベントが起きたら initSchedules 関数を実行．つまり，カレンダーの描画が終わってから，予定を埋め込むということ．

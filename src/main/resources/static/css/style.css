@@ -49,6 +49,13 @@ body.task-body {
   left: 50px;
 }
 
+#total-point-display {
+  position: fixed;
+  top: 280px;
+  left: 50px;
+  font-weight: bold;
+}
+
 /* task-top.html だけの処理*/
 .calendar-area {
   position: absolute; /* 画面に固定，絶対位置，下にスクロールすると見えなくなる*/

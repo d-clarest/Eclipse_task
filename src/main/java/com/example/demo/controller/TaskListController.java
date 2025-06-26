@@ -123,4 +123,11 @@ public class TaskListController {
                 .filter(s -> s.getScheduleDate().getYear() == year && s.getScheduleDate().getMonthValue() == month)
                 .toList();
     }
+
+    @GetMapping("/total-point")
+    @ResponseBody
+    public Integer getTotalPoint() {
+        log.debug("Fetching total completed points");
+        return scheduleService.getTotalCompletedPoints();
+    }
 }

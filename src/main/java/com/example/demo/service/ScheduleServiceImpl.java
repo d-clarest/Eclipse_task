@@ -70,4 +70,10 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.debug("Deleting schedule with id {}", id);
         repository.deleteById(id);
     }
+
+    @Override
+    public int getTotalCompletedPoints() {
+        log.debug("Fetching total completed points");
+        return repository.sumCompletedPoints();
+    }
 }

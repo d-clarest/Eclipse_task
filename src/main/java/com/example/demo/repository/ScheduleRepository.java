@@ -15,4 +15,6 @@ public interface ScheduleRepository {
     void insertSchedule(Schedule schedule);
 
     void deleteById(int id);
+
+    int sumCompletedPoints();
 }

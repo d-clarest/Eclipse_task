@@ -15,4 +15,6 @@ public interface ScheduleService {
     void addSchedule(Schedule schedule);
 
     void deleteScheduleById(int id);
+
+    int getTotalCompletedPoints();
 }
