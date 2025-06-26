@@ -1,105 +1,170 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<html>
-<head>
-<meta charset="UTF-8">
-<title>トップ画面</title>
-<link rel="stylesheet" th:href="@{/css/style.css}">
-</head>
-<body class="task-body">
-    <div class="link-area">
+  <html>
+    <head>
+      <meta charset="UTF-8" />
+      <title>トップ画面</title>
+      <link rel="stylesheet" th:href="@{/css/style.css}" />
+    </head>
+    <body class="task-body">
+      <div class="link-area">
         <a href="challenge-box.html">挑戦ボックス</a>
         <a href="question-survey-box.html">疑問・調査ボックス</a>
-        <a th:href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックス</a><!-- java変数などを埋め込める動的リンクを生成（Thymeleaf使用） @{URLパターン}，java側でusernameをmodel.addAttributeしてる-->
-    </div>
+        <a th:href="@{'/' + ${username} + '/task-top/task-box'}"
+          >タスクボックス</a
+        ><!-- java変数などを埋め込める動的リンクを生成（Thymeleaf使用） @{URLパターン}，java側でusernameをmodel.addAttributeしてる-->
+      </div>
 
-    <div id="calendar" class="calendar-area"></div><!-- idの方でjs，classの方でcssの処理を適用-->
-    
-    <div class="database-container">
+      <div id="calendar" class="calendar-area"></div>
+      <!-- idの方でjs，classの方でcssの処理を適用-->
+
+      <div class="database-container">
         <table class="database-table">
-                <tr>
-                        <th>完了</th>
-                        <th>削除</th>
-                        <th>add</th>
-                        <th>予定名</th>
-                        <th>予定日</th>
-                        <th>曜日</th>
-                        <th>開始時刻</th>
-                        <th>終了時刻</th>
-                        <th>場所</th>
-                        <th>詳細</th>
-                        <th>feedback</th>
-                        <th>point</th>
-                        <th>完了日</th>
-                        <th>開始まで</th>
-                </tr>
-                <!-- 範囲for文でレコードの値を追加していく，th:data-とするとjs側でrow.dataset.id，row.dataset.oldTitle，row.dataset.oldDateで使える-->
-                 <!-- class="schedule-row"はschedule.jsとcalender-detail.jsの中で -->
-                <tr th:each="schedule : ${schedules}" class="schedule-row"
-                    th:data-id="${schedule.id}" th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
-                    <!-- schedule.jsにイベントハンドラーが書いてる -->
-                        <td>
-                            <input type="button" value="完了" class="complete-button">
-                        </td>
-                        <td>
-                            <input type="button" value="削除" class="delete-button">
-                        </td>
-                        <td>
-                            <input type="checkbox" th:checked="${schedule.addFlag}" class="schedule-add-flag">
-                        </td>
-                        <td>
-                            <input type="text" th:value="${schedule.title}" size="8" class="schedule-title-input">
-                        </td>
-                        <td>
-                            <input type="date" th:value="${schedule.scheduleDate}" class="schedule-date-input">
-                        </td>
-                        <td>
-                            <input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly size="2">
-                        </td>
-                        <td>
-                            <select class="start-hour" th:data-time="${schedule.startTime}"></select> :
-                            <select class="start-minute" th:data-time="${schedule.startTime}"></select>
-                        </td>
-                        <td>
-                            <select class="end-hour" th:data-time="${schedule.endTime}"></select> :
-                            <select class="end-minute" th:data-time="${schedule.endTime}"></select>
-                        </td>
-                        <td>
-                            <input type="text" th:value="${schedule.location}" size="5" class="schedule-location-input">
-                        </td>
-                        <td>
-                            <input type="text" th:value="${schedule.detail}" size="8" class="schedule-detail-input">
-                        </td>
-                        <td>
-                            <input type="text" th:value="${schedule.feedback}" size="8" class="schedule-feedback-input">
-                        </td>
-                        <td>
-                            <input type="number" th:value="${schedule.point}" size="2" class="point-input">
-                        </td>
-                        <td>
-                            <input type="date" th:value="${schedule.completedDay}" class="completed-day-input">
-                        </td>
-                        <td>
-                            <span th:text="${schedule.timeUntilStart}"></span>
-                        </td>
-                </tr>
+          <tr>
+            <th>完了</th>
+            <th>削除</th>
+            <th>add</th>
+            <th>予定名</th>
+            <th>予定日</th>
+            <th>曜日</th>
+            <th>開始時刻</th>
+            <th>終了時刻</th>
+            <th>場所</th>
+            <th>詳細</th>
+            <th>feedback</th>
+            <th>point</th>
+            <th>完了日</th>
+            <th>開始まで</th>
+          </tr>
+          <!-- 範囲for文でレコードの値を追加していく，th:data-とするとjs側でrow.dataset.id，row.dataset.oldTitle，row.dataset.oldDateで使える-->
+          <!-- class="schedule-row"はschedule.jsとcalender-detail.jsの中で -->
+          <tr
+            th:each="schedule : ${schedules}"
+            class="schedule-row"
+            th:data-id="${schedule.id}"
+            th:data-old-title="${schedule.title}"
+            th:data-old-date="${schedule.scheduleDate}"
+          >
+            <!-- schedule.jsにイベントハンドラーが書いてる -->
+            <td>
+              <input type="button" value="完了" class="complete-button" />
+            </td>
+            <td>
+              <input type="button" value="削除" class="delete-button" />
+            </td>
+            <td>
+              <input
+                type="checkbox"
+                th:checked="${schedule.addFlag}"
+                class="schedule-add-flag"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                th:value="${schedule.title}"
+                size="8"
+                class="schedule-title-input"
+              />
+            </td>
+            <td>
+              <input
+                type="date"
+                th:value="${schedule.scheduleDate}"
+                class="schedule-date-input"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                th:value="${schedule.dayOfWeek}"
+                class="schedule-day-of-week"
+                readonly
+                size="2"
+              />
+            </td>
+            <td>
+              <select
+                class="start-hour"
+                th:data-time="${schedule.startTime}"
+              ></select>
+              :
+              <select
+                class="start-minute"
+                th:data-time="${schedule.startTime}"
+              ></select>
+            </td>
+            <td>
+              <select
+                class="end-hour"
+                th:data-time="${schedule.endTime}"
+              ></select>
+              :
+              <select
+                class="end-minute"
+                th:data-time="${schedule.endTime}"
+              ></select>
+            </td>
+            <td>
+              <input
+                type="text"
+                th:value="${schedule.location}"
+                size="5"
+                class="schedule-location-input"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                th:value="${schedule.detail}"
+                size="8"
+                class="schedule-detail-input"
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                th:value="${schedule.feedback}"
+                size="8"
+                class="schedule-feedback-input"
+              />
+            </td>
+            <td>
+              <input
+                type="number"
+                th:value="${schedule.point}"
+                size="2"
+                class="point-input"
+              />
+            </td>
+            <td>
+              <input
+                type="date"
+                th:value="${schedule.completedDay}"
+                class="completed-day-input"
+              />
+            </td>
+            <td>
+              <span th:text="${schedule.timeUntilStart}"></span>
+            </td>
+          </tr>
         </table>
         <!-- cssとschedule.jsの両方 -->
         <button id="new-schedule-button">新規</button>
-    </div>  
-    
-    
-    <div id="schedule-overlay" class="schedule-overlay"></div><!-- idはjs，classはcss用 -->
-    <div id="schedule-popup" class="schedule-popup">
+      </div>
+
+      <div id="schedule-overlay" class="schedule-overlay"></div>
+      <!-- idはjs，classはcss用 -->
+      <div id="schedule-popup" class="schedule-popup">
         <button id="close-schedule-popup">&#x2715;</button>
         <h3 id="schedule-popup-title"></h3>
         <ul id="schedule-popup-list"></ul>
-    </div>
+      </div>
 
-    <script th:src="@{/js/calende.js}"></script>
-    <script th:src="@{/js/tasks.js}"></script>
-    <script th:src="@{/js/schedule.js}"></script>
-    <script th:src="@{/js/calendar-detail.js}"></script>
-
-</body>
+      <script th:src="@{/js/calende.js}"></script>
+      <!-- <script th:src="@{/js/tasks.js}"></script> -->
+      <script th:src="@{/js/schedule.js}"></script>
+      <script th:src="@{/js/calendar-detail.js}"></script>
+    </body>
+  </html>
 </html>

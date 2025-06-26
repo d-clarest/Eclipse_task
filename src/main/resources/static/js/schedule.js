@@ -1,410 +1,441 @@
+//ページが全部読み込まれたら、中の処理を始める
 document.addEventListener('DOMContentLoaded', () => {
-    function sortScheduleTable(table) {
-        if (!table) return;
-        const tbody = table.tBodies[0] || table;
-        const rows = Array.from(tbody.querySelectorAll('tr.schedule-row'));
-        rows.sort((a, b) => {
-            const dateA = a.querySelector('.schedule-date-input').value;
-            const dateB = b.querySelector('.schedule-date-input').value;
-            if (dateA < dateB) return -1;
-            if (dateA > dateB) return 1;
-            const tA = a.querySelector('.start-hour').value.padStart(2, '0') + ':' +
-                      a.querySelector('.start-minute').value.padStart(2, '0');
-            const tB = b.querySelector('.start-hour').value.padStart(2, '0') + ':' +
-                      b.querySelector('.start-minute').value.padStart(2, '0');
-            return tA.localeCompare(tB);
-        });
-        rows.forEach(r => tbody.appendChild(r));
+  function sortScheduleTable(table) {
+    if (!table) return; //引数が無効の場合の安全対策
+    const tbody = table.tBodies[0] || table;//テーブルの中には通常 <tbody> があります.tBodies[0] は「最初の <tbody>」を指し，なければ table 自体を使う．
+    const rows = Array.from(tbody.querySelectorAll('tr.schedule-row'));//tbody の中から、クラス名が "schedule-row" の <tr> 要素を全部取り出す。Array.from(...) で配列に変換し，ソートできるようにしている．
+    //配列のsortメソッドは，2つの要素を何度も何度も比べて順番を入れ替える（今回は昇順）
+    rows.sort((a, b) => {
+      const dateA = a.querySelector('.schedule-date-input').value;
+      const dateB = b.querySelector('.schedule-date-input').value;
+      if (dateA < dateB) return -1;//そのまま
+      if (dateA > dateB) return 1;//前後交換
+      const tA =
+        a.querySelector('.start-hour').value.padStart(2, '0') +
+        ':' +
+        a.querySelector('.start-minute').value.padStart(2, '0');
+      const tB =
+        b.querySelector('.start-hour').value.padStart(2, '0') +
+        ':' +
+        b.querySelector('.start-minute').value.padStart(2, '0');
+      return tA.localeCompare(tB);//上の比較と同じ意味，-1,0,1のいずれかを返す．ただ，文字列比較をしている．:は必要．HH:MMにして時間順に比較している．
+    });
+    rows.forEach((r) => tbody.appendChild(r));//rowsにはすでに並べ替えられている．それをhtml側にも反映させるためにtbodyに入れていっている．
+  }
+
+  function sortAllTables() {
+    //classのdatabase-tableすべてに対して、それぞれsortScheduleTable関数を呼び出している、引数はforEachによって渡されている
+    document.querySelectorAll('.database-table').forEach(sortScheduleTable);
+  }
+
+  const completedTable = document.getElementById('completed-table'); //task-box.htmlの完了済みテーブル
+  const upcomingTable = document.getElementById('upcoming-table'); //task-box.htmlのこれからの予定テーブル
+
+  function moveRow(row, table) {
+    if (!row || !table) return;
+    const tbody = table.tBodies[0] || table;
+    tbody.appendChild(row);
+  }
+
+  function moveRowBasedOnCompletion(row, completed) {
+    if (completedTable && upcomingTable) {
+      const target = completed ? completedTable : upcomingTable;
+      moveRow(row, target);
+      sortScheduleTable(target);
+    } else {
+      // When tables are not separated, simply hide or show the row
+      row.style.display = completed ? 'none' : '';
     }
+  }
 
-    function sortAllTables() {
-        document.querySelectorAll('.database-table').forEach(sortScheduleTable);
+  function sendUpdate(row) {
+    const data = {
+      id: parseInt(row.dataset.id, 10),
+      oldTitle: row.dataset.oldTitle,
+      oldScheduleDate: row.dataset.oldDate,
+      addFlag: row.querySelector('.schedule-add-flag').checked,
+      title: row.querySelector('.schedule-title-input').value,
+      dayOfWeek: row.querySelector('.schedule-day-of-week').value,
+      scheduleDate: row.querySelector('.schedule-date-input').value,
+      startTime:
+        row.querySelector('.start-hour').value.padStart(2, '0') +
+        ':' +
+        row.querySelector('.start-minute').value.padStart(2, '0'),
+      endTime:
+        row.querySelector('.end-hour').value.padStart(2, '0') +
+        ':' +
+        row.querySelector('.end-minute').value.padStart(2, '0'),
+      location: row.querySelector('.schedule-location-input').value,
+      detail: row.querySelector('.schedule-detail-input').value,
+      feedback: row.querySelector('.schedule-feedback-input').value,
+      point: parseInt(row.querySelector('.point-input').value || '0', 10),
+      completedDay: row.querySelector('.completed-day-input').value || null,
+    };
+    fetch('/schedule-update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }).then((res) => {
+      if (res.ok) {
+        row.dataset.oldTitle = data.title;
+        row.dataset.oldDate = data.scheduleDate;
+      } else {
+        console.error('Schedule update failed');
+      }
+    });
+  }
+
+  function updateTimeUntilStart(row) {
+    const dateStr = row.querySelector('.schedule-date-input').value;
+    const hourSel = row.querySelector('.start-hour');
+    const minuteSel = row.querySelector('.start-minute');
+    if (!dateStr || !hourSel || !minuteSel) return;
+    const start = new Date(
+      `${dateStr}T${hourSel.value.padStart(2, '0')}:${minuteSel.value.padStart(
+        2,
+        '0'
+      )}:00`
+    );
+    const now = new Date();
+    let diff = Math.floor((start - now) / 60000); // minutes
+    if (diff < 0) diff = 0;
+    diff = Math.floor(diff / 5) * 5;
+    const days = Math.floor(diff / (60 * 24));
+    const hours = Math.floor((diff % (60 * 24)) / 60);
+    const mins = diff % 60;
+    const span = row.querySelector('td:last-child span');
+    if (span) span.textContent = `${days}日${hours}時間${mins}分`;
+  }
+
+  
+
+  const calendar = document.getElementById('calendar');
+  let dayCells = {};//連想配列の定義
+  let currentYear = new Date().getFullYear();
+  let currentMonth = new Date().getMonth();
+
+  function updateCurrentYearMonth() {
+    const title = document.getElementById('calendar-title');
+    if (title) {
+      const m = title.textContent.match(/(\d+)年(\d+)月/);//mにcalender-titleの文字に一致するやつを取り出す．m[0]に2025年6月，m[1]に2025，m[2]に6みたいな感じで
+      if (m) {
+        currentYear = parseInt(m[1], 10);//勝手に8進数で解釈しないように，10進数であることを明記
+        currentMonth = parseInt(m[2], 10) - 1;//月を引数として使うときのために，-1しておく．0基準に合わせる．
+      }
     }
+  }
 
-    const completedTable = document.getElementById('completed-table');
-    const upcomingTable = document.getElementById('upcoming-table');
+  function mapDayCells() {
+    dayCells = {};//連想配列の初期化
+    updateCurrentYearMonth();//今カレンダーが表示されている年月を取得し，currentYear，currentMonthに代入
+    calendar.querySelectorAll('td').forEach((td) => {
+      const day = parseInt(td.textContent, 10);
+      //日付が書かれてる奴だけ以下の条件に入る．空白を除きたい．
+      if (!isNaN(day)) {
+        dayCells[day] = td;//例えば，dayCells[1]=<td>1</td>みたいなのが入ってる．
+      }
+    });
+  }
 
-    function moveRow(row, table) {
-        if (!row || !table) return;
-        const tbody = table.tBodies[0] || table;
-        tbody.appendChild(row);
+  function addSchedule(name, dateStr) {
+    const date = new Date(dateStr);//文字列をDate型に変換
+    if (isNaN(date.getTime())) return;//日付をミリ秒に変換して，変な数字じゃないか判定
+    if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth)//現在表示されているカレンダーの年月とデータベースの予定テーブルの年月が一致しているやつだけ追加．一致してないのは入れない．
+      return;
+    const cell = dayCells[date.getDate()];//日付に対応する<td>1</td>みたいなのを代入
+    if (!cell) return;//まあ，ありえない
+    let wrapper = cell.querySelector('.schedules');//cellには<td>1</td>の中に，classのschedulesがあるか検索
+    //td要素の中にclass="schedules"はない場合は，作る
+    if (!wrapper) {
+      wrapper = document.createElement('div');
+      wrapper.className = 'schedules';
+      cell.appendChild(wrapper);//<div class="schedules"></div>をcellの子要素に
     }
+    const item = document.createElement('div');
+    item.textContent = name.slice(0, 6);//予定名を4文字まで表示
+    item.title = name;//カレンダー表示用
+    item.dataset.name = name;//属性値
+    item.dataset.date = dateStr;//属性値
+    wrapper.appendChild(item);//<div>name</div>をwrapperの子要素に
+  }
 
-    function moveRowBasedOnCompletion(row, completed) {
-        if (completedTable && upcomingTable) {
-            const target = completed ? completedTable : upcomingTable;
-            moveRow(row, target);
-            sortScheduleTable(target);
-        } else {
-            // When tables are not separated, simply hide or show the row
-            row.style.display = completed ? 'none' : '';
+  function removeSchedule(name, dateStr) {
+    const date = new Date(dateStr);//文字列をDate型に変換
+    if (isNaN(date.getTime())) return;
+    if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth)
+      return;
+    const cell = dayCells[date.getDate()];
+    if (!cell) return;
+    const wrapper = cell.querySelector('.schedules');
+    if (!wrapper) return;
+    wrapper.querySelectorAll('div').forEach((div) => {
+      if (div.dataset.name === name && div.dataset.date === dateStr) {
+        div.remove();
+      }
+    });
+  }
+
+  //
+  function initSchedules() {
+    mapDayCells();//calender-titleの年月の約30日分の日付連想配列dayCellsを作成
+    //これからの予定
+    document.querySelectorAll('.schedule-row').forEach((row) => {
+      const cb = row.querySelector('.schedule-add-flag');//cbには<input type="checkbox">が入る．
+      //cb.checkedでチェックがついている予定なら
+      if (cb && cb.checked) {
+        const name = row.querySelector('.schedule-title-input').value;//予定名
+        const date = row.querySelector('.schedule-date-input').value;//何年何月何日
+        addSchedule(name, date);
+      }
+    });
+  }
+
+  document.querySelectorAll('.schedule-date-input').forEach((inp) => {
+    const handler = () => {
+      const date = new Date(inp.value);
+      if (isNaN(date.getTime())) return;
+      const dow = date.toLocaleDateString('ja-JP', { weekday: 'short' });
+      const row = inp.closest('tr');
+      if (row) {
+        const dayField = row.querySelector('.schedule-day-of-week');
+        if (dayField) {
+          dayField.value = dow;
         }
-    }
+        const cb = row.querySelector('.schedule-add-flag');
+        if (cb && cb.checked) {
+          removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
+          addSchedule(
+            row.querySelector('.schedule-title-input').value,
+            inp.value
+          );
+        }
+        sendUpdate(row);
+        updateTimeUntilStart(row);
+        sortAllTables();
+      }
+    };
+    inp.addEventListener('change', handler);
+  });
 
-    function sendUpdate(row) {
-        const data = {
-            id: parseInt(row.dataset.id, 10),
-            oldTitle: row.dataset.oldTitle,
-            oldScheduleDate: row.dataset.oldDate,
-            addFlag: row.querySelector('.schedule-add-flag').checked,
-            title: row.querySelector('.schedule-title-input').value,
-            dayOfWeek: row.querySelector('.schedule-day-of-week').value,
-            scheduleDate: row.querySelector('.schedule-date-input').value,
-            startTime: row.querySelector('.start-hour').value.padStart(2, '0') + ':' +
-                       row.querySelector('.start-minute').value.padStart(2, '0'),
-            endTime: row.querySelector('.end-hour').value.padStart(2, '0') + ':' +
-                     row.querySelector('.end-minute').value.padStart(2, '0'),
-            location: row.querySelector('.schedule-location-input').value,
-            detail: row.querySelector('.schedule-detail-input').value,
-            feedback: row.querySelector('.schedule-feedback-input').value,
-            point: parseInt(row.querySelector('.point-input').value || '0', 10),
-            completedDay: row.querySelector('.completed-day-input').value || null
-        };
-        fetch('/schedule-update', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        }).then(res => {
-            if (res.ok) {
-                row.dataset.oldTitle = data.title;
-                row.dataset.oldDate = data.scheduleDate;
-            } else {
-                console.error('Schedule update failed');
-            }
-        });
+  function initTimeSelects(hourSel, minuteSel, time) {
+    for (let h = 0; h < 24; h++) {
+      const opt = document.createElement('option');
+      opt.value = String(h).padStart(2, '0');
+      opt.textContent = opt.value;
+      hourSel.appendChild(opt);
     }
+    for (let m = 0; m < 60; m += 5) {
+      const opt = document.createElement('option');
+      opt.value = String(m).padStart(2, '0');
+      opt.textContent = opt.value;
+      minuteSel.appendChild(opt);
+    }
+    if (time) {
+      const [h, m] = time.split(':');
+      hourSel.value = h;
+      minuteSel.value = m.padStart(2, '0');
+    }
+  }
 
-    function updateTimeUntilStart(row) {
-        const dateStr = row.querySelector('.schedule-date-input').value;
-        const hourSel = row.querySelector('.start-hour');
-        const minuteSel = row.querySelector('.start-minute');
-        if (!dateStr || !hourSel || !minuteSel) return;
-        const start = new Date(`${dateStr}T${hourSel.value.padStart(2,'0')}:${minuteSel.value.padStart(2,'0')}:00`);
-        const now = new Date();
-        let diff = Math.floor((start - now) / 60000); // minutes
-        if (diff < 0) diff = 0;
-        diff = Math.floor(diff / 5) * 5;
-        const days = Math.floor(diff / (60 * 24));
-        const hours = Math.floor((diff % (60 * 24)) / 60);
-        const mins = diff % 60;
+  document.querySelectorAll('.start-hour').forEach((sel) => {
+    const minuteSel = sel.parentElement.querySelector('.start-minute');
+    initTimeSelects(sel, minuteSel, sel.dataset.time);
+    sel.addEventListener('change', () => {
+      const row = sel.closest('tr');
+      if (row) {
+        sendUpdate(row);
+        updateTimeUntilStart(row);
+        sortAllTables();
+      }
+    });
+    if (minuteSel) {
+      minuteSel.addEventListener('change', () => {
+        const row = sel.closest('tr');
+        if (row) {
+          sendUpdate(row);
+          updateTimeUntilStart(row);
+          sortAllTables();
+        }
+      });
+    }
+  });
+
+  document.querySelectorAll('.end-hour').forEach((sel) => {
+    const minuteSel = sel.parentElement.querySelector('.end-minute');
+    initTimeSelects(sel, minuteSel, sel.dataset.time);
+    sel.addEventListener('change', () => {
+      const row = sel.closest('tr');
+      if (row) sendUpdate(row);
+    });
+    if (minuteSel) {
+      minuteSel.addEventListener('change', () => {
+        const row = sel.closest('tr');
+        if (row) sendUpdate(row);
+      });
+    }
+  });
+
+  document.querySelectorAll('.schedule-add-flag').forEach((cb) => {
+    cb.addEventListener('change', () => {
+      const row = cb.closest('tr');
+      if (!row) return;
+      const title = row.querySelector('.schedule-title-input').value;
+      const date = row.querySelector('.schedule-date-input').value;
+      if (cb.checked) {
+        addSchedule(title, date);
+      } else {
+        removeSchedule(title, date);
+      }
+      sendUpdate(row);
+    });
+  });
+
+  document.querySelectorAll('.schedule-title-input').forEach((inp) => {
+    const handler = () => {
+      const row = inp.closest('tr');
+      if (row) {
+        const cb = row.querySelector('.schedule-add-flag');
+        if (cb && cb.checked) {
+          removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
+          addSchedule(
+            inp.value,
+            row.querySelector('.schedule-date-input').value
+          );
+        }
+        sendUpdate(row);
+      }
+    };
+    inp.addEventListener('change', handler);
+    inp.addEventListener('input', handler);
+  });
+
+  document.querySelectorAll('.schedule-location-input').forEach((inp) => {
+    const handler = () => {
+      const row = inp.closest('tr');
+      if (row) sendUpdate(row);
+    };
+    inp.addEventListener('change', handler);
+    inp.addEventListener('input', handler);
+  });
+
+  document.querySelectorAll('.schedule-detail-input').forEach((inp) => {
+    const handler = () => {
+      const row = inp.closest('tr');
+      if (row) sendUpdate(row);
+    };
+    inp.addEventListener('change', handler);
+    inp.addEventListener('input', handler);
+  });
+
+  document.querySelectorAll('.schedule-feedback-input').forEach((inp) => {
+    const handler = () => {
+      const row = inp.closest('tr');
+      if (row) sendUpdate(row);
+    };
+    inp.addEventListener('change', handler);
+    inp.addEventListener('input', handler);
+  });
+
+  document.querySelectorAll('.point-input').forEach((inp) => {
+    const handler = () => {
+      const row = inp.closest('tr');
+      if (row) sendUpdate(row);
+    };
+    inp.addEventListener('change', handler);
+    inp.addEventListener('input', handler);
+  });
+
+  document.querySelectorAll('.completed-day-input').forEach((inp) => {
+    const handler = () => {
+      const row = inp.closest('tr');
+      if (!row) return;
+      const completed = !!inp.value;
+      sendUpdate(row);
+      moveRowBasedOnCompletion(row, completed);
+      if (completed) {
         const span = row.querySelector('td:last-child span');
-        if (span) span.textContent = `${days}日${hours}時間${mins}分`;
+        if (span) span.textContent = '';
+      } else {
+        updateTimeUntilStart(row);
+      }
+    };
+    inp.addEventListener('change', handler);
+    inp.addEventListener('input', handler);
+  });
+
+  document.querySelectorAll('.complete-button').forEach((btn) => {
+    const row = btn.closest('tr');
+    const comp = row ? row.querySelector('.completed-day-input') : null;
+    if (comp && comp.value) {
+      btn.value = '取消';
     }
 
-    const calendar = document.getElementById('calendar');
-    let dayCells = {};
-    let currentYear = new Date().getFullYear();
-    let currentMonth = new Date().getMonth();
+    btn.addEventListener('click', () => {
+      if (!row || !comp) return;
 
-    function updateCurrentYearMonth() {
-        const title = document.getElementById('calendar-title');
-        if (title) {
-            const m = title.textContent.match(/(\d+)年(\d+)月/);
-            if (m) {
-                currentYear = parseInt(m[1], 10);
-                currentMonth = parseInt(m[2], 10) - 1;
-            }
-        }
-    }
-
-    function mapDayCells() {
-        dayCells = {};
-        updateCurrentYearMonth();
-        calendar.querySelectorAll('td').forEach(td => {
-            const day = parseInt(td.textContent, 10);
-            if (!isNaN(day)) {
-                dayCells[day] = td;
-            }
-        });
-    }
-
-    function addSchedule(name, dateStr) {
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return;
-        if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth) return;
-        const cell = dayCells[date.getDate()];
-        if (!cell) return;
-        let wrapper = cell.querySelector('.tasks');
-        if (!wrapper) {
-            wrapper = document.createElement('div');
-            wrapper.className = 'tasks';
-            cell.appendChild(wrapper);
-        }
-        const item = document.createElement('div');
-        item.textContent = name.slice(0, 4);
-        item.title = name;
-        item.dataset.name = name;
-        item.dataset.date = dateStr;
-        wrapper.appendChild(item);
-    }
-
-    function removeSchedule(name, dateStr) {
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return;
-        if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth) return;
-        const cell = dayCells[date.getDate()];
-        if (!cell) return;
-        const wrapper = cell.querySelector('.tasks');
-        if (!wrapper) return;
-        wrapper.querySelectorAll('div').forEach(div => {
-            if (div.dataset.name === name && div.dataset.date === dateStr) {
-                div.remove();
-            }
-        });
-    }
-
-    function initSchedules() {
-        mapDayCells();
-        document.querySelectorAll('.schedule-row').forEach(row => {
-            const cb = row.querySelector('.schedule-add-flag');
-            if (cb && cb.checked) {
-                const name = row.querySelector('.schedule-title-input').value;
-                const date = row.querySelector('.schedule-date-input').value;
-                addSchedule(name, date);
-            }
-        });
-    }
-
-    document.querySelectorAll('.schedule-date-input').forEach(inp => {
-        const handler = () => {
-            const date = new Date(inp.value);
-            if (isNaN(date.getTime())) return;
-            const dow = date.toLocaleDateString('ja-JP', { weekday: 'short' });
-            const row = inp.closest('tr');
-            if (row) {
-                const dayField = row.querySelector('.schedule-day-of-week');
-                if (dayField) {
-                    dayField.value = dow;
-                }
-                const cb = row.querySelector('.schedule-add-flag');
-                if (cb && cb.checked) {
-                    removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
-                    addSchedule(row.querySelector('.schedule-title-input').value, inp.value);
-                }
-                sendUpdate(row);
-                updateTimeUntilStart(row);
-                sortAllTables();
-            }
-        };
-        inp.addEventListener('change', handler);
+      if (btn.value === '完了') {
+        const today = new Date().toISOString().split('T')[0];
+        comp.value = today;
+        btn.value = '取消';
+        moveRowBasedOnCompletion(row, true);
+        const span = row.querySelector('td:last-child span');
+        if (span) span.textContent = '';
+      } else {
+        comp.value = '';
+        btn.value = '完了';
+        moveRowBasedOnCompletion(row, false);
+        updateTimeUntilStart(row);
+      }
+      sendUpdate(row);
     });
+  });
 
-    function initTimeSelects(hourSel, minuteSel, time) {
-        for (let h = 0; h < 24; h++) {
-            const opt = document.createElement('option');
-            opt.value = String(h).padStart(2, '0');
-            opt.textContent = opt.value;
-            hourSel.appendChild(opt);
-        }
-        for (let m = 0; m < 60; m += 5) {
-            const opt = document.createElement('option');
-            opt.value = String(m).padStart(2, '0');
-            opt.textContent = opt.value;
-            minuteSel.appendChild(opt);
-        }
-        if (time) {
-            const [h, m] = time.split(':');
-            hourSel.value = h;
-            minuteSel.value = m.padStart(2, '0');
-        }
-    }
-
-    document.querySelectorAll('.start-hour').forEach(sel => {
-        const minuteSel = sel.parentElement.querySelector('.start-minute');
-        initTimeSelects(sel, minuteSel, sel.dataset.time);
-        sel.addEventListener('change', () => {
-            const row = sel.closest('tr');
-            if (row) {
-                sendUpdate(row);
-                updateTimeUntilStart(row);
-                sortAllTables();
-            }
-        });
-        if (minuteSel) {
-            minuteSel.addEventListener('change', () => {
-                const row = sel.closest('tr');
-                if (row) {
-                    sendUpdate(row);
-                    updateTimeUntilStart(row);
-                    sortAllTables();
-                }
-            });
-        }
+  document.querySelectorAll('.delete-button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('tr');
+      if (!row) return;
+      const id = row.dataset.id;
+      if (!id) return;
+      fetch('/schedule-delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id, 10) }),
+      }).then(() => {
+        location.reload();
+      });
     });
+  });
 
-    document.querySelectorAll('.end-hour').forEach(sel => {
-        const minuteSel = sel.parentElement.querySelector('.end-minute');
-        initTimeSelects(sel, minuteSel, sel.dataset.time);
-        sel.addEventListener('change', () => {
-            const row = sel.closest('tr');
-            if (row) sendUpdate(row);
-        });
-        if (minuteSel) {
-            minuteSel.addEventListener('change', () => {
-                const row = sel.closest('tr');
-                if (row) sendUpdate(row);
-            });
-        }
+  const newButton = document.getElementById('new-schedule-button');
+  if (newButton) {
+    newButton.addEventListener('click', () => {
+      const today = new Date();
+      const dateStr = today.toISOString().split('T')[0];
+      const dow = today.toLocaleDateString('ja-JP', { weekday: 'short' });
+      const data = {
+        addFlag: true,
+        title: '',
+        dayOfWeek: dow,
+        scheduleDate: dateStr,
+        startTime: '00:00',
+        endTime: '01:00',
+        location: '',
+        detail: '',
+        feedback: '',
+        point: 1,
+        completedDay: null,
+      };
+      fetch('/schedule-add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }).then(() => {
+        location.reload();
+      });
     });
+  }
 
-    document.querySelectorAll('.schedule-add-flag').forEach(cb => {
-        cb.addEventListener('change', () => {
-            const row = cb.closest('tr');
-            if (!row) return;
-            const title = row.querySelector('.schedule-title-input').value;
-            const date = row.querySelector('.schedule-date-input').value;
-            if (cb.checked) {
-                addSchedule(title, date);
-            } else {
-                removeSchedule(title, date);
-            }
-            sendUpdate(row);
-        });
-    });
-
-    document.querySelectorAll('.schedule-title-input').forEach(inp => {
-        const handler = () => {
-            const row = inp.closest('tr');
-            if (row) {
-                const cb = row.querySelector('.schedule-add-flag');
-                if (cb && cb.checked) {
-                    removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
-                    addSchedule(inp.value, row.querySelector('.schedule-date-input').value);
-                }
-                sendUpdate(row);
-            }
-        };
-        inp.addEventListener('change', handler);
-        inp.addEventListener('input', handler);
-    });
-
-    document.querySelectorAll('.schedule-location-input').forEach(inp => {
-        const handler = () => {
-            const row = inp.closest('tr');
-            if (row) sendUpdate(row);
-        };
-        inp.addEventListener('change', handler);
-        inp.addEventListener('input', handler);
-    });
-
-    document.querySelectorAll('.schedule-detail-input').forEach(inp => {
-        const handler = () => {
-            const row = inp.closest('tr');
-            if (row) sendUpdate(row);
-        };
-        inp.addEventListener('change', handler);
-        inp.addEventListener('input', handler);
-    });
-
-    document.querySelectorAll('.schedule-feedback-input').forEach(inp => {
-        const handler = () => {
-            const row = inp.closest('tr');
-            if (row) sendUpdate(row);
-        };
-        inp.addEventListener('change', handler);
-        inp.addEventListener('input', handler);
-    });
-
-    document.querySelectorAll('.point-input').forEach(inp => {
-        const handler = () => {
-            const row = inp.closest('tr');
-            if (row) sendUpdate(row);
-        };
-        inp.addEventListener('change', handler);
-        inp.addEventListener('input', handler);
-    });
-
-    document.querySelectorAll('.completed-day-input').forEach(inp => {
-        const handler = () => {
-            const row = inp.closest('tr');
-            if (!row) return;
-            const completed = !!inp.value;
-            sendUpdate(row);
-            moveRowBasedOnCompletion(row, completed);
-            if (completed) {
-                const span = row.querySelector('td:last-child span');
-                if (span) span.textContent = '';
-            } else {
-                updateTimeUntilStart(row);
-            }
-        };
-        inp.addEventListener('change', handler);
-        inp.addEventListener('input', handler);
-    });
-
-    document.querySelectorAll('.complete-button').forEach(btn => {
-        const row = btn.closest('tr');
-        const comp = row ? row.querySelector('.completed-day-input') : null;
-        if (comp && comp.value) {
-            btn.value = '取消';
-        }
-
-        btn.addEventListener('click', () => {
-            if (!row || !comp) return;
-
-            if (btn.value === '完了') {
-                const today = new Date().toISOString().split('T')[0];
-                comp.value = today;
-                btn.value = '取消';
-                moveRowBasedOnCompletion(row, true);
-                const span = row.querySelector('td:last-child span');
-                if (span) span.textContent = '';
-            } else {
-                comp.value = '';
-                btn.value = '完了';
-                moveRowBasedOnCompletion(row, false);
-                updateTimeUntilStart(row);
-            }
-            sendUpdate(row);
-        });
-    });
-
-    document.querySelectorAll('.delete-button').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const row = btn.closest('tr');
-            if (!row) return;
-            const id = row.dataset.id;
-            if (!id) return;
-            fetch('/schedule-delete', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: parseInt(id, 10) })
-            }).then(() => {
-                location.reload();
-            });
-        });
-    });
-
-    const newButton = document.getElementById('new-schedule-button');
-    if (newButton) {
-        newButton.addEventListener('click', () => {
-            const today = new Date();
-            const dateStr = today.toISOString().split('T')[0];
-            const dow = today.toLocaleDateString('ja-JP', { weekday: 'short' });
-            const data = {
-                addFlag: true,
-                title: '',
-                dayOfWeek: dow,
-                scheduleDate: dateStr,
-                startTime: '00:00',
-                endTime: '01:00',
-                location: '',
-                detail: '',
-                feedback: '',
-                point: 1,
-                completedDay: null
-            };
-            fetch('/schedule-add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            }).then(() => {
-                location.reload();
-            });
-        });
-    }
-
-    sortAllTables();
-    initSchedules();
-    document.addEventListener('calendarRendered', initSchedules);
+  sortAllTables(); //予定データベーステーブルを日付と時間の昇順に並べ替える,初期化
+  initSchedules();//今表示されているカレンダーに予定を埋め込む
+  document.addEventListener('calendarRendered', initSchedules);//calendarRendered というイベントが起きたら initSchedules 関数を実行．つまり，カレンダーの描画が終わってから，予定を埋め込むということ．
 });
