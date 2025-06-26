@@ -106,4 +106,11 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         String sql = "DELETE FROM schedules WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public int sumCompletedPoints() {
+        String sql = "SELECT COALESCE(SUM(point), 0) FROM schedules WHERE completed_day IS NOT NULL";
+        Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
+        return result != null ? result : 0;
+    }
 }
