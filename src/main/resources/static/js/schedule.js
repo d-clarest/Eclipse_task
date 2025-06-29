@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (res.ok) {
         row.dataset.oldTitle = data.title;
         row.dataset.oldDate = data.scheduleDate;
+        refreshTotalPoint();
       } else {
         console.error('Schedule update failed');
       }
@@ -488,13 +489,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const pointDisplay = document.getElementById('total-point-display');
-  if (pointDisplay) {
+
+  function refreshTotalPoint() {
+    if (!pointDisplay) return;
     fetch('/total-point')
       .then((res) => res.json())
       .then((pt) => {
         pointDisplay.textContent = `${pt}P`;
       });
   }
+
+  refreshTotalPoint();
 
   sortAllTables(); //予定データベーステーブルを日付と時間の昇順に並べ替える,初期化
   initSchedules();//今表示されているカレンダーに予定を埋め込む
