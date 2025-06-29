@@ -341,6 +341,29 @@ document.addEventListener('DOMContentLoaded', () => {
     inp.addEventListener('input', handler);
   });
 
+  function enableFullTextDisplay(selector) {
+    document.querySelectorAll(selector).forEach((inp) => {
+      let originalWidth = '';
+      const adjustWidth = () => {
+        inp.style.width = 'auto';
+        const w = inp.scrollWidth + 4; // some padding
+        inp.style.width = w + 'px';
+      };
+      inp.addEventListener('focus', () => {
+        originalWidth = inp.style.width || inp.offsetWidth + 'px';
+        adjustWidth();
+      });
+      inp.addEventListener('input', adjustWidth);
+      inp.addEventListener('blur', () => {
+        inp.style.width = originalWidth;
+      });
+    });
+  }
+
+  enableFullTextDisplay(
+    '.schedule-title-input, .schedule-location-input, .schedule-detail-input, .schedule-feedback-input'
+  );
+
   document.querySelectorAll('.point-input').forEach((inp) => {
     const handler = () => {
       const row = inp.closest('tr');
