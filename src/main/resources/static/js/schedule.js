@@ -486,7 +486,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ----- completed schedule display toggle -----
   const toggleBtn = document.getElementById('toggle-completed-button');
-  let completedShown = false;
+  const STORAGE_KEY = 'completedShown';
+  let completedShown = localStorage.getItem(STORAGE_KEY) === 'true';
   let displayedCompleted = [];
 
   //完了済みの予定を赤文字で表示する関数
@@ -509,6 +510,13 @@ document.addEventListener('DOMContentLoaded', () => {
     displayedCompleted = [];
   }
 
+  //ページ読み込み時に前回の表示状態を復元
+  if (toggleBtn && completedShown) {
+    toggleBtn.textContent = '非表示';
+    fetchCompletedAndShow();
+    localStorage.setItem(STORAGE_KEY, 'true');
+  }
+
    //toggleBtnが入っていないページでのエラーを防ぐ
   if (toggleBtn) {
     toggleBtn.addEventListener('click', () => {
@@ -522,6 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleBtn.textContent = '非表示';
         completedShown = true;
       }
+      localStorage.setItem(STORAGE_KEY, completedShown);
     });
   }
 
