@@ -109,8 +109,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
     @Override
     public int sumCompletedPoints() {
-        String sql = "SELECT COALESCE(SUM(point), 0) FROM schedules WHERE completed_day IS NOT NULL";
-        Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
-        return result != null ? result : 0;
+        String sql = "SELECT COALESCE(SUM(point), 0) FROM schedules WHERE completed_day IS NOT NULL";//合計が NULL の場合は 0 に置き換える
+        Integer result = jdbcTemplate.queryForObject(sql, Integer.class);//queryForObjectは結果を1行1列（つまり値）で取得，引数に何の型で受け取るか明記する必要があり
+        return result != null ? result : 0;//念のために，もし，結果がnullの場合は0にする．
     }
 }

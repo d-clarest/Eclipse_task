@@ -489,59 +489,63 @@ document.addEventListener('DOMContentLoaded', () => {
   let completedShown = false;
   let displayedCompleted = [];
 
+  //完了済みの予定を赤文字で表示する関数
   function fetchCompletedAndShow() {
-    mapDayCells();
+    mapDayCells();//calender-titleの年月の約30日分の日付連想配列dayCellsを作成
     const year = currentYear;
-    const month = currentMonth + 1;
-    fetch(`/completed-schedules?year=${year}&month=${month}`)
-      .then((res) => res.json())
+    const month = currentMonth + 1;//currentMonthはjs上の月なので、現実世界の月に変換
+    fetch(`/completed-schedules?year=${year}&month=${month}`)//GETリクエスト
+      .then((res) => res.json())//データをjson形式で受け取る、次のthenに結果を返す
       .then((list) => {
         list.forEach((s) => {
-          addSchedule(s.title, s.scheduleDate, { completed: true });
-          displayedCompleted.push({ name: s.title, date: s.scheduleDate });
+          addSchedule(s.title, s.scheduleDate, { completed: true });//カレンダーに予定を追加
+          displayedCompleted.push({ name: s.title, date: s.scheduleDate });//完了済みスケジュールのうちすでに画面に表示したものを記録・管理するための配列
         });
       });
   }
 
   function removeDisplayedCompleted() {
-    displayedCompleted.forEach((d) => removeSchedule(d.name, d.date));
+    displayedCompleted.forEach((d) => removeSchedule(d.name, d.date));//予定完了済みの予定名と予定日から予定をとの除く（削除ではない）
     displayedCompleted = [];
   }
 
+   //toggleBtnが入っていないページでのエラーを防ぐ
   if (toggleBtn) {
     toggleBtn.addEventListener('click', () => {
+        //いまページに「表示」と表示されている場合はelseの方に、「非表示」と表示されていればifの方に
       if (completedShown) {
-        removeDisplayedCompleted();
+        removeDisplayedCompleted();//予定完了済みのdisplayedCompletedから1つずつ取り出して、カレンダーから取り除く、そしてdisplayedCompletedを空にする
         toggleBtn.textContent = '表示';
         completedShown = false;
       } else {
-        fetchCompletedAndShow();
+        fetchCompletedAndShow();//予定完了済み　かつ　現在のカレンダーの年月でフィルターをかけて予定追加
         toggleBtn.textContent = '非表示';
         completedShown = true;
       }
     });
   }
 
+  //カレンダーが読みこまれ(先月のカレンダーに移行したりすると)、かつcompletedShownがtrueの時は処理実行
   document.addEventListener('calendarRendered', () => {
     if (completedShown) {
-      removeDisplayedCompleted();
-      fetchCompletedAndShow();
+      removeDisplayedCompleted();//一旦、今のやつ全部破棄
+      fetchCompletedAndShow();//今表示のカレンダーで完了済みの予定を全部表示
     }
   });
 
   const pointDisplay = document.getElementById('total-point-display');
 
   function refreshTotalPoint() {
-    if (!pointDisplay) return;
+    if (!pointDisplay) return;//ページにポイント表示するとことがない場合は，return
     fetch('/total-point')
-      .then((res) => res.json())
+      .then((res) => res.json())//jsonでcontrollerにリクエスト
       .then((pt) => {
-        pointDisplay.textContent = `${pt}P`;
+        pointDisplay.textContent = `${pt}P`;//controllerから受け取ったデータは，${}によって受け取る．
       });
   }
 
-  refreshTotalPoint();
 
+  refreshTotalPoint();//ページにポイント表示する部分があれば，表示
   sortAllTables(); //予定データベーステーブルを日付と時間の昇順に並べ替える,初期化
   initSchedules();//今表示されているカレンダーに予定を埋め込む
   document.addEventListener('calendarRendered', initSchedules);//calendarRendered というイベントが起きたら initSchedules 関数を実行．つまり，カレンダーの描画が終わってから，予定を埋め込むということ．

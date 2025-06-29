@@ -115,19 +115,20 @@ public class TaskListController {
     }
 
     @GetMapping("/completed-schedules")
-    @ResponseBody
+    @ResponseBody//このアノテーションにより、メソッドの戻り値（ここでは List<Schedule>）が自動的にJSONなどのHTTPレスポンスボディに変換されて返す
+    //@RequestParam でjavascriptからGETリクエストを受け取っている。 fetch(`/completed-schedules?year=${year}&month=${month}`)
     public java.util.List<Schedule> getCompletedSchedules(@RequestParam int year, @RequestParam int month) {
         log.debug("Fetching completed schedules for {}/{}", year, month);
-        return scheduleService.getAllSchedules().stream()
-                .filter(s -> s.getCompletedDay() != null)
-                .filter(s -> s.getScheduleDate().getYear() == year && s.getScheduleDate().getMonthValue() == month)
-                .toList();
+        return scheduleService.getAllSchedules().stream()//全てのスケジュールをList<Schedule>で取得し、stream()することでfilterをつなげられる
+                .filter(s -> s.getCompletedDay() != null)//完了日がnullでない、つまり完了済みのやつでフィルタ
+                .filter(s -> s.getScheduleDate().getYear() == year && s.getScheduleDate().getMonthValue() == month)//現在表示しているカレンダーの年月と一致してるのでフィルタ
+                .toList();//Stream<Schedule>の処理結果をList<Schedule>に変換
     }
 
     @GetMapping("/total-point")
     @ResponseBody
     public Integer getTotalPoint() {
         log.debug("Fetching total completed points");
-        return scheduleService.getTotalCompletedPoints();
+        return scheduleService.getTotalCompletedPoints();//@ResponseBodyによって，htmlではなく，interger型のデータ（ポイント）をreturn
     }
 }
