@@ -350,11 +350,27 @@ document.addEventListener('DOMContentLoaded', () => {
     inp.addEventListener('input', handler);
   });
 
+  function updateCalendarCompletion(row, completed) {
+    const cb = row.querySelector('.schedule-add-flag');
+    if (!cb || !cb.checked) return;
+    const title = row.querySelector('.schedule-title-input').value;
+    const date = row.querySelector('.schedule-date-input').value;
+    removeSchedule(title, date);
+    if (completed) {
+      if (completedShown) {
+        addSchedule(title, date, { completed: true });
+      }
+    } else {
+      addSchedule(title, date);
+    }
+  }
+
   document.querySelectorAll('.completed-day-input').forEach((inp) => {
     const handler = () => {
       const row = inp.closest('tr');
       if (!row) return;
       const completed = !!inp.value;
+      updateCalendarCompletion(row, completed);
       sendUpdate(row);
       moveRowBasedOnCompletion(row, completed);
       if (completed) {
@@ -382,12 +398,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const today = new Date().toISOString().split('T')[0];
         comp.value = today;
         btn.value = '取消';
+        updateCalendarCompletion(row, true);
         moveRowBasedOnCompletion(row, true);
         const span = row.querySelector('td:last-child span');
         if (span) span.textContent = '';
       } else {
         comp.value = '';
         btn.value = '完了';
+        updateCalendarCompletion(row, false);
         moveRowBasedOnCompletion(row, false);
         updateTimeUntilStart(row);
       }
