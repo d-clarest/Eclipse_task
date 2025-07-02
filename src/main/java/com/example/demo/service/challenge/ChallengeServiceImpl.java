@@ -40,4 +40,10 @@ public class ChallengeServiceImpl implements ChallengeService {
         log.debug("Deleting challenge with id {}", id);
         repository.deleteById(id);
     }
+
+    @Override
+    public int getTotalCompletedPoints() {
+        log.debug("Fetching total challenge points");
+        return repository.sumCompletedPoints();
+    }
 }
