@@ -115,7 +115,11 @@
             <td><input type="text" th:value="${challenge.strategy}" size="8" class="challenge-strategy-input" /></td>
             <td><input type="text" th:value="${challenge.actualResult}" size="8" class="challenge-actual-input" /></td>
             <td><input type="text" th:value="${challenge.improvementPlan}" size="8" class="challenge-improvement-input" /></td>
-            <td><input type="number" th:value="${challenge.challengeLevel}" class="challenge-level-input" /></td>
+            <td>
+              <select class="challenge-level-input">
+                <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == challenge.challengeLevel}"></option>
+              </select>
+            </td>
             <td><input type="date" th:value="${challenge.challengeDate}" class="challenge-date-input" /></td>
           </tr>
         </table>
