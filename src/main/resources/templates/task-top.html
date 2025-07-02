@@ -95,20 +95,28 @@
       </div>
 
       <div class="database-container">
-        <table class="chalenge-database">
+          <table class="chalenge-database">
           <tr>
             <th>成功</th>
             <th>挑戦名</th>
-            <!-- <th>リスク</th>
+            <th>リスク</th>
             <th>求める結果</th>
             <th>戦略</th>
             <th>結果</th>
             <th>改善案</th>
-            <th>挑戦日</th> -->
+            <th>挑戦度</th>
+            <th>挑戦日</th>
           </tr>
           <tr th:each="challenge : ${challenges}" class="challenge-row" th:data-id="${challenge.id}">
             <td><input type="button" value="成功" class="challenge-suc-button" /></td>
             <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>
+            <td><input type="text" th:value="${challenge.risk}" size="8" class="challenge-risk-input" /></td>
+            <td><input type="text" th:value="${challenge.expectedResult}" size="8" class="challenge-expected-input" /></td>
+            <td><input type="text" th:value="${challenge.strategy}" size="8" class="challenge-strategy-input" /></td>
+            <td><input type="text" th:value="${challenge.actualResult}" size="8" class="challenge-actual-input" /></td>
+            <td><input type="text" th:value="${challenge.improvementPlan}" size="8" class="challenge-improvement-input" /></td>
+            <td><input type="number" th:value="${challenge.challengeLevel}" class="challenge-level-input" /></td>
+            <td><input type="date" th:value="${challenge.challengeDate}" class="challenge-date-input" /></td>
           </tr>
         </table>
       </div>

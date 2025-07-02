@@ -20,13 +20,23 @@ public class ChallengeRepositoryImpl implements ChallengeRepository {
 
     @Override
     public List<Challenge> findAll() {
-        String sql = "SELECT id, title FROM challenges";
+        String sql = "SELECT id, title, risk, expected_result, strategy, actual_result, improvement_plan, challenge_level, challenge_date FROM challenges";
         return jdbcTemplate.query(sql, new RowMapper<Challenge>() {
             @Override
             public Challenge mapRow(ResultSet rs, int rowNum) throws SQLException {
                 Challenge c = new Challenge();
                 c.setId(rs.getInt("id"));
                 c.setTitle(rs.getString("title"));
+                c.setRisk(rs.getString("risk"));
+                c.setExpectedResult(rs.getString("expected_result"));
+                c.setStrategy(rs.getString("strategy"));
+                c.setActualResult(rs.getString("actual_result"));
+                c.setImprovementPlan(rs.getString("improvement_plan"));
+                c.setChallengeLevel(rs.getInt("challenge_level"));
+                java.sql.Date date = rs.getDate("challenge_date");
+                if (date != null) {
+                    c.setChallengeDate(date.toLocalDate());
+                }
                 return c;
             }
         });
@@ -34,7 +44,16 @@ public class ChallengeRepositoryImpl implements ChallengeRepository {
 
     @Override
     public void insertChallenge(Challenge challenge) {
-        String sql = "INSERT INTO challenges (title) VALUES (?)";
-        jdbcTemplate.update(sql, challenge.getTitle());
+        String sql = "INSERT INTO challenges (title, risk, expected_result, strategy, actual_result, improvement_plan, challenge_level, challenge_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        java.sql.Date date = challenge.getChallengeDate() != null ? java.sql.Date.valueOf(challenge.getChallengeDate()) : null;
+        jdbcTemplate.update(sql,
+                challenge.getTitle(),
+                challenge.getRisk(),
+                challenge.getExpectedResult(),
+                challenge.getStrategy(),
+                challenge.getActualResult(),
+                challenge.getImprovementPlan(),
+                challenge.getChallengeLevel(),
+                date);
     }
 }
