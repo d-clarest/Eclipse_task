@@ -9,4 +9,5 @@ public interface ChallengeService {
     void addChallenge(Challenge challenge);
     void updateChallenge(Challenge challenge);
     void deleteById(int id);
+    int getTotalCompletedPoints();
 }

@@ -15,6 +15,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const unchallengedTable = document.getElementById('unchallenged-table');
   const completedTable = document.getElementById('completed-challenge-table');
+  const pointDisplay = document.getElementById('total-point-display');
+
+  function refreshTotalPoint() {
+    if (!pointDisplay) return;
+    fetch('/total-point')
+      .then((res) => res.json())
+      .then((pt) => {
+        pointDisplay.textContent = `${pt}P`;
+      });
+  }
 
   function moveRow(row, toCompleted) {
     if (!row) return;
@@ -77,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
       sendUpdate(row);
       moveRow(row, true);
       replaceWithCancel(row);
+      refreshTotalPoint();
     });
   }
 
@@ -91,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
       sendUpdate(row);
       moveRow(row, true);
       replaceWithCancel(row);
+      refreshTotalPoint();
     });
   }
 
@@ -105,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
       sendUpdate(row);
       moveRow(row, false);
       replaceWithSucFail(row);
+      refreshTotalPoint();
     });
   }
 
@@ -126,4 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   });
+
+  refreshTotalPoint();
 });

@@ -78,4 +78,11 @@ public class ChallengeRepositoryImpl implements ChallengeRepository {
         String sql = "DELETE FROM challenges WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public int sumCompletedPoints() {
+        String sql = "SELECT COALESCE(SUM(challenge_level * 2), 0) FROM challenges WHERE challenge_date IS NOT NULL";
+        Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
+        return result != null ? result : 0;
+    }
 }
