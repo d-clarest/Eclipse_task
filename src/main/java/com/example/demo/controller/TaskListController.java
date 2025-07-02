@@ -1,22 +1,23 @@
 package com.example.demo.controller;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import jakarta.servlet.http.HttpSession;
-import com.example.demo.form.TaskNameUpdate;
-import com.example.demo.form.ScheduleUpdateForm;
 
-import com.example.demo.entity.Task;
 import com.example.demo.entity.Schedule;
-import com.example.demo.service.TaskService;
+import com.example.demo.entity.Task;
+import com.example.demo.form.ScheduleUpdateForm;
+import com.example.demo.form.TaskNameUpdate;
 import com.example.demo.service.ScheduleService;
+import com.example.demo.service.TaskService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -110,7 +111,7 @@ public class TaskListController {
     @PostMapping("/schedule-delete")
     public ResponseEntity<Void> deleteSchedule(@RequestBody Schedule schedule) {
         log.debug("Deleting schedule id {}", schedule.getId());
-        scheduleService.deleteScheduleById(schedule.getId());
+        scheduleService.deleteScheduleById(schedule.getId());//idで削除
         return ResponseEntity.ok().build();
     }
 
@@ -125,10 +126,10 @@ public class TaskListController {
                 .toList();//Stream<Schedule>の処理結果をList<Schedule>に変換
     }
 
-    @GetMapping("/total-point")
-    @ResponseBody
-    public Integer getTotalPoint() {
-        log.debug("Fetching total completed points");
-        return scheduleService.getTotalCompletedPoints();//@ResponseBodyによって，htmlではなく，interger型のデータ（ポイント）をreturn
-    }
+//    @GetMapping("/total-point")
+//    @ResponseBody
+//    public Integer getTotalPoint() {
+//        log.debug("Fetching total completed points");
+//        return scheduleService.getTotalCompletedPoints();//@ResponseBodyによって，htmlではなく，interger型のデータ（ポイント）をreturn
+//    }
 }
