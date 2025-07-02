@@ -56,4 +56,26 @@ public class ChallengeRepositoryImpl implements ChallengeRepository {
                 challenge.getChallengeLevel(),
                 date);
     }
+
+    @Override
+    public void updateChallenge(Challenge challenge) {
+        String sql = "UPDATE challenges SET title = ?, risk = ?, expected_result = ?, strategy = ?, actual_result = ?, improvement_plan = ?, challenge_level = ?, challenge_date = ? WHERE id = ?";
+        java.sql.Date date = challenge.getChallengeDate() != null ? java.sql.Date.valueOf(challenge.getChallengeDate()) : null;
+        jdbcTemplate.update(sql,
+                challenge.getTitle(),
+                challenge.getRisk(),
+                challenge.getExpectedResult(),
+                challenge.getStrategy(),
+                challenge.getActualResult(),
+                challenge.getImprovementPlan(),
+                challenge.getChallengeLevel(),
+                date,
+                challenge.getId());
+    }
+
+    @Override
+    public void deleteById(int id) {
+        String sql = "DELETE FROM challenges WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

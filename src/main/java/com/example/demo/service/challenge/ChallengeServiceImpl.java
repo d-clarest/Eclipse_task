@@ -28,4 +28,16 @@ public class ChallengeServiceImpl implements ChallengeService {
         log.debug("Adding challenge {}", challenge.getTitle());
         repository.insertChallenge(challenge);
     }
+
+    @Override
+    public void updateChallenge(Challenge challenge) {
+        log.debug("Updating challenge id {}", challenge.getId());
+        repository.updateChallenge(challenge);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        log.debug("Deleting challenge with id {}", id);
+        repository.deleteById(id);
+    }
 }
