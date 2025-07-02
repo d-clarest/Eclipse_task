@@ -70,8 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const row = btn.closest('tr');
       if (!row) return;
-      const input = row.querySelector('.challenge-actual-input');
-      if (input) input.value = '成功';
+      const actual = row.querySelector('.challenge-actual-input');
+      if (actual) actual.value = '成功';
+      const date = row.querySelector('.challenge-date-input');
+      if (date) date.value = new Date().toISOString().split('T')[0];
       sendUpdate(row);
       moveRow(row, true);
       replaceWithCancel(row);
@@ -82,8 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const row = btn.closest('tr');
       if (!row) return;
-      const input = row.querySelector('.challenge-actual-input');
-      if (input) input.value = '失敗';
+      const actual = row.querySelector('.challenge-actual-input');
+      if (actual) actual.value = '失敗';
+      const date = row.querySelector('.challenge-date-input');
+      if (date) date.value = new Date().toISOString().split('T')[0];
       sendUpdate(row);
       moveRow(row, true);
       replaceWithCancel(row);
@@ -94,8 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const row = btn.closest('tr');
       if (!row) return;
-      const input = row.querySelector('.challenge-actual-input');
-      if (input) input.value = '';
+      const actual = row.querySelector('.challenge-actual-input');
+      if (actual) actual.value = '';
+      const date = row.querySelector('.challenge-date-input');
+      if (date) date.value = '';
       sendUpdate(row);
       moveRow(row, false);
       replaceWithSucFail(row);

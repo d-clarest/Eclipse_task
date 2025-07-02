@@ -79,10 +79,10 @@ public class TaskListController {
         log.debug("Displaying challenge box page");
         var all = challengeService.getAllChallenges();
         var unchallenged = all.stream()
-                .filter(c -> c.getActualResult() == null || c.getActualResult().isBlank())
+                .filter(c -> c.getChallengeDate() == null)
                 .toList();
         var completed = all.stream()
-                .filter(c -> c.getActualResult() != null && !c.getActualResult().isBlank())
+                .filter(c -> c.getChallengeDate() != null)
                 .toList();
         model.addAttribute("unchallenged", unchallenged);
         model.addAttribute("completedChallenges", completed);
