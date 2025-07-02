@@ -8,10 +8,10 @@
     </head>
     <body class="task-body">
       <div class="link-area">
-        <a href="challenge-box.html">挑戦ボックス</a>
+        <a th:href="@{'/' + ${username} + '/task-top/challenge-box'}">挑戦ボックス</a>
         <a href="question-survey-box.html">疑問・調査ボックス</a>
-        <a th:href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックス</a
-        ><!-- java変数などを埋め込める動的リンクを生成（Thymeleaf使用） @{URLパターン}，java側でusernameをmodel.addAttributeしてる-->
+        <a th:href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックス</a>
+        <!-- java変数などを埋め込める動的リンクを生成（Thymeleaf使用） @{URLパターン}，java側でusernameをmodel.addAttributeしてる-->
       </div>
 
       <div id="calendar" class="calendar-area"></div>
