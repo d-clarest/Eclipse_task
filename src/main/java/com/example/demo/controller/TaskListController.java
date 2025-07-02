@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.Schedule;
 import com.example.demo.entity.Task;
+import com.example.demo.entity.Challenge;
 import com.example.demo.form.ScheduleUpdateForm;
 import com.example.demo.form.TaskNameUpdate;
 import com.example.demo.service.ScheduleService;
@@ -108,6 +109,13 @@ public class TaskListController {
     public ResponseEntity<Void> addSchedule(@RequestBody Schedule schedule) {
         log.debug("Adding schedule {} on {}", schedule.getTitle(), schedule.getScheduleDate());
         scheduleService.addSchedule(schedule);//repository.insertSchedule(schedule)
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/challenge-add")
+    public ResponseEntity<Void> addChallenge(@RequestBody Challenge challenge) {
+        log.debug("Adding challenge {}", challenge.getTitle());
+        challengeService.addChallenge(challenge);
         return ResponseEntity.ok().build();
     }
 

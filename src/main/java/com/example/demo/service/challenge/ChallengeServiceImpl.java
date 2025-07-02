@@ -22,4 +22,10 @@ public class ChallengeServiceImpl implements ChallengeService {
         log.debug("Fetching all challenges");
         return repository.findAll();
     }
+
+    @Override
+    public void addChallenge(Challenge challenge) {
+        log.debug("Adding challenge {}", challenge.getTitle());
+        repository.insertChallenge(challenge);
+    }
 }

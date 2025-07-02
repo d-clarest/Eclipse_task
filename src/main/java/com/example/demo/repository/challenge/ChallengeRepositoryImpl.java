@@ -31,4 +31,10 @@ public class ChallengeRepositoryImpl implements ChallengeRepository {
             }
         });
     }
+
+    @Override
+    public void insertChallenge(Challenge challenge) {
+        String sql = "INSERT INTO challenges (title) VALUES (?)";
+        jdbcTemplate.update(sql, challenge.getTitle());
+    }
 }

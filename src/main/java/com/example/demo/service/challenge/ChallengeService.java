@@ -6,4 +6,5 @@ import com.example.demo.entity.Challenge;
 
 public interface ChallengeService {
     List<Challenge> getAllChallenges();
+    void addChallenge(Challenge challenge);
 }

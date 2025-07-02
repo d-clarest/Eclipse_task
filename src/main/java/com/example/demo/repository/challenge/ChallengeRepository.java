@@ -6,4 +6,5 @@ import com.example.demo.entity.Challenge;
 
 public interface ChallengeRepository {
     List<Challenge> findAll();
+    void insertChallenge(Challenge challenge);
 }
