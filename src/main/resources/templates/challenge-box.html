@@ -64,10 +64,7 @@
           <th>挑戦日</th>
         </tr>
         <tr th:each="challenge : ${completedChallenges}" class="challenge-row" th:data-id="${challenge.id}">
-          <td>
-            <input type="button" value="成功" class="challenge-suc-button" />
-            <input type="button" value="失敗" class="challenge-fail-button" />
-          </td>
+          <td><input type="button" value="取消" class="challenge-cancel-button" /></td>
           <td><input type="button" value="削除" class="challenge-delete-button" /></td>
           <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>
           <td><input type="text" th:value="${challenge.risk}" size="8" class="challenge-risk-input" /></td>
