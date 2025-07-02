@@ -16,11 +16,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const unchallengedTable = document.getElementById('unchallenged-table');
   const completedTable = document.getElementById('completed-challenge-table');
 
-  function moveRow(row, completed) {
-    const target = completed ? completedTable : unchallengedTable;
-    if (!row || !target) return;
-    const tbody = target.tBodies[0] || target;
-    tbody.appendChild(row);
+  function moveRow(row, toCompleted) {
+    if (!row) return;
+    const target = toCompleted ? completedTable : unchallengedTable;
+    if (target) {
+      const tbody = target.tBodies[0] || target;
+      tbody.appendChild(row);
+    } else {
+      row.style.display = toCompleted ? 'none' : '';
+    }
   }
 
   function gatherData(row) {
@@ -46,7 +50,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  document.querySelectorAll('.challenge-suc-button').forEach((btn) => {
+  function replaceWithCancel(row) {
+    const cell = row.querySelector('td:first-child');
+    if (!cell) return;
+    cell.innerHTML = '<input type="button" value="取消" class="challenge-cancel-button" />';
+    const btn = cell.querySelector('.challenge-cancel-button');
+    if (btn) addCancelListener(btn);
+  }
+
+  function replaceWithSucFail(row) {
+    const cell = row.querySelector('td:first-child');
+    if (!cell) return;
+    cell.innerHTML = '<input type="button" value="成功" class="challenge-suc-button" /> <input type="button" value="失敗" class="challenge-fail-button" />';
+    cell.querySelectorAll('.challenge-suc-button').forEach(addSuccessListener);
+    cell.querySelectorAll('.challenge-fail-button').forEach(addFailListener);
+  }
+
+  function addSuccessListener(btn) {
     btn.addEventListener('click', () => {
       const row = btn.closest('tr');
       if (!row) return;
@@ -54,10 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (input) input.value = '成功';
       sendUpdate(row);
       moveRow(row, true);
+      replaceWithCancel(row);
     });
-  });
+  }
 
-  document.querySelectorAll('.challenge-fail-button').forEach((btn) => {
+  function addFailListener(btn) {
     btn.addEventListener('click', () => {
       const row = btn.closest('tr');
       if (!row) return;
@@ -65,8 +86,25 @@ document.addEventListener('DOMContentLoaded', () => {
       if (input) input.value = '失敗';
       sendUpdate(row);
       moveRow(row, true);
+      replaceWithCancel(row);
     });
-  });
+  }
+
+  function addCancelListener(btn) {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('tr');
+      if (!row) return;
+      const input = row.querySelector('.challenge-actual-input');
+      if (input) input.value = '';
+      sendUpdate(row);
+      moveRow(row, false);
+      replaceWithSucFail(row);
+    });
+  }
+
+  document.querySelectorAll('.challenge-suc-button').forEach(addSuccessListener);
+  document.querySelectorAll('.challenge-fail-button').forEach(addFailListener);
+  document.querySelectorAll('.challenge-cancel-button').forEach(addCancelListener);
 
   document.querySelectorAll('.challenge-delete-button').forEach((btn) => {
     btn.addEventListener('click', () => {
