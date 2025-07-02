@@ -70,6 +70,26 @@ public class TaskListController {
         return "task-box";
     }
 
+    @GetMapping("/{username}/task-top/challenge-box")
+    public String showChallengeBox(@PathVariable String username, Model model, HttpSession session) {
+        String loginUser = (String) session.getAttribute("loginUser");
+        if (loginUser == null || !loginUser.equals(username)) {
+            return "redirect:/log-in";
+        }
+        log.debug("Displaying challenge box page");
+        var all = challengeService.getAllChallenges();
+        var unchallenged = all.stream()
+                .filter(c -> c.getActualResult() == null || c.getActualResult().isBlank())
+                .toList();
+        var completed = all.stream()
+                .filter(c -> c.getActualResult() != null && !c.getActualResult().isBlank())
+                .toList();
+        model.addAttribute("unchallenged", unchallenged);
+        model.addAttribute("completedChallenges", completed);
+        model.addAttribute("username", username);
+        return "challenge-box";
+    }
+
     @PostMapping("/task-confirm")
     public ResponseEntity<Void> updateConfirmed(@RequestBody Task task) {
         log.debug("Updating task confirm: {} {}", task.getTaskName(), task.isConfirmed());
