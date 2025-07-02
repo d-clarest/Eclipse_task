@@ -108,7 +108,7 @@
             <th>挑戦度</th>
             <th>挑戦日</th>
           </tr>
-          <tr th:each="challenge : ${challenges}" class="challenge-row" th:data-id="${challenge.id}">
+          <tr th:each="challenge : ${challenges}" th:if="${challenge.challengeDate} == null" class="challenge-row" th:data-id="${challenge.id}">
             <td>
               <input type="button" value="成功" class="challenge-suc-button" />
               <input type="button" value="失敗" class="challenge-fail-button" />

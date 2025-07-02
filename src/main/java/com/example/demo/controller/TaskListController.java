@@ -45,7 +45,10 @@ public class TaskListController {
                 .filter(s -> s.getCompletedDay() == null)
                 .toList();
         model.addAttribute("schedules", list);
-        model.addAttribute("challenges", challengeService.getAllChallenges());
+        var challengeList = challengeService.getAllChallenges().stream()
+                .filter(c -> c.getChallengeDate() == null)
+                .toList();
+        model.addAttribute("challenges", challengeList);
         model.addAttribute("username", username);
         return "task-top";
     }
