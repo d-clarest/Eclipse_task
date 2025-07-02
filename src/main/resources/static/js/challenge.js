@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function sendUpdate(row) {
     const data = gatherData(row);
-    fetch('/challenge-update', {
+    return fetch('/challenge-update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -84,10 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (actual) actual.value = '成功';
       const date = row.querySelector('.challenge-date-input');
       if (date) date.value = new Date().toISOString().split('T')[0];
-      sendUpdate(row);
+      sendUpdate(row).then(refreshTotalPoint);
       moveRow(row, true);
       replaceWithCancel(row);
-      refreshTotalPoint();
     });
   }
 
@@ -99,10 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (actual) actual.value = '失敗';
       const date = row.querySelector('.challenge-date-input');
       if (date) date.value = new Date().toISOString().split('T')[0];
-      sendUpdate(row);
+      sendUpdate(row).then(refreshTotalPoint);
       moveRow(row, true);
       replaceWithCancel(row);
-      refreshTotalPoint();
     });
   }
 
@@ -114,10 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (actual) actual.value = '';
       const date = row.querySelector('.challenge-date-input');
       if (date) date.value = '';
-      sendUpdate(row);
+      sendUpdate(row).then(refreshTotalPoint);
       moveRow(row, false);
       replaceWithSucFail(row);
-      refreshTotalPoint();
     });
   }
 
