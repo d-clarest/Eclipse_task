@@ -2,25 +2,19 @@
 document.addEventListener('DOMContentLoaded', () => {
   function sortScheduleTable(table) {
     if (!table) return; //引数が無効の場合の安全対策
-    const tbody = table.tBodies[0] || table;//テーブルの中には通常 <tbody> があります.tBodies[0] は「最初の <tbody>」を指し，なければ table 自体を使う．
-    const rows = Array.from(tbody.querySelectorAll('tr.schedule-row'));//tbody の中から、クラス名が "schedule-row" の <tr> 要素を全部取り出す。Array.from(...) で配列に変換し，ソートできるようにしている．
+    const tbody = table.tBodies[0] || table; //テーブルの中には通常 <tbody> があります.tBodies[0] は「最初の <tbody>」を指し，なければ table 自体を使う．
+    const rows = Array.from(tbody.querySelectorAll('tr.schedule-row')); //tbody の中から、クラス名が "schedule-row" の <tr> 要素を全部取り出す。Array.from(...) で配列に変換し，ソートできるようにしている．
     //配列のsortメソッドは，2つの要素を何度も何度も比べて順番を入れ替える（今回は昇順）
     rows.sort((a, b) => {
       const dateA = a.querySelector('.schedule-date-input').value;
       const dateB = b.querySelector('.schedule-date-input').value;
-      if (dateA < dateB) return -1;//そのまま
-      if (dateA > dateB) return 1;//前後交換
-      const tA =
-        a.querySelector('.start-hour').value.padStart(2, '0') +
-        ':' +
-        a.querySelector('.start-minute').value.padStart(2, '0');
-      const tB =
-        b.querySelector('.start-hour').value.padStart(2, '0') +
-        ':' +
-        b.querySelector('.start-minute').value.padStart(2, '0');
-      return tA.localeCompare(tB);//上の比較と同じ意味，-1,0,1のいずれかを返す．ただ，文字列比較をしている．:は必要．HH:MMにして時間順に比較している．
+      if (dateA < dateB) return -1; //そのまま
+      if (dateA > dateB) return 1; //前後交換
+      const tA = a.querySelector('.start-hour').value.padStart(2, '0') + ':' + a.querySelector('.start-minute').value.padStart(2, '0');
+      const tB = b.querySelector('.start-hour').value.padStart(2, '0') + ':' + b.querySelector('.start-minute').value.padStart(2, '0');
+      return tA.localeCompare(tB); //上の比較と同じ意味，-1,0,1のいずれかを返す．ただ，文字列比較をしている．:は必要．HH:MMにして時間順に比較している．
     });
-    rows.forEach((r) => tbody.appendChild(r));//rowsにはすでに並べ替えられている．それをhtml側にも反映させるためにtbodyに入れていっている．
+    rows.forEach((r) => tbody.appendChild(r)); //rowsにはすでに並べ替えられている．それをhtml側にも反映させるためにtbodyに入れていっている．
   }
 
   function sortAllTables() {
@@ -57,14 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
       title: row.querySelector('.schedule-title-input').value,
       dayOfWeek: row.querySelector('.schedule-day-of-week').value,
       scheduleDate: row.querySelector('.schedule-date-input').value,
-      startTime:
-        row.querySelector('.start-hour').value.padStart(2, '0') +
-        ':' +
-        row.querySelector('.start-minute').value.padStart(2, '0'),
-      endTime:
-        row.querySelector('.end-hour').value.padStart(2, '0') +
-        ':' +
-        row.querySelector('.end-minute').value.padStart(2, '0'),
+      startTime: row.querySelector('.start-hour').value.padStart(2, '0') + ':' + row.querySelector('.start-minute').value.padStart(2, '0'),
+      endTime: row.querySelector('.end-hour').value.padStart(2, '0') + ':' + row.querySelector('.end-minute').value.padStart(2, '0'),
       location: row.querySelector('.schedule-location-input').value,
       detail: row.querySelector('.schedule-detail-input').value,
       feedback: row.querySelector('.schedule-feedback-input').value,
@@ -91,12 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hourSel = row.querySelector('.start-hour');
     const minuteSel = row.querySelector('.start-minute');
     if (!dateStr || !hourSel || !minuteSel) return;
-    const start = new Date(
-      `${dateStr}T${hourSel.value.padStart(2, '0')}:${minuteSel.value.padStart(
-        2,
-        '0'
-      )}:00`
-    );
+    const start = new Date(`${dateStr}T${hourSel.value.padStart(2, '0')}:${minuteSel.value.padStart(2, '0')}:00`);
     const now = new Date();
     let diff = Math.floor((start - now) / 60000); // minutes
     if (diff < 0) diff = 0;
@@ -108,67 +91,65 @@ document.addEventListener('DOMContentLoaded', () => {
     if (span) span.textContent = `${days}日${hours}時間${mins}分`;
   }
 
-  
-
   const calendar = document.getElementById('calendar');
-  let dayCells = {};//連想配列の定義
+  let dayCells = {}; //連想配列の定義
   let currentYear = new Date().getFullYear();
   let currentMonth = new Date().getMonth();
 
   function updateCurrentYearMonth() {
     const title = document.getElementById('calendar-title');
     if (title) {
-      const m = title.textContent.match(/(\d+)年(\d+)月/);//mにcalender-titleの文字に一致するやつを取り出す．m[0]に2025年6月，m[1]に2025，m[2]に6みたいな感じで
+      const m = title.textContent.match(/(\d+)年(\d+)月/); //mにcalender-titleの文字に一致するやつを取り出す．m[0]に2025年6月，m[1]に2025，m[2]に6みたいな感じで
       if (m) {
-        currentYear = parseInt(m[1], 10);//勝手に8進数で解釈しないように，10進数であることを明記
-        currentMonth = parseInt(m[2], 10) - 1;//月を引数として使うときのために，-1しておく．0基準に合わせる．
+        currentYear = parseInt(m[1], 10); //勝手に8進数で解釈しないように，10進数であることを明記
+        currentMonth = parseInt(m[2], 10) - 1; //月を引数として使うときのために，-1しておく．0基準に合わせる．
       }
     }
   }
 
   function mapDayCells() {
-    dayCells = {};//連想配列の初期化
-    updateCurrentYearMonth();//今カレンダーが表示されている年月を取得し，currentYear，currentMonthに代入
+    dayCells = {}; //連想配列の初期化
+    updateCurrentYearMonth(); //今カレンダーが表示されている年月を取得し，currentYear，currentMonthに代入
     calendar.querySelectorAll('td').forEach((td) => {
       const day = parseInt(td.textContent, 10);
       //日付が書かれてる奴だけ以下の条件に入る．空白を除きたい．
       if (!isNaN(day)) {
-        dayCells[day] = td;//例えば，dayCells[1]=<td>1</td>みたいなのが入ってる．
+        dayCells[day] = td; //例えば，dayCells[1]=<td>1</td>みたいなのが入ってる．
       }
     });
   }
 
   function addSchedule(name, dateStr, opts = {}) {
-    const date = new Date(dateStr);//文字列をDate型に変換
-    if (isNaN(date.getTime())) return;//日付をミリ秒に変換して，変な数字じゃないか判定
-    if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth)//現在表示されているカレンダーの年月とデータベースの予定テーブルの年月が一致しているやつだけ追加．一致してないのは入れない．
+    const date = new Date(dateStr); //文字列をDate型に変換
+    if (isNaN(date.getTime())) return; //日付をミリ秒に変換して，変な数字じゃないか判定
+    if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth)
+      //現在表示されているカレンダーの年月とデータベースの予定テーブルの年月が一致しているやつだけ追加．一致してないのは入れない．
       return;
-    const cell = dayCells[date.getDate()];//日付に対応する<td>1</td>みたいなのを代入
-    if (!cell) return;//まあ，ありえない
-    let wrapper = cell.querySelector('.schedules');//cellには<td>1</td>の中に，classのschedulesがあるか検索
+    const cell = dayCells[date.getDate()]; //日付に対応する<td>1</td>みたいなのを代入
+    if (!cell) return; //まあ，ありえない
+    let wrapper = cell.querySelector('.schedules'); //cellには<td>1</td>の中に，classのschedulesがあるか検索
     //td要素の中にclass="schedules"はない場合は，作る
     if (!wrapper) {
       wrapper = document.createElement('div');
       wrapper.className = 'schedules';
-      cell.appendChild(wrapper);//<div class="schedules"></div>をcellの子要素に
+      cell.appendChild(wrapper); //<div class="schedules"></div>をcellの子要素に
     }
     const item = document.createElement('div');
-    item.textContent = name.slice(0, 6);//予定名を6文字まで表示
-    item.title = name;//カレンダー表示用
-    item.dataset.name = name;//属性値
-    item.dataset.date = dateStr;//属性値
+    item.textContent = name.slice(0, 6); //予定名を6文字まで表示
+    item.title = name; //カレンダー表示用
+    item.dataset.name = name; //属性値
+    item.dataset.date = dateStr; //属性値
     if (opts.completed) {
       item.style.color = 'red';
     }
-    wrapper.appendChild(item);//<div>name</div>をwrapperの子要素に
+    wrapper.appendChild(item); //<div>name</div>をwrapperの子要素に
     return item;
   }
 
   function removeSchedule(name, dateStr) {
-    const date = new Date(dateStr);//文字列をDate型に変換
+    const date = new Date(dateStr); //文字列をDate型に変換
     if (isNaN(date.getTime())) return;
-    if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth)
-      return;
+    if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth) return;
     const cell = dayCells[date.getDate()];
     if (!cell) return;
     const wrapper = cell.querySelector('.schedules');
@@ -182,14 +163,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //
   function initSchedules() {
-    mapDayCells();//calender-titleの年月の約30日分の日付連想配列dayCellsを作成
+    mapDayCells(); //calender-titleの年月の約30日分の日付連想配列dayCellsを作成
     //これからの予定
     document.querySelectorAll('.schedule-row').forEach((row) => {
-      const cb = row.querySelector('.schedule-add-flag');//cbには<input type="checkbox">が入る．
+      const cb = row.querySelector('.schedule-add-flag'); //cbには<input type="checkbox">が入る．
+      const comp_btn = row.querySelector('.complete-button');
       //cb.checkedでチェックがついている予定なら
-      if (cb && cb.checked) {
-        const name = row.querySelector('.schedule-title-input').value;//予定名
-        const date = row.querySelector('.schedule-date-input').value;//何年何月何日
+      if (cb && cb.checked && comp_btn.value == '完了') {
+        const name = row.querySelector('.schedule-title-input').value; //予定名
+        const date = row.querySelector('.schedule-date-input').value; //何年何月何日
         addSchedule(name, date);
       }
     });
@@ -209,10 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cb = row.querySelector('.schedule-add-flag');
         if (cb && cb.checked) {
           removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
-          addSchedule(
-            row.querySelector('.schedule-title-input').value,
-            inp.value
-          );
+          addSchedule(row.querySelector('.schedule-title-input').value, inp.value);
         }
         sendUpdate(row);
         updateTimeUntilStart(row);
@@ -302,10 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cb = row.querySelector('.schedule-add-flag');
         if (cb && cb.checked) {
           removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
-          addSchedule(
-            inp.value,
-            row.querySelector('.schedule-date-input').value
-          );
+          addSchedule(inp.value, row.querySelector('.schedule-date-input').value);
         }
         sendUpdate(row);
       }
@@ -360,9 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  enableFullTextDisplay(
-    '.schedule-title-input, .schedule-location-input, .schedule-detail-input, .schedule-feedback-input'
-  );
+  enableFullTextDisplay('.schedule-title-input, .schedule-location-input, .schedule-detail-input, .schedule-feedback-input');
 
   document.querySelectorAll('.point-input').forEach((inp) => {
     const handler = () => {
@@ -382,6 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (completed) {
       if (completedShown) {
         addSchedule(title, date, { completed: true });
+        console.log('AAA');
       }
     } else {
       addSchedule(title, date);
@@ -408,12 +383,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.querySelectorAll('.complete-button').forEach((btn) => {
-    const row = btn.closest('tr');
-    const comp = row ? row.querySelector('.completed-day-input') : null;
+    const row = btn.closest('tr'); //ボタンのある行を取得
+    const comp = row ? row.querySelector('.completed-day-input') : null; //その行にrowがあれば、完了日をcompに代入
+    //もし完了日に値があるなら、取消ボタンに変更
     if (comp && comp.value) {
       btn.value = '取消';
     }
-
+    //完了ボタンを押したらトリガー
     btn.addEventListener('click', () => {
       if (!row || !comp) return;
 
@@ -437,29 +413,29 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.querySelectorAll('.delete-button').forEach((btn) => {
+    //削除ボタンがクリックされたらトリガー
     btn.addEventListener('click', () => {
       const row = btn.closest('tr');
       if (!row) return;
-      const id = row.dataset.id;
+      const id = row.dataset.id; //task-top.html側でth:data-id="${schedule.id}"があるから使える
       if (!id) return;
       fetch('/schedule-delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: parseInt(id, 10) }),
+        body: JSON.stringify({ id: parseInt(id, 10) }), //parseInt(id, 10)でidを10進数の整数に変換,id:とすることで、entityのScheduleのidを変更している
       }).then(() => {
         location.reload();
       });
     });
   });
-  
 
   const newButton = document.getElementById('new-schedule-button');
   //このif文はnewButtonがnullの時の可能性もあるので必要，nullの時，newButton.addEventListenerでエラーになる
   if (newButton) {
     newButton.addEventListener('click', () => {
-      const today = new Date();//年・月・日・時・分・秒 などの情報がすべて入っている
-      const dateStr = today.toISOString().split('T')[0];//toISOString() → 2025-06-26T10:30:00.000Z のような文字列になる,.split('T')[0] → "2025-06-26" の部分だけ取り出す
-      const dow = today.toLocaleDateString('ja-JP', { weekday: 'short' });//今日の曜日を日本語で取得，火，木みたいな
+      const today = new Date(); //年・月・日・時・分・秒 などの情報がすべて入っている
+      const dateStr = today.toISOString().split('T')[0]; //toISOString() → 2025-06-26T10:30:00.000Z のような文字列になる,.split('T')[0] → "2025-06-26" の部分だけ取り出す
+      const dow = today.toLocaleDateString('ja-JP', { weekday: 'short' }); //今日の曜日を日本語で取得，火，木みたいな
       const data = {
         addFlag: true,
         title: '',
@@ -477,9 +453,9 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('/schedule-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),//@RequestBodyでjava側でjsonをjavaに変換
+        body: JSON.stringify(data), //@RequestBodyでjava側でjsonをjavaに変換
       }).then(() => {
-        location.reload();//dataの中のlocationとは全く関係のない
+        location.reload(); //dataの中のlocationとは全く関係のない
       });
     });
   }
@@ -487,75 +463,75 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----- completed schedule display toggle -----
   const toggleBtn = document.getElementById('toggle-completed-button');
   const STORAGE_KEY = 'completedShown';
-  let completedShown = localStorage.getItem(STORAGE_KEY) === 'true';
+  let completedShown = localStorage.getItem(STORAGE_KEY) === 'true'; //
   let displayedCompleted = [];
 
   //完了済みの予定を赤文字で表示する関数
   function fetchCompletedAndShow() {
-    mapDayCells();//calender-titleの年月の約30日分の日付連想配列dayCellsを作成
+    mapDayCells(); //calender-titleの年月の約30日分の日付連想配列dayCellsを作成
     const year = currentYear;
-    const month = currentMonth + 1;//currentMonthはjs上の月なので、現実世界の月に変換
-    fetch(`/completed-schedules?year=${year}&month=${month}`)//GETリクエスト
-      .then((res) => res.json())//データをjson形式で受け取る、次のthenに結果を返す
+    const month = currentMonth + 1; //currentMonthはjs上の月なので、現実世界の月に変換
+    fetch(`/completed-schedules?year=${year}&month=${month}`) //GETリクエスト
+      .then((res) => res.json()) //データをjson形式で受け取る、次のthenに結果を返す
       .then((list) => {
         list.forEach((s) => {
-          addSchedule(s.title, s.scheduleDate, { completed: true });//カレンダーに予定を追加
-          displayedCompleted.push({ name: s.title, date: s.scheduleDate });//完了済みスケジュールのうちすでに画面に表示したものを記録・管理するための配列
+          addSchedule(s.title, s.scheduleDate, { completed: true }); //カレンダーに予定を追加
+          displayedCompleted.push({ name: s.title, date: s.scheduleDate }); //完了済みスケジュールのうちすでに画面に表示したものを記録・管理するための配列
         });
       });
   }
 
   function removeDisplayedCompleted() {
-    displayedCompleted.forEach((d) => removeSchedule(d.name, d.date));//予定完了済みの予定名と予定日から予定をとの除く（削除ではない）
+    displayedCompleted.forEach((d) => removeSchedule(d.name, d.date)); //予定完了済みの予定名と予定日から予定をとの除く（削除ではない）
     displayedCompleted = [];
   }
 
-  //ページ読み込み時に前回の表示状態を復元
+  //ページ読み込み時に前回の表示状態を復元、completedShownがtrueというのは、今ボタンが非表示の時。
   if (toggleBtn && completedShown) {
     toggleBtn.textContent = '非表示';
-    fetchCompletedAndShow();
-    localStorage.setItem(STORAGE_KEY, 'true');
+    fetchCompletedAndShow(); //予定完了済み　かつ　現在のカレンダーの年月でフィルターをかけて予定追加
+    localStorage.setItem(STORAGE_KEY, 'true'); //ローカルに保持、次またページ更新しても保持するために
   }
 
-   //toggleBtnが入っていないページでのエラーを防ぐ
+  //toggleBtnが入っていないページでのエラーを防ぐ
   if (toggleBtn) {
+    //表示/非表示ボタンが押されたら、イベントトリガー
     toggleBtn.addEventListener('click', () => {
-        //いまページに「表示」と表示されている場合はelseの方に、「非表示」と表示されていればifの方に
+      //いまページに「表示」と表示されている場合はelseの方に、「非表示」と表示されていればifの方に
       if (completedShown) {
-        removeDisplayedCompleted();//予定完了済みのdisplayedCompletedから1つずつ取り出して、カレンダーから取り除く、そしてdisplayedCompletedを空にする
+        removeDisplayedCompleted(); //予定完了済みのdisplayedCompletedから1つずつ取り出して、カレンダーから取り除く、そしてdisplayedCompletedを空にする
         toggleBtn.textContent = '表示';
         completedShown = false;
       } else {
-        fetchCompletedAndShow();//予定完了済み　かつ　現在のカレンダーの年月でフィルターをかけて予定追加
+        fetchCompletedAndShow(); //予定完了済み　かつ　現在のカレンダーの年月でフィルターをかけて予定追加
         toggleBtn.textContent = '非表示';
         completedShown = true;
       }
-      localStorage.setItem(STORAGE_KEY, completedShown);
+      localStorage.setItem(STORAGE_KEY, completedShown); //ローカルに保持、ユーザーのブラウザにデータ（文字列）をキーと値のペアで保存
     });
   }
 
   //カレンダーが読みこまれ(先月のカレンダーに移行したりすると)、かつcompletedShownがtrueの時は処理実行
   document.addEventListener('calendarRendered', () => {
     if (completedShown) {
-      removeDisplayedCompleted();//一旦、今のやつ全部破棄
-      fetchCompletedAndShow();//今表示のカレンダーで完了済みの予定を全部表示
+      removeDisplayedCompleted(); //一旦、今のやつ全部破棄
+      fetchCompletedAndShow(); //今表示のカレンダーで完了済みの予定を全部表示
     }
   });
 
   const pointDisplay = document.getElementById('total-point-display');
 
   function refreshTotalPoint() {
-    if (!pointDisplay) return;//ページにポイント表示するとことがない場合は，return
+    if (!pointDisplay) return; //ページにポイント表示するとことがない場合は，return
     fetch('/total-point')
-      .then((res) => res.json())//jsonでcontrollerにリクエスト
+      .then((res) => res.json()) //jsonでcontrollerにリクエスト
       .then((pt) => {
-        pointDisplay.textContent = `${pt}P`;//controllerから受け取ったデータは，${}によって受け取る．
+        pointDisplay.textContent = `${pt}P`; //controllerから受け取ったデータは，${}によって受け取る．
       });
   }
 
-
-  refreshTotalPoint();//ページにポイント表示する部分があれば，表示
+  refreshTotalPoint(); //ページにポイント表示する部分があれば，表示
   sortAllTables(); //予定データベーステーブルを日付と時間の昇順に並べ替える,初期化
-  initSchedules();//今表示されているカレンダーに予定を埋め込む
-  document.addEventListener('calendarRendered', initSchedules);//calendarRendered というイベントが起きたら initSchedules 関数を実行．つまり，カレンダーの描画が終わってから，予定を埋め込むということ．
+  initSchedules(); //今表示されているカレンダーに予定を埋め込む
+  document.addEventListener('calendarRendered', initSchedules); //calendarRendered というイベントが起きたら initSchedules 関数を実行．つまり，カレンダーの描画が終わってから，予定を埋め込むということ．
 });

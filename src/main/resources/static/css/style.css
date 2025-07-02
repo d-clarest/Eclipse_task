@@ -57,6 +57,7 @@ body.task-body {
 }
 
 /* task-top.html だけの処理*/
+
 .calendar-area {
   position: absolute; /* 画面に固定，絶対位置，下にスクロールすると見えなくなる*/
   top: 10px;
@@ -88,12 +89,7 @@ body.task-body {
   left: 0; /* 画面の最左端から配置開始 */
   width: 100%; /* 画面の横幅すべてに広がる */
   height: 100%; /* 画面の高さすべてに広がる */
-  background: rgba(
-    0,
-    0,
-    0,
-    0.3
-  ); /* 半透明の黒背景（R=0, G=0, B=0, 30%の不透明度） */
+  background: rgba(0, 0, 0, 0.3); /* 半透明の黒背景（R=0, G=0, B=0, 30%の不透明度） */
   z-index: 999; /* z-indexが999以下のものに適用 */
 }
 
@@ -102,10 +98,7 @@ body.task-body {
   position: fixed; /* 画面内に固定（スクロールしても動かない） */
   top: 50%;
   left: 50%;
-  transform: translate(
-    -50%,
-    -50%
-  ); /* 中央寄せ：中央を基準に表示位置を調整,必ずいる．無いとポップアップの左上が中央にくる */
+  transform: translate(-50%, -50%); /* 中央寄せ：中央を基準に表示位置を調整,必ずいる．無いとポップアップの左上が中央にくる */
   background: #fff; /* 背景色：白 */
   border: 2px solid #5e696c; /* 灰色系の外枠 */
   padding: 10px; /* 内側の余白 */
@@ -151,9 +144,6 @@ body.task-body {
   /*    text-overflow: ellipsis; 隠れた文字の代わりに「...」を表示する */
   /* width: 5ch;幅を「文字4個分」に固定する（例: "予定1"），これなくても4文字固定で表示されるのはなぜ？ */
 }
-
-
-
 
 .login {
   display: flex;

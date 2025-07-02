@@ -10,8 +10,7 @@
       <div class="link-area">
         <a href="challenge-box.html">挑戦ボックス</a>
         <a href="question-survey-box.html">疑問・調査ボックス</a>
-        <a th:href="@{'/' + ${username} + '/task-top/task-box'}"
-          >タスクボックス</a
+        <a th:href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックス</a
         ><!-- java変数などを埋め込める動的リンクを生成（Thymeleaf使用） @{URLパターン}，java側でusernameをmodel.addAttributeしてる-->
       </div>
 
@@ -38,13 +37,7 @@
           </tr>
           <!-- 範囲for文でレコードの値を追加していく，th:data-とするとjs側でrow.dataset.id，row.dataset.oldTitle，row.dataset.oldDateで使える-->
           <!-- class="schedule-row"はschedule.jsとcalender-detail.jsの中で -->
-          <tr
-            th:each="schedule : ${schedules}"
-            class="schedule-row"
-            th:data-id="${schedule.id}"
-            th:data-old-title="${schedule.title}"
-            th:data-old-date="${schedule.scheduleDate}"
-          >
+          <tr th:each="schedule : ${schedules}" class="schedule-row" th:data-id="${schedule.id}" th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
             <!-- schedule.jsにイベントハンドラーが書いてる -->
             <td>
               <input type="button" value="完了" class="complete-button" />
@@ -53,96 +46,41 @@
               <input type="button" value="削除" class="delete-button" />
             </td>
             <td>
-              <input
-                type="checkbox"
-                th:checked="${schedule.addFlag}"
-                class="schedule-add-flag"
-              />
+              <input type="checkbox" th:checked="${schedule.addFlag}" class="schedule-add-flag" />
             </td>
             <td>
-              <input
-                type="text"
-                th:value="${schedule.title}"
-                size="8"
-                class="schedule-title-input"
-              />
+              <input type="text" th:value="${schedule.title}" size="8" class="schedule-title-input" />
             </td>
             <td>
-              <input
-                type="date"
-                th:value="${schedule.scheduleDate}"
-                class="schedule-date-input"
-              />
+              <input type="date" th:value="${schedule.scheduleDate}" class="schedule-date-input" />
             </td>
             <td>
-              <input
-                type="text"
-                th:value="${schedule.dayOfWeek}"
-                class="schedule-day-of-week"
-                readonly
-                size="2"
-              />
+              <input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly size="2" />
             </td>
             <td>
-              <select
-                class="start-hour"
-                th:data-time="${schedule.startTime}"
-              ></select>
+              <select class="start-hour" th:data-time="${schedule.startTime}"></select>
               :
-              <select
-                class="start-minute"
-                th:data-time="${schedule.startTime}"
-              ></select>
+              <select class="start-minute" th:data-time="${schedule.startTime}"></select>
             </td>
             <td>
-              <select
-                class="end-hour"
-                th:data-time="${schedule.endTime}"
-              ></select>
+              <select class="end-hour" th:data-time="${schedule.endTime}"></select>
               :
-              <select
-                class="end-minute"
-                th:data-time="${schedule.endTime}"
-              ></select>
+              <select class="end-minute" th:data-time="${schedule.endTime}"></select>
             </td>
             <td>
-              <input
-                type="text"
-                th:value="${schedule.location}"
-                size="5"
-                class="schedule-location-input"
-              />
+              <input type="text" th:value="${schedule.location}" size="5" class="schedule-location-input" />
             </td>
             <td>
-              <input
-                type="text"
-                th:value="${schedule.detail}"
-                size="8"
-                class="schedule-detail-input"
-              />
+              <input type="text" th:value="${schedule.detail}" size="8" class="schedule-detail-input" />
             </td>
             <td>
-              <input
-                type="text"
-                th:value="${schedule.feedback}"
-                size="8"
-                class="schedule-feedback-input"
-              />
+              <input type="text" th:value="${schedule.feedback}" size="8" class="schedule-feedback-input" />
             </td>
             <td>
-              <input
-                type="number"
-                th:value="${schedule.point}"
-                size="2"
-                class="point-input"
-              />
+              <input type="number" th:value="${schedule.point}" size="2" class="point-input" />
             </td>
             <td>
-              <input
-                type="date"
-                th:value="${schedule.completedDay}"
-                class="completed-day-input"
-              />
+              <input type="date" th:value="${schedule.completedDay}" class="completed-day-input" />
             </td>
             <td>
               <span th:text="${schedule.timeUntilStart}"></span>
@@ -155,6 +93,31 @@
         <div id="total-point-display"></div>
       </div>
 
+      <div class="database-container">
+        <table class="chalenge-database">
+          <tr>
+            <th>成功</th>
+            <th>挑戦名</th>
+            <!-- <th>リスク</th>
+            <th>求める結果</th>
+            <th>戦略</th>
+            <th>結果</th>
+            <th>改善案</th>
+            <th>挑戦日</th> -->
+          </tr>
+<!--          <tr th:each="challenge : ${challenges}" class="challenge-row" th:data-id="${challenge.id}">-->
+<!--            <td><input type="button" value="成功" class="challenge-suc-button" /></td>-->
+<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
+<!--             <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
+<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
+<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
+<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
+<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
+<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td> -->
+<!--          </tr>-->
+        </table>
+      </div>
+
       <div id="schedule-overlay" class="schedule-overlay"></div>
       <!-- idはjs，classはcss用 -->
       <div id="schedule-popup" class="schedule-popup">
@@ -164,7 +127,7 @@
       </div>
 
       <script th:src="@{/js/calende.js}"></script>
-      <!-- <script th:src="@{/js/tasks.js}"></script> -->
+      <script th:src="@{/js/challenge.js}"></script>
       <script th:src="@{/js/schedule.js}"></script>
       <script th:src="@{/js/calendar-detail.js}"></script>
     </body>
