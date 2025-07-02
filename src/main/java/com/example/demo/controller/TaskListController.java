@@ -139,6 +139,20 @@ public class TaskListController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/challenge-update")
+    public ResponseEntity<Void> updateChallenge(@RequestBody Challenge challenge) {
+        log.debug("Updating challenge id {}", challenge.getId());
+        challengeService.updateChallenge(challenge);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/challenge-delete")
+    public ResponseEntity<Void> deleteChallenge(@RequestBody Challenge challenge) {
+        log.debug("Deleting challenge id {}", challenge.getId());
+        challengeService.deleteById(challenge.getId());
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/schedule-delete")
     public ResponseEntity<Void> deleteSchedule(@RequestBody Schedule schedule) {
         log.debug("Deleting schedule id {}", schedule.getId());
