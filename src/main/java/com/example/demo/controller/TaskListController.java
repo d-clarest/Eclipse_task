@@ -18,6 +18,7 @@ import com.example.demo.form.ScheduleUpdateForm;
 import com.example.demo.form.TaskNameUpdate;
 import com.example.demo.service.ScheduleService;
 import com.example.demo.service.TaskService;
+import com.example.demo.service.challenge.ChallengeService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class TaskListController {
 
     private final TaskService service;
     private final ScheduleService scheduleService;
+    private final ChallengeService challengeService;
 
     @GetMapping("/{username}/task-top")
     public String showTaskTop(@PathVariable String username, Model model, HttpSession session) {
@@ -42,6 +44,7 @@ public class TaskListController {
                 .filter(s -> s.getCompletedDay() == null)
                 .toList();
         model.addAttribute("schedules", list);
+        model.addAttribute("challenges", challengeService.getAllChallenges());
         model.addAttribute("username", username);
         return "task-top";
     }

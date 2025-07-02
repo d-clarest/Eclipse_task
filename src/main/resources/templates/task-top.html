@@ -105,16 +105,10 @@
             <th>改善案</th>
             <th>挑戦日</th> -->
           </tr>
-<!--          <tr th:each="challenge : ${challenges}" class="challenge-row" th:data-id="${challenge.id}">-->
-<!--            <td><input type="button" value="成功" class="challenge-suc-button" /></td>-->
-<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
-<!--             <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
-<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
-<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
-<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
-<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>-->
-<!--            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td> -->
-<!--          </tr>-->
+          <tr th:each="challenge : ${challenges}" class="challenge-row" th:data-id="${challenge.id}">
+            <td><input type="button" value="成功" class="challenge-suc-button" /></td>
+            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>
+          </tr>
         </table>
       </div>
 
