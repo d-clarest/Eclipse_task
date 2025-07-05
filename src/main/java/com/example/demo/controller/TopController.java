@@ -83,10 +83,12 @@ public class TopController {
         return "challenge-box";
     }
     //-------------------------------------------------------------------------------------------------
-   @GetMapping("/total-point")
-   @ResponseBody
-   public Integer getTotalPoint() {
-       log.debug("Fetching total completed points");
-       return scheduleService.getTotalCompletedPoints();//@ResponseBodyによって，htmlではなく，interger型のデータ（ポイント）をreturn
-   }
+    @GetMapping("/total-point")
+    @ResponseBody
+    public Integer getTotalPoint() {
+        log.debug("Fetching total completed points");
+        int schedulePoints = scheduleService.getTotalCompletedPoints();
+        int challengePoints = challengeService.getTotalCompletedPoints();
+        return schedulePoints + challengePoints;
+    }
 }

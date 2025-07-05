@@ -81,9 +81,9 @@ public class ChallengeRepositoryImpl implements ChallengeRepository {
 
     @Override
     public int sumCompletedPoints() {
-        String sql = "SELECT COALESCE(SUM(CASE actual_result "
-                + "WHEN '成功' THEN challenge_level * 2 "
-                + "WHEN '失敗' THEN challenge_level "
+        String sql = "SELECT COALESCE(SUM(CASE "
+                + "WHEN actual_result LIKE '（成功）%' THEN challenge_level * 2 "
+                + "WHEN actual_result LIKE '（失敗）%' THEN challenge_level "
                 + "ELSE 0 END), 0) "
                 + "FROM challenges WHERE challenge_date IS NOT NULL";
         Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
