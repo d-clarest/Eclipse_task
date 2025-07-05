@@ -56,6 +56,12 @@ body.task-body {
   font-weight: bold;
 }
 
+#new-challenge-button {
+  position: fixed;
+  top: 320px;
+  left: 50px;
+}
+
 /* task-top.html だけの処理*/
 
 .calendar-area {
