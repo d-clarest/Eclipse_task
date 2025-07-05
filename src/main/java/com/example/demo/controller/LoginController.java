@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import com.example.demo.entity.User;
 import com.example.demo.form.LogInForm;
 import com.example.demo.form.NewRegistForm;
-import com.example.demo.service.LoginRegistService;
+import com.example.demo.service.login.LoginRegistService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

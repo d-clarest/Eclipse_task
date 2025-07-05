@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.login;
 
 import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
@@ -6,7 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import com.example.demo.entity.User;
-import com.example.demo.repository.LoginRepository;
+import com.example.demo.repository.login.LoginRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

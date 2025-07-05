@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.database-table').forEach(sortScheduleTable);
   }
 
-  const completedTable = document.getElementById('completed-table'); //task-box.htmlの完了済みテーブル
-  const upcomingTable = document.getElementById('upcoming-table'); //task-box.htmlのこれからの予定テーブル
+  const completedTable = document.getElementById('completed-table'); //schedule-box.htmlの完了済みテーブル
+  const upcomingTable = document.getElementById('upcoming-table'); //schedule-box.htmlのこれからの予定テーブル
 
   function moveRow(row, table) {
     if (!row || !table) return;

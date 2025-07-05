@@ -10,7 +10,7 @@
       <div class="link-area">
         <a th:href="@{'/' + ${username} + '/task-top/challenge-box'}">挑戦ボックス</a>
         <a href="question-survey-box.html">疑問・調査ボックス</a>
-        <a th:href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックス</a>
+        <a th:href="@{'/' + ${username} + '/task-top/schedule-box'}">予定ボックス</a>
         <!-- java変数などを埋め込める動的リンクを生成（Thymeleaf使用） @{URLパターン}，java側でusernameをmodel.addAttributeしてる-->
       </div>
 
@@ -20,7 +20,7 @@
       <div class="database-container">
         <table class="database-table">
           <tr>
-            <th>完了</th>
+            <th>報告</th>
             <th>削除</th>
             <th>add</th>
             <th>予定名</th>
@@ -95,9 +95,9 @@
       </div>
 
       <div class="database-container">
-          <table class="chalenge-database">
+        <table class="chalenge-database">
           <tr>
-            <th>成功</th>
+            <th>報告</th>
             <th>削除</th>
             <th>挑戦名</th>
             <th>リスク</th>

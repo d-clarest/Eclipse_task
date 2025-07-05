@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-/* 共通処理 (task-top.html，task-box.html)*/
+/* 共通処理 (task-top.html，schedule-box.html)*/
 body.task-body {
   display: block; /* 表示するという意味，noneにすると表示しないようにできる，HTMLのデフォルトでbodyはblockにもともとなっているので不要 */
   height: auto; /* HTMLの要素数が多くなったときにはみ出さないように */

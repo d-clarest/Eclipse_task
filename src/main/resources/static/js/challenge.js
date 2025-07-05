@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('/challenge-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: '' })
+        body: JSON.stringify({ title: '' }),
       }).then(() => {
         location.reload();
       });
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       actualResult: row.querySelector('.challenge-actual-input').value,
       improvementPlan: row.querySelector('.challenge-improvement-input').value,
       challengeLevel: parseInt(row.querySelector('.challenge-level-input').value, 10),
-      challengeDate: row.querySelector('.challenge-date-input').value || null
+      challengeDate: row.querySelector('.challenge-date-input').value || null,
     };
   }
 
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return fetch('/challenge-update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
   }
 
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const row = btn.closest('tr');
       if (!row) return;
       const actual = row.querySelector('.challenge-actual-input');
-      if (actual) actual.value = '成功';
+      if (actual) actual.value = '（成功）' + actual.value;
       const date = row.querySelector('.challenge-date-input');
       if (date) date.value = new Date().toISOString().split('T')[0];
       sendUpdate(row).then(refreshTotalPoint);
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const row = btn.closest('tr');
       if (!row) return;
       const actual = row.querySelector('.challenge-actual-input');
-      if (actual) actual.value = '失敗';
+      if (actual) actual.value = '（失敗）' + actual.value;
       const date = row.querySelector('.challenge-date-input');
       if (date) date.value = new Date().toISOString().split('T')[0];
       sendUpdate(row).then(refreshTotalPoint);
@@ -130,10 +130,45 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('/challenge-delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: parseInt(id, 10) })
+        body: JSON.stringify({ id: parseInt(id, 10) }),
       }).then(() => {
         row.remove();
       });
+    });
+  });
+
+  //--------------------------------------------------------------------------------------
+  function sendChallengeUpdate(row) {
+    const data = {
+      id: parseInt(row.dataset.id, 10),
+      title: row.querySelector('.challenge-title-input').value,
+      risk: row.querySelector('.challenge-risk-input').value,
+      expectedResult: row.querySelector('.challenge-expected-input').value,
+      strategy: row.querySelector('.challenge-strategy-input').value,
+      actualResult: row.querySelector('.challenge-actual-input').value,
+      improvementPlan: row.querySelector('.challenge-improvement-input').value,
+      challengeLevel: parseInt(row.querySelector('.challenge-level-input').value, 10),
+      challengeDate: row.querySelector('.challenge-date-input').value || null,
+    };
+    fetch('/challenge-update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }).then((res) => {
+      if (res.ok) {
+        refreshTotalPoint();
+      }
+    });
+  }
+
+  ['.challenge-title-input', '.challenge-risk-input', '.challenge-expected-input', '.challenge-strategy-input', '.challenge-actual-input', '.challenge-improvement-input'].forEach((selector) => {
+    document.querySelectorAll(selector).forEach((inp) => {
+      const handler = () => {
+        const row = inp.closest('tr');
+        if (row) sendChallengeUpdate(row);
+      };
+      inp.addEventListener('change', handler);
+      inp.addEventListener('input', handler);
     });
   });
 

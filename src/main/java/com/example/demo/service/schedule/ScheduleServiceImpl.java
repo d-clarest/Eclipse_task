@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.schedule;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Schedule;
 import com.example.demo.form.ScheduleUpdateForm;
-import com.example.demo.repository.ScheduleRepository;
+import com.example.demo.repository.schedule.ScheduleRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
