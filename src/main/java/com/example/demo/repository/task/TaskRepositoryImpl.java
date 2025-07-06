@@ -71,8 +71,11 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     public void updateTask(Task task) {
-        String sql = "UPDATE tasks SET title = ?, category = ?, result = ?, detail = ?, level = ?, completed_at = ?, updated_at = NOW() WHERE id = ?";
-        java.sql.Date completed = task.getCompletedAt() != null ? java.sql.Date.valueOf(task.getCompletedAt()) : null;
+        boolean completedFlag = task.getCompletedAt() != null;
+        String sql = "UPDATE tasks SET title = ?, category = ?, result = ?, detail = ?, level = ?, completed_at = ?, "
+                + (completedFlag ? "due_date = NULL, " : "")
+                + "updated_at = NOW() WHERE id = ?";
+        java.sql.Date completed = completedFlag ? java.sql.Date.valueOf(task.getCompletedAt()) : null;
         jdbcTemplate.update(sql,
                 task.getTitle(),
                 task.getCategory(),
