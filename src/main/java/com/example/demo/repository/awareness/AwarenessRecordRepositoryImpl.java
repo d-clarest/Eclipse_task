@@ -20,7 +20,7 @@ public class AwarenessRecordRepositoryImpl implements AwarenessRecordRepository 
 
     @Override
     public List<AwarenessRecord> findAll() {
-        String sql = "SELECT id, awareness, opinion, awareness_level FROM awareness_records";
+        String sql = "SELECT id, awareness, opinion, awareness_level FROM awareness_records ORDER BY id DESC";
         return jdbcTemplate.query(sql, new RowMapper<AwarenessRecord>() {
             @Override
             public AwarenessRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
