@@ -47,7 +47,10 @@ public class TopController {
                 .filter(t -> t.getCompletedAt() == null)
                 .toList();
         model.addAttribute("tasks", taskList);
-        var awarenessList = awarenessRecordService.getAllRecords();
+        var awarenessList = awarenessRecordService.getAllRecords()
+                .stream()
+                .limit(5)
+                .toList();
         model.addAttribute("awarenessRecords", awarenessList);
         model.addAttribute("username", username);
         return "task-top";
