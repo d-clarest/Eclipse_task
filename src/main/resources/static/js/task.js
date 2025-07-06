@@ -63,4 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
       sendUpdate(row);
     });
   });
+
+  document.querySelectorAll('.task-delete-button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('tr');
+      if (!row) return;
+      const id = row.dataset.id;
+      fetch('/task-delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id, 10) })
+      }).then(() => {
+        row.remove();
+      });
+    });
+  });
 });
