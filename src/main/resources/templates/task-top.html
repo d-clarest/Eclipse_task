@@ -147,7 +147,15 @@
           <tr th:each="task : ${tasks}" class="task-row" th:data-id="${task.id}">
           <td><input type="button" value="完了" class="task-complete-button" /></td>
           <td><input type="text" th:value="${task.title}" class="task-title-input" /></td>
-            <td th:text="${task.category}"></td>
+            <td>
+              <select class="task-category-select">
+                <option value="今日" th:selected="${task.category == '今日'}">今日</option>
+                <option value="明日" th:selected="${task.category == '明日'}">明日</option>
+                <option value="今週" th:selected="${task.category == '今週'}">今週</option>
+                <option value="来週" th:selected="${task.category == '来週'}">来週</option>
+                <option value="再来週" th:selected="${task.category == '再来週'}">再来週</option>
+              </select>
+            </td>
             <td th:text="${task.dueDate}"></td>
             <td><input type="text" th:value="${task.result}" class="task-result-input" /></td>
               <td><input type="text" th:value="${task.detail}" class="task-detail-input" /></td>
