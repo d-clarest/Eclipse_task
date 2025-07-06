@@ -71,11 +71,12 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     public void updateTask(Task task) {
-        String sql = "UPDATE tasks SET title = ?, result = ?, detail = ?, updated_at = NOW() WHERE id = ?";
+        String sql = "UPDATE tasks SET title = ?, result = ?, detail = ?, level = ?, updated_at = NOW() WHERE id = ?";
         jdbcTemplate.update(sql,
                 task.getTitle(),
                 task.getResult(),
                 task.getDetail(),
+                task.getLevel(),
                 task.getId());
     }
 

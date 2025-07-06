@@ -140,16 +140,20 @@
             <th>期日</th>
             <th>結果</th>
             <th>詳細</th>
-            <th>レベル</th>
-            <th>完了日</th>
-          </tr>
-          <tr th:each="task : ${tasks}" class="task-row" th:data-id="${task.id}">
+              <th>レベル</th>
+              <th>完了日</th>
+            </tr>
+            <tr th:each="task : ${tasks}" class="task-row" th:data-id="${task.id}">
             <td><input type="text" th:value="${task.title}" class="task-title-input" /></td>
             <td th:text="${task.category}"></td>
             <td th:text="${task.dueDate}"></td>
             <td><input type="text" th:value="${task.result}" class="task-result-input" /></td>
-            <td><input type="text" th:value="${task.detail}" class="task-detail-input" /></td>
-            <td th:text="${task.level}"></td>
+              <td><input type="text" th:value="${task.detail}" class="task-detail-input" /></td>
+              <td>
+                <select class="task-level-select">
+                  <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == task.level}"></option>
+                </select>
+              </td>
             <td th:text="${task.completedAt}"></td>
           </tr>
         </table>
