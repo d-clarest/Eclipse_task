@@ -13,6 +13,7 @@ import com.example.demo.entity.Schedule;
 import com.example.demo.service.challenge.ChallengeService;
 import com.example.demo.service.schedule.ScheduleService;
 import com.example.demo.service.task.TaskService;
+import com.example.demo.service.awareness.AwarenessRecordService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class TopController {
     private final ScheduleService scheduleService;
     private final ChallengeService challengeService;
     private final TaskService taskService;
+    private final AwarenessRecordService awarenessRecordService;
 
     @GetMapping("/{username}/task-top")
     public String showTaskTop(@PathVariable String username, Model model, HttpSession session) {
@@ -45,6 +47,8 @@ public class TopController {
                 .filter(t -> t.getCompletedAt() == null)
                 .toList();
         model.addAttribute("tasks", taskList);
+        var awarenessList = awarenessRecordService.getAllRecords();
+        model.addAttribute("awarenessRecords", awarenessList);
         model.addAttribute("username", username);
         return "task-top";
     }
