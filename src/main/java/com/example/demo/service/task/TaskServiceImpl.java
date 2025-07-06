@@ -1,5 +1,11 @@
 package com.example.demo.service.task;
 
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -20,7 +26,45 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> getAllTasks() {
         log.debug("Fetching all tasks");
-        return repository.findAll();
+        List<Task> list = repository.findAll();
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDate today = now.toLocalDate();
+        LocalDate sundayThisWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+        for (Task t : list) {
+            if (t.getCompletedAt() != null) {
+                t.setTimeUntilDue(null);
+                continue;
+            }
+            LocalDateTime deadline;
+            switch (t.getCategory()) {
+            case "今日":
+                deadline = today.plusDays(1).atStartOfDay();
+                break;
+            case "明日":
+                deadline = today.plusDays(2).atStartOfDay();
+                break;
+            case "今週":
+                deadline = sundayThisWeek.plusDays(1).atStartOfDay();
+                break;
+            case "来週":
+                deadline = sundayThisWeek.plusWeeks(1).plusDays(1).atStartOfDay();
+                break;
+            case "再来週":
+                deadline = sundayThisWeek.plusWeeks(2).plusDays(1).atStartOfDay();
+                break;
+            default:
+                deadline = today.plusDays(1).atStartOfDay();
+            }
+            long minutes = Duration.between(now, deadline).toMinutes();
+            if (minutes < 0)
+                minutes = 0;
+            long rounded = (minutes / 5) * 5;
+            long days = rounded / (60 * 24);
+            long hours = (rounded % (60 * 24)) / 60;
+            long mins = rounded % 60;
+            t.setTimeUntilDue(String.format("%d日%d時間%d分", days, hours, mins));
+        }
+        return list;
     }
 
     @Override

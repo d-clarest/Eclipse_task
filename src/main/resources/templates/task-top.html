@@ -156,7 +156,7 @@
                 <option value="再来週" th:selected="${task.category == '再来週'}">再来週</option>
               </select>
             </td>
-            <td th:text="${task.dueDate}"></td>
+            <td th:text="${task.timeUntilDue}"></td>
             <td><input type="text" th:value="${task.result}" class="task-result-input" /></td>
               <td><input type="text" th:value="${task.detail}" class="task-detail-input" /></td>
               <td>
