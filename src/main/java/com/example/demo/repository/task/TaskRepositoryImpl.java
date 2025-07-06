@@ -91,4 +91,11 @@ public class TaskRepositoryImpl implements TaskRepository {
         String sql = "DELETE FROM tasks WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public int sumCompletedLevels() {
+        String sql = "SELECT COALESCE(SUM(level), 0) FROM tasks WHERE completed_at IS NOT NULL";
+        Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
+        return result != null ? result : 0;
+    }
 }

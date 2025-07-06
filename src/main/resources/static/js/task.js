@@ -12,6 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const uncompletedTable = document.getElementById('uncompleted-task-table');
   const completedTable = document.getElementById('completed-task-table');
+  const pointDisplay = document.getElementById('total-point-display');
+
+  function refreshTotalPoint() {
+    if (!pointDisplay) return;
+    fetch('/total-point')
+      .then((res) => res.json())
+      .then((pt) => {
+        pointDisplay.textContent = `${pt}P`;
+      });
+  }
 
   function moveRow(row, completed) {
     if (!row) return;
@@ -38,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function sendUpdate(row) {
     const data = gatherData(row);
-    fetch('/task-update', {
+    return fetch('/task-update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -92,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const row = inp.closest('tr');
         if (!row) return;
         if (selector === '.task-category-select') updateTimeUntilDue(row);
-        sendUpdate(row);
+        sendUpdate(row).then(refreshTotalPoint);
       };
       inp.addEventListener('change', handler);
       inp.addEventListener('input', handler);
@@ -120,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         moveRow(row, false);
         updateTimeUntilDue(row);
       }
-      sendUpdate(row);
+      sendUpdate(row).then(refreshTotalPoint);
     });
   });
 
@@ -135,7 +145,10 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({ id: parseInt(id, 10) })
       }).then(() => {
         row.remove();
+        refreshTotalPoint();
       });
     });
   });
+
+  refreshTotalPoint();
 });

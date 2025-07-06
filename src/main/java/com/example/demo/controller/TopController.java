@@ -115,6 +115,7 @@ public class TopController {
         log.debug("Fetching total completed points");
         int schedulePoints = scheduleService.getTotalCompletedPoints();
         int challengePoints = challengeService.getTotalCompletedPoints();
-        return schedulePoints + challengePoints;
+        int taskPoints = taskService.getTotalCompletedLevels();
+        return schedulePoints + challengePoints + taskPoints;
     }
 }
