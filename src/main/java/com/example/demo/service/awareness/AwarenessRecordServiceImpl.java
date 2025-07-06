@@ -40,4 +40,10 @@ public class AwarenessRecordServiceImpl implements AwarenessRecordService {
         log.debug("Deleting awareness record id {}", id);
         repository.deleteById(id);
     }
+
+    @Override
+    public int getTotalAwarenessLevel() {
+        log.debug("Fetching total awareness levels");
+        return repository.sumAwarenessLevels();
+    }
 }

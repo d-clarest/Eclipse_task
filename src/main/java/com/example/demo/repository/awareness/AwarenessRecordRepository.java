@@ -12,4 +12,6 @@ public interface AwarenessRecordRepository {
     void updateRecord(AwarenessRecord record);
 
     void deleteById(int id);
+
+    int sumAwarenessLevels();
 }
