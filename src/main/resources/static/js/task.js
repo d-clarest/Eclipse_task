@@ -96,12 +96,32 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cell) cell.textContent = `${days}日${hours}時間${mins}分`;
   }
 
+  function sortTaskTable(table) {
+    if (!table) return;
+    const tbody = table.tBodies[0] || table;
+    const rows = Array.from(tbody.querySelectorAll('tr.task-row'));
+    const order = { '今日': 1, '明日': 2, '今週': 3, '来週': 4, '再来週': 5 };
+    rows.sort((a, b) => {
+      const catA = a.querySelector('.task-category-select').value;
+      const catB = b.querySelector('.task-category-select').value;
+      return (order[catA] || 6) - (order[catB] || 6);
+    });
+    rows.forEach((r) => tbody.appendChild(r));
+  }
+
+  function sortAllTaskTables() {
+    document.querySelectorAll('.task-database').forEach(sortTaskTable);
+  }
+
   ['.task-title-input', '.task-result-input', '.task-detail-input', '.task-level-select', '.task-completed-input', '.task-category-select'].forEach((selector) => {
     document.querySelectorAll(selector).forEach((inp) => {
       const handler = () => {
         const row = inp.closest('tr');
         if (!row) return;
-        if (selector === '.task-category-select') updateTimeUntilDue(row);
+        if (selector === '.task-category-select') {
+          updateTimeUntilDue(row);
+          sortAllTaskTables();
+        }
         sendUpdate(row).then(refreshTotalPoint);
       };
       inp.addEventListener('change', handler);
@@ -124,11 +144,13 @@ document.addEventListener('DOMContentLoaded', () => {
         moveRow(row, true);
         const cell = row.cells[4];
         if (cell) cell.textContent = '';
+        sortAllTaskTables();
       } else {
         comp.value = '';
         btn.value = '完了';
         moveRow(row, false);
         updateTimeUntilDue(row);
+        sortAllTaskTables();
       }
       sendUpdate(row).then(refreshTotalPoint);
     });
