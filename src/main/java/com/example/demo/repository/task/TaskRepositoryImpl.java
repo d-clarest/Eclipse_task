@@ -23,7 +23,13 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public List<Task> findAll() {
         String sql = "SELECT id, title, category, due_date, result, detail, level, created_at, updated_at, completed_at "
-                + "FROM tasks ORDER BY due_date ASC";
+                + "FROM tasks ORDER BY CASE category "
+                + "WHEN '今日' THEN 1 "
+                + "WHEN '明日' THEN 2 "
+                + "WHEN '今週' THEN 3 "
+                + "WHEN '来週' THEN 4 "
+                + "WHEN '再来週' THEN 5 "
+                + "ELSE 6 END";
         return jdbcTemplate.query(sql, new RowMapper<Task>() {
             @Override
             public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
