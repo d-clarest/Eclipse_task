@@ -6,4 +6,10 @@ import com.example.demo.entity.Task;
 
 public interface TaskService {
     List<Task> getAllTasks();
+
+    void addTask(Task task);
+
+    void updateTask(Task task);
+
+    void deleteTaskById(int id);
 }

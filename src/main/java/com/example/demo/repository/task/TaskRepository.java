@@ -6,4 +6,7 @@ import com.example.demo.entity.Task;
 
 public interface TaskRepository {
     List<Task> findAll();
+    void insertTask(Task task);
+    void updateTask(Task task);
+    void deleteById(int id);
 }
