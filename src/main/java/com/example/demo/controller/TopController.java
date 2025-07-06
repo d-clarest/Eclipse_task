@@ -112,6 +112,19 @@ public class TopController {
         model.addAttribute("username", username);
         return "task-box";
     }
+
+    @GetMapping("/{username}/task-top/awareness-box")
+    public String showAwarenessBox(@PathVariable String username, Model model, HttpSession session) {
+        String loginUser = (String) session.getAttribute("loginUser");
+        if (loginUser == null || !loginUser.equals(username)) {
+            return "redirect:/log-in";
+        }
+        log.debug("Displaying awareness box page");
+        var records = awarenessRecordService.getAllRecords();
+        model.addAttribute("awarenessRecords", records);
+        model.addAttribute("username", username);
+        return "awareness-box";
+    }
     //-------------------------------------------------------------------------------------------------
     @GetMapping("/total-point")
     @ResponseBody

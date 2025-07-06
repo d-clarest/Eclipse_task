@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>気づきボックス</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="task-body">
+    <div class="link-area">
+      <a th:href="@{'/' + ${username} + '/task-top'}">TOPへ</a>
+    </div>
+
+    <div class="database-container">
+      <table class="awareness-database">
+        <tr>
+          <th>削除</th>
+          <th>気づき</th>
+          <th>意見</th>
+          <th>気づき度</th>
+        </tr>
+        <tr th:each="record : ${awarenessRecords}" th:data-id="${record.id}">
+          <td><input type="button" value="削除" class="awareness-delete-button" /></td>
+          <td><input type="text" th:value="${record.awareness}" class="awareness-input" /></td>
+          <td><input type="text" th:value="${record.opinion}" class="opinion-input" /></td>
+          <td>
+            <select class="awareness-level-select">
+              <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == record.awarenessLevel}"></option>
+            </select>
+          </td>
+        </tr>
+      </table>
+      <button id="new-awareness-button">新規気づき</button>
+    </div>
+
+    <script th:src="@{/js/awareness.js}"></script>
+  </body>
+</html>
