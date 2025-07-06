@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('/task-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: '', result: '', detail: '' })
+        body: JSON.stringify({ title: '', result: '', detail: '', level: 1 })
       }).then(() => location.reload());
     });
   }
@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
       id: parseInt(row.dataset.id, 10),
       title: row.querySelector('.task-title-input').value,
       result: row.querySelector('.task-result-input').value,
-      detail: row.querySelector('.task-detail-input').value
+      detail: row.querySelector('.task-detail-input').value,
+      level: parseInt(row.querySelector('.task-level-select').value, 10)
     };
   }
 
@@ -28,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  ['.task-title-input', '.task-result-input', '.task-detail-input'].forEach((selector) => {
+  ['.task-title-input', '.task-result-input', '.task-detail-input', '.task-level-select'].forEach((selector) => {
     document.querySelectorAll(selector).forEach((inp) => {
       const handler = () => {
         const row = inp.closest('tr');
