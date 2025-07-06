@@ -41,7 +41,9 @@ public class TopController {
                 .filter(c -> c.getChallengeDate() == null)
                 .toList();
         model.addAttribute("challenges", challengeList);
-        var taskList = taskService.getAllTasks();
+        var taskList = taskService.getAllTasks().stream()
+                .filter(t -> t.getCompletedAt() == null)
+                .toList();
         model.addAttribute("tasks", taskList);
         model.addAttribute("username", username);
         return "task-top";
