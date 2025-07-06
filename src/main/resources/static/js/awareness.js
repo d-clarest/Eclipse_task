@@ -1,14 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const newButton = document.getElementById('new-awareness-button');
-  if (newButton) {
-    newButton.addEventListener('click', () => {
+  document.querySelectorAll('#new-awareness-button').forEach((btn) => {
+    btn.addEventListener('click', () => {
       fetch('/awareness-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ awareness: '', opinion: '', awarenessLevel: 1 })
       }).then(() => location.reload());
     });
-  }
+  });
 
   function gatherData(row) {
     return {
