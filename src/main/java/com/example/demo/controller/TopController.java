@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.entity.Schedule;
 import com.example.demo.service.challenge.ChallengeService;
 import com.example.demo.service.schedule.ScheduleService;
+import com.example.demo.service.task.TaskService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class TopController {
 
     private final ScheduleService scheduleService;
     private final ChallengeService challengeService;
+    private final TaskService taskService;
 
     @GetMapping("/{username}/task-top")
     public String showTaskTop(@PathVariable String username, Model model, HttpSession session) {
@@ -39,6 +41,8 @@ public class TopController {
                 .filter(c -> c.getChallengeDate() == null)
                 .toList();
         model.addAttribute("challenges", challengeList);
+        var taskList = taskService.getAllTasks();
+        model.addAttribute("tasks", taskList);
         model.addAttribute("username", username);
         return "task-top";
     }
