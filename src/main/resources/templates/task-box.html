@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>タスクボックス</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body class="task-body">
+  <div class="link-area">
+    <a th:href="@{'/' + ${username} + '/task-top'}">TOPへ</a>
+  </div>
+
+  <div class="database-container">
+    <p>未完了タスク</p>
+    <table id="uncompleted-task-table" class="task-database">
+      <tr>
+        <th>報告</th>
+        <th>削除</th>
+        <th>タスク・疑問調査</th>
+        <th>区分</th>
+        <th>期日</th>
+        <th>結果</th>
+        <th>詳細</th>
+        <th>レベル</th>
+        <th>完了日</th>
+      </tr>
+      <tr th:each="task : ${uncompletedTasks}" class="task-row" th:data-id="${task.id}">
+        <td><input type="button" value="完了" class="task-complete-button" /></td>
+        <td><input type="button" value="削除" class="task-delete-button" /></td>
+        <td><input type="text" th:value="${task.title}" class="task-title-input" /></td>
+        <td>
+          <select class="task-category-select">
+            <option value="今日" th:selected="${task.category == '今日'}">今日</option>
+            <option value="明日" th:selected="${task.category == '明日'}">明日</option>
+            <option value="今週" th:selected="${task.category == '今週'}">今週</option>
+            <option value="来週" th:selected="${task.category == '来週'}">来週</option>
+            <option value="再来週" th:selected="${task.category == '再来週'}">再来週</option>
+          </select>
+        </td>
+        <td th:text="${task.timeUntilDue}"></td>
+        <td><input type="text" th:value="${task.result}" class="task-result-input" /></td>
+        <td><input type="text" th:value="${task.detail}" class="task-detail-input" /></td>
+        <td>
+          <select class="task-level-select">
+            <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == task.level}"></option>
+          </select>
+        </td>
+        <td><input type="date" th:value="${task.completedAt}" class="task-completed-input" /></td>
+      </tr>
+    </table>
+    <button id="new-task-button">タスク新規</button>
+  </div>
+
+  <div class="database-container">
+    <p>完了済みタスク</p>
+    <table id="completed-task-table" class="task-database">
+      <tr>
+        <th>報告</th>
+        <th>削除</th>
+        <th>タスク・疑問調査</th>
+        <th>区分</th>
+        <th>期日</th>
+        <th>結果</th>
+        <th>詳細</th>
+        <th>レベル</th>
+        <th>完了日</th>
+      </tr>
+      <tr th:each="task : ${completedTasks}" class="task-row" th:data-id="${task.id}">
+        <td><input type="button" value="取消" class="task-complete-button" /></td>
+        <td><input type="button" value="削除" class="task-delete-button" /></td>
+        <td><input type="text" th:value="${task.title}" class="task-title-input" /></td>
+        <td>
+          <select class="task-category-select">
+            <option value="今日" th:selected="${task.category == '今日'}">今日</option>
+            <option value="明日" th:selected="${task.category == '明日'}">明日</option>
+            <option value="今週" th:selected="${task.category == '今週'}">今週</option>
+            <option value="来週" th:selected="${task.category == '来週'}">来週</option>
+            <option value="再来週" th:selected="${task.category == '再来週'}">再来週</option>
+          </select>
+        </td>
+        <td th:text="${task.timeUntilDue}"></td>
+        <td><input type="text" th:value="${task.result}" class="task-result-input" /></td>
+        <td><input type="text" th:value="${task.detail}" class="task-detail-input" /></td>
+        <td>
+          <select class="task-level-select">
+            <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == task.level}"></option>
+          </select>
+        </td>
+        <td><input type="date" th:value="${task.completedAt}" class="task-completed-input" /></td>
+      </tr>
+    </table>
+  </div>
+
+  <script th:src="@{/js/task.js}"></script>
+</body>
+</html>

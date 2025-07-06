@@ -88,6 +88,26 @@ public class TopController {
         model.addAttribute("username", username);
         return "challenge-box";
     }
+
+    @GetMapping("/{username}/task-top/task-box")
+    public String showTaskBoxPage(@PathVariable String username, Model model, HttpSession session) {
+        String loginUser = (String) session.getAttribute("loginUser");
+        if (loginUser == null || !loginUser.equals(username)) {
+            return "redirect:/log-in";
+        }
+        log.debug("Displaying task box page");
+        var all = taskService.getAllTasks();
+        var uncompleted = all.stream()
+                .filter(t -> t.getCompletedAt() == null)
+                .toList();
+        var completedTasks = all.stream()
+                .filter(t -> t.getCompletedAt() != null)
+                .toList();
+        model.addAttribute("uncompletedTasks", uncompleted);
+        model.addAttribute("completedTasks", completedTasks);
+        model.addAttribute("username", username);
+        return "task-box";
+    }
     //-------------------------------------------------------------------------------------------------
     @GetMapping("/total-point")
     @ResponseBody

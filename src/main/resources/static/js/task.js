@@ -10,6 +10,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const uncompletedTable = document.getElementById('uncompleted-task-table');
+  const completedTable = document.getElementById('completed-task-table');
+
+  function moveRow(row, completed) {
+    if (!row) return;
+    if (uncompletedTable && completedTable) {
+      const target = completed ? completedTable : uncompletedTable;
+      const tbody = target.tBodies[0] || target;
+      tbody.appendChild(row);
+    } else {
+      row.style.display = completed ? 'none' : '';
+    }
+  }
+
   function gatherData(row) {
     return {
       id: parseInt(row.dataset.id, 10),
@@ -90,18 +104,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const comp = row ? row.querySelector('.task-completed-input') : null;
     if (comp && comp.value) {
       btn.value = '取消';
-      if (row) row.style.display = 'none';
+      moveRow(row, true);
     }
     btn.addEventListener('click', () => {
       if (!row || !comp) return;
       if (btn.value === '完了') {
         comp.value = new Date().toISOString().split('T')[0];
         btn.value = '取消';
-        row.style.display = 'none';
+        moveRow(row, true);
       } else {
         comp.value = '';
         btn.value = '完了';
-        row.style.display = '';
+        moveRow(row, false);
       }
       sendUpdate(row);
     });
