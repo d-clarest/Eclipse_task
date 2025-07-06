@@ -171,6 +171,21 @@
         </table>
       </div>
 
+      <div class="database-container">
+        <table class="awareness-database">
+          <tr>
+            <th>気づき</th>
+            <th>意見</th>
+            <th>気づき度</th>
+          </tr>
+          <tr th:each="record : ${awarenessRecords}">
+            <td th:text="${record.awareness}"></td>
+            <td th:text="${record.opinion}"></td>
+            <td th:text="${record.awarenessLevel}"></td>
+          </tr>
+        </table>
+      </div>
+
       <div id="schedule-overlay" class="schedule-overlay"></div>
       <!-- idはjs，classはcss用 -->
       <div id="schedule-popup" class="schedule-popup">
