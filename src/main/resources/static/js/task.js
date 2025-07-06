@@ -112,10 +112,13 @@ document.addEventListener('DOMContentLoaded', () => {
         comp.value = new Date().toISOString().split('T')[0];
         btn.value = '取消';
         moveRow(row, true);
+        const cell = row.cells[4];
+        if (cell) cell.textContent = '';
       } else {
         comp.value = '';
         btn.value = '完了';
         moveRow(row, false);
+        updateTimeUntilDue(row);
       }
       sendUpdate(row);
     });
