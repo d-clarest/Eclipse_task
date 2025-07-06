@@ -9,7 +9,7 @@
     <body class="task-body">
       <div class="link-area">
         <a th:href="@{'/' + ${username} + '/task-top/challenge-box'}">挑戦ボックス</a>
-        <a href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックス</a>
+        <a th:href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックス</a>
         <a th:href="@{'/' + ${username} + '/task-top/schedule-box'}">予定ボックス</a>
         <!-- java変数などを埋め込める動的リンクを生成（Thymeleaf使用） @{URLパターン}，java側でusernameをmodel.addAttributeしてる-->
       </div>
