@@ -3,14 +3,13 @@ package com.example.demo.repository.schedule;
 import java.util.List;
 
 import com.example.demo.entity.Schedule;
-import com.example.demo.form.ScheduleUpdateForm;
 
 public interface ScheduleRepository {
     List<Schedule> findAll();
 
     void updateCompletedDay(Schedule schedule);
 
-    void updateSchedule(ScheduleUpdateForm form);
+    void updateSchedule(Schedule schedule);
 
     void insertSchedule(Schedule schedule);
 
