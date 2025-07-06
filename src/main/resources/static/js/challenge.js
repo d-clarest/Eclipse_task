@@ -165,7 +165,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll(selector).forEach((inp) => {
       const handler = () => {
         const row = inp.closest('tr');
-        if (row) sendChallengeUpdate(row);
+        // if (row) sendChallengeUpdate(row);
+          if (row) sendUpdate(row).then(refreshTotalPoint);
+
+        
       };
       inp.addEventListener('change', handler);
       inp.addEventListener('input', handler);
