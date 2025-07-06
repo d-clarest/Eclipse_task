@@ -22,4 +22,22 @@ public class TaskServiceImpl implements TaskService {
         log.debug("Fetching all tasks");
         return repository.findAll();
     }
+
+    @Override
+    public void addTask(Task task) {
+        log.debug("Adding task {}", task.getTitle());
+        repository.insertTask(task);
+    }
+
+    @Override
+    public void updateTask(Task task) {
+        log.debug("Updating task id {}", task.getId());
+        repository.updateTask(task);
+    }
+
+    @Override
+    public void deleteTaskById(int id) {
+        log.debug("Deleting task with id {}", id);
+        repository.deleteById(id);
+    }
 }

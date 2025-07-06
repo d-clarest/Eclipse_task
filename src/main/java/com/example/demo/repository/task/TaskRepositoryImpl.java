@@ -53,4 +53,35 @@ public class TaskRepositoryImpl implements TaskRepository {
             }
         });
     }
+
+    @Override
+    public void insertTask(Task task) {
+        String sql = "INSERT INTO tasks (title, category, due_date, result, detail, level, created_at, updated_at, completed_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)";
+        java.sql.Date due = task.getDueDate() != null ? java.sql.Date.valueOf(task.getDueDate()) : null;
+        java.sql.Date completed = task.getCompletedAt() != null ? java.sql.Date.valueOf(task.getCompletedAt()) : null;
+        jdbcTemplate.update(sql,
+                task.getTitle(),
+                task.getCategory(),
+                due,
+                task.getResult(),
+                task.getDetail(),
+                task.getLevel(),
+                completed);
+    }
+
+    @Override
+    public void updateTask(Task task) {
+        String sql = "UPDATE tasks SET title = ?, result = ?, detail = ?, updated_at = NOW() WHERE id = ?";
+        jdbcTemplate.update(sql,
+                task.getTitle(),
+                task.getResult(),
+                task.getDetail(),
+                task.getId());
+    }
+
+    @Override
+    public void deleteById(int id) {
+        String sql = "DELETE FROM tasks WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

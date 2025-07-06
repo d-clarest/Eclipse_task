@@ -133,30 +133,25 @@
       <div class="database-container">
         <table class="database-table">
           <tr>
-            <th>ID</th>
             <th>タスク名</th>
             <th>区分</th>
             <th>期日</th>
             <th>結果</th>
             <th>詳細</th>
             <th>レベル</th>
-            <th>作成日</th>
-            <th>更新日</th>
             <th>完了日</th>
           </tr>
-          <tr th:each="task : ${tasks}">
-            <td th:text="${task.id}"></td>
-            <td th:text="${task.title}"></td>
+          <tr th:each="task : ${tasks}" class="task-row" th:data-id="${task.id}">
+            <td><input type="text" th:value="${task.title}" class="task-title-input" /></td>
             <td th:text="${task.category}"></td>
             <td th:text="${task.dueDate}"></td>
-            <td th:text="${task.result}"></td>
-            <td th:text="${task.detail}"></td>
+            <td><input type="text" th:value="${task.result}" class="task-result-input" /></td>
+            <td><input type="text" th:value="${task.detail}" class="task-detail-input" /></td>
             <td th:text="${task.level}"></td>
-            <td th:text="${task.createdAt}"></td>
-            <td th:text="${task.updatedAt}"></td>
             <td th:text="${task.completedAt}"></td>
           </tr>
         </table>
+        <button id="new-task-button">タスク新規</button>
       </div>
 
       <div id="schedule-overlay" class="schedule-overlay"></div>
@@ -170,6 +165,7 @@
       <script th:src="@{/js/calende.js}"></script>
       <script th:src="@{/js/challenge.js}"></script>
       <script th:src="@{/js/schedule.js}"></script>
+      <script th:src="@{/js/task.js}"></script>
       <script th:src="@{/js/calendar-detail.js}"></script>
     </body>
   </html>
