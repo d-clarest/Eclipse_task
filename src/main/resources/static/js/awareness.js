@@ -9,6 +9,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  const pointDisplay = document.getElementById('total-point-display');
+
+  function refreshTotalPoint() {
+    if (!pointDisplay) return;
+    fetch('/total-point')
+      .then((res) => res.json())
+      .then((pt) => {
+        pointDisplay.textContent = `${pt}P`;
+      });
+  }
+
+  refreshTotalPoint();
+
   function gatherData(row) {
     return {
       id: parseInt(row.dataset.id, 10),
@@ -24,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
+    }).then(() => {
+      refreshTotalPoint();
     });
   }
 
@@ -47,7 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: parseInt(id, 10) })
-      }).then(() => row.remove());
+      }).then(() => {
+        row.remove();
+        refreshTotalPoint();
+      });
     });
   });
 });
