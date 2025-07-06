@@ -136,6 +136,7 @@
         <table class="task-database">
           <tr>
             <th>報告</th>
+            <th>削除</th>
             <th>タスク・疑問調査</th>
             <th>区分</th>
             <th>期日</th>
@@ -146,6 +147,7 @@
             </tr>
           <tr th:each="task : ${tasks}" class="task-row" th:data-id="${task.id}">
           <td><input type="button" value="完了" class="task-complete-button" /></td>
+          <td><input type="button" value="削除" class="task-delete-button" /></td>
           <td><input type="text" th:value="${task.title}" class="task-title-input" /></td>
             <td>
               <select class="task-category-select">
