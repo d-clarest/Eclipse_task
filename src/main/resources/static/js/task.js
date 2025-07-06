@@ -31,11 +31,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function updateTimeUntilDue(row) {
+    const sel = row.querySelector('.task-category-select');
+    if (!sel) return;
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const sunday = new Date(today);
+    sunday.setDate(today.getDate() + ((7 - today.getDay()) % 7));
+    let deadline = new Date(today);
+    switch (sel.value) {
+      case '今日':
+        deadline.setDate(today.getDate() + 1);
+        break;
+      case '明日':
+        deadline.setDate(today.getDate() + 2);
+        break;
+      case '今週':
+        deadline = new Date(sunday);
+        deadline.setDate(deadline.getDate() + 1);
+        break;
+      case '来週':
+        deadline = new Date(sunday);
+        deadline.setDate(deadline.getDate() + 8);
+        break;
+      case '再来週':
+        deadline = new Date(sunday);
+        deadline.setDate(deadline.getDate() + 15);
+        break;
+      default:
+        deadline.setDate(today.getDate() + 1);
+    }
+    deadline.setHours(0, 0, 0, 0);
+    let diff = Math.floor((deadline - now) / 60000);
+    if (diff < 0) diff = 0;
+    diff = Math.floor(diff / 5) * 5;
+    const days = Math.floor(diff / (60 * 24));
+    const hours = Math.floor((diff % (60 * 24)) / 60);
+    const mins = diff % 60;
+    const cell = row.cells[4];
+    if (cell) cell.textContent = `${days}日${hours}時間${mins}分`;
+  }
+
   ['.task-title-input', '.task-result-input', '.task-detail-input', '.task-level-select', '.task-completed-input', '.task-category-select'].forEach((selector) => {
     document.querySelectorAll(selector).forEach((inp) => {
       const handler = () => {
         const row = inp.closest('tr');
-        if (row) sendUpdate(row);
+        if (!row) return;
+        if (selector === '.task-category-select') updateTimeUntilDue(row);
+        sendUpdate(row);
       };
       inp.addEventListener('change', handler);
       inp.addEventListener('input', handler);
