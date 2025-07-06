@@ -36,24 +36,29 @@ public class TaskServiceImpl implements TaskService {
                 continue;
             }
             LocalDateTime deadline;
-            switch (t.getCategory()) {
-            case "今日":
+            String category = t.getCategory();
+            if (category == null) {
                 deadline = today.plusDays(1).atStartOfDay();
-                break;
-            case "明日":
-                deadline = today.plusDays(2).atStartOfDay();
-                break;
-            case "今週":
-                deadline = sundayThisWeek.plusDays(1).atStartOfDay();
-                break;
-            case "来週":
-                deadline = sundayThisWeek.plusWeeks(1).plusDays(1).atStartOfDay();
-                break;
-            case "再来週":
-                deadline = sundayThisWeek.plusWeeks(2).plusDays(1).atStartOfDay();
-                break;
-            default:
-                deadline = today.plusDays(1).atStartOfDay();
+            } else {
+                switch (category) {
+                case "今日":
+                    deadline = today.plusDays(1).atStartOfDay();
+                    break;
+                case "明日":
+                    deadline = today.plusDays(2).atStartOfDay();
+                    break;
+                case "今週":
+                    deadline = sundayThisWeek.plusDays(1).atStartOfDay();
+                    break;
+                case "来週":
+                    deadline = sundayThisWeek.plusWeeks(1).plusDays(1).atStartOfDay();
+                    break;
+                case "再来週":
+                    deadline = sundayThisWeek.plusWeeks(2).plusDays(1).atStartOfDay();
+                    break;
+                default:
+                    deadline = today.plusDays(1).atStartOfDay();
+                }
             }
             long minutes = Duration.between(now, deadline).toMinutes();
             if (minutes < 0)
