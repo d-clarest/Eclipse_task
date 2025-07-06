@@ -9,4 +9,5 @@ public interface TaskRepository {
     void insertTask(Task task);
     void updateTask(Task task);
     void deleteById(int id);
+    int sumCompletedLevels();
 }

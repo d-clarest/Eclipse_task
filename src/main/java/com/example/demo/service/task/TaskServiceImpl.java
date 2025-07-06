@@ -89,4 +89,10 @@ public class TaskServiceImpl implements TaskService {
         log.debug("Deleting task with id {}", id);
         repository.deleteById(id);
     }
+
+    @Override
+    public int getTotalCompletedLevels() {
+        log.debug("Fetching total completed task levels");
+        return repository.sumCompletedLevels();
+    }
 }

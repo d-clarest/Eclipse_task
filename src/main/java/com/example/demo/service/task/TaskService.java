@@ -12,4 +12,6 @@ public interface TaskService {
     void updateTask(Task task);
 
     void deleteTaskById(int id);
+
+    int getTotalCompletedLevels();
 }
