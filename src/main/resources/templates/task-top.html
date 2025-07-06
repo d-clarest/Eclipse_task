@@ -174,16 +174,23 @@
       <div class="database-container">
         <table class="awareness-database">
           <tr>
+            <th>削除</th>
             <th>気づき</th>
             <th>意見</th>
             <th>気づき度</th>
           </tr>
-          <tr th:each="record : ${awarenessRecords}">
-            <td th:text="${record.awareness}"></td>
-            <td th:text="${record.opinion}"></td>
-            <td th:text="${record.awarenessLevel}"></td>
+          <tr th:each="record : ${awarenessRecords}" th:data-id="${record.id}">
+            <td><input type="button" value="削除" class="awareness-delete-button" /></td>
+            <td><input type="text" th:value="${record.awareness}" class="awareness-input" /></td>
+            <td><input type="text" th:value="${record.opinion}" class="opinion-input" /></td>
+            <td>
+              <select class="awareness-level-select">
+                <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == record.awarenessLevel}"></option>
+              </select>
+            </td>
           </tr>
         </table>
+        <button id="new-awareness-button">新規</button>
       </div>
 
       <div id="schedule-overlay" class="schedule-overlay"></div>
@@ -198,6 +205,7 @@
       <script th:src="@{/js/challenge.js}"></script>
       <script th:src="@{/js/schedule.js}"></script>
       <script th:src="@{/js/task.js}"></script>
+      <script th:src="@{/js/awareness.js}"></script>
       <script th:src="@{/js/calendar-detail.js}"></script>
     </body>
   </html>

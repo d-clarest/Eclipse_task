@@ -1,0 +1,54 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const newButton = document.getElementById('new-awareness-button');
+  if (newButton) {
+    newButton.addEventListener('click', () => {
+      fetch('/awareness-add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ awareness: '', opinion: '', awarenessLevel: 1 })
+      }).then(() => location.reload());
+    });
+  }
+
+  function gatherData(row) {
+    return {
+      id: parseInt(row.dataset.id, 10),
+      awareness: row.querySelector('.awareness-input').value,
+      opinion: row.querySelector('.opinion-input').value,
+      awarenessLevel: parseInt(row.querySelector('.awareness-level-select').value, 10)
+    };
+  }
+
+  function sendUpdate(row) {
+    const data = gatherData(row);
+    return fetch('/awareness-update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  }
+
+  document.querySelectorAll('.awareness-input, .opinion-input, .awareness-level-select').forEach((el) => {
+    el.addEventListener('change', () => {
+      const row = el.closest('tr');
+      if (row) sendUpdate(row);
+    });
+    el.addEventListener('input', () => {
+      const row = el.closest('tr');
+      if (row) sendUpdate(row);
+    });
+  });
+
+  document.querySelectorAll('.awareness-delete-button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('tr');
+      if (!row) return;
+      const id = row.dataset.id;
+      fetch('/awareness-delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id, 10) })
+      }).then(() => row.remove());
+    });
+  });
+});

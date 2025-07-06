@@ -33,4 +33,29 @@ public class AwarenessRecordRepositoryImpl implements AwarenessRecordRepository 
             }
         });
     }
+
+    @Override
+    public void insertRecord(AwarenessRecord record) {
+        String sql = "INSERT INTO awareness_records (awareness, opinion, awareness_level) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql,
+                record.getAwareness(),
+                record.getOpinion(),
+                record.getAwarenessLevel());
+    }
+
+    @Override
+    public void updateRecord(AwarenessRecord record) {
+        String sql = "UPDATE awareness_records SET awareness = ?, opinion = ?, awareness_level = ? WHERE id = ?";
+        jdbcTemplate.update(sql,
+                record.getAwareness(),
+                record.getOpinion(),
+                record.getAwarenessLevel(),
+                record.getId());
+    }
+
+    @Override
+    public void deleteById(int id) {
+        String sql = "DELETE FROM awareness_records WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }
