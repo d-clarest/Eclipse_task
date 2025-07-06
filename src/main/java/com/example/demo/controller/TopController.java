@@ -128,11 +128,12 @@ public class TopController {
     //-------------------------------------------------------------------------------------------------
     @GetMapping("/total-point")
     @ResponseBody
-    public Integer getTotalPoint() {
+    public Double getTotalPoint() {
         log.debug("Fetching total completed points");
         int schedulePoints = scheduleService.getTotalCompletedPoints();
         int challengePoints = challengeService.getTotalCompletedPoints();
         int taskPoints = taskService.getTotalCompletedLevels();
-        return schedulePoints + challengePoints + taskPoints;
+        int awareness = awarenessRecordService.getTotalAwarenessLevel();
+        return schedulePoints + challengePoints + taskPoints + awareness * 0.5;
     }
 }

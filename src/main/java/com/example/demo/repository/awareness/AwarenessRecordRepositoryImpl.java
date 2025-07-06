@@ -58,4 +58,11 @@ public class AwarenessRecordRepositoryImpl implements AwarenessRecordRepository 
         String sql = "DELETE FROM awareness_records WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public int sumAwarenessLevels() {
+        String sql = "SELECT COALESCE(SUM(awareness_level), 0) FROM awareness_records";
+        Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
+        return result != null ? result : 0;
+    }
 }
