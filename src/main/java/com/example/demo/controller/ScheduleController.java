@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.entity.Schedule;
-import com.example.demo.form.ScheduleUpdateForm;
 import com.example.demo.service.schedule.ScheduleService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,9 +29,9 @@ public class ScheduleController {
     }
     
     @PostMapping("/schedule-update")
-    public ResponseEntity<Void> updateSchedule(@RequestBody ScheduleUpdateForm form) {
-        log.debug("Updating schedule {} on {}", form.getTitle(), form.getScheduleDate());
-        scheduleService.updateSchedule(form);
+    public ResponseEntity<Void> updateSchedule(@RequestBody Schedule schedule) {
+        log.debug("Updating schedule {} on {}", schedule.getTitle(), schedule.getScheduleDate());
+        scheduleService.updateSchedule(schedule);
         return ResponseEntity.ok().build();
     }
 

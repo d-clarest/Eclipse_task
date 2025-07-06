@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.entity.Schedule;
-import com.example.demo.form.ScheduleUpdateForm;
 
 import lombok.RequiredArgsConstructor;
 
@@ -59,25 +58,25 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public void updateSchedule(ScheduleUpdateForm form) {
+    public void updateSchedule(Schedule schedule) {
         String sql = "UPDATE schedules SET add_flag = ?, title = ?, day_of_week = ?, schedule_date = ?, start_time = ?, end_time = ?, location = ?, detail = ?, feedback = ?, point = ?, completed_day = ? WHERE id = ?";
-        java.sql.Date schedDate = java.sql.Date.valueOf(form.getScheduleDate());
-        java.sql.Time start = java.sql.Time.valueOf(form.getStartTime());
-        java.sql.Time end = java.sql.Time.valueOf(form.getEndTime());
-        java.sql.Date completed = form.getCompletedDay() != null ? java.sql.Date.valueOf(form.getCompletedDay()) : null;
+        java.sql.Date schedDate = java.sql.Date.valueOf(schedule.getScheduleDate());
+        java.sql.Time start = java.sql.Time.valueOf(schedule.getStartTime());
+        java.sql.Time end = java.sql.Time.valueOf(schedule.getEndTime());
+        java.sql.Date completed = schedule.getCompletedDay() != null ? java.sql.Date.valueOf(schedule.getCompletedDay()) : null;
         jdbcTemplate.update(sql,
-                form.isAddFlag(),
-                form.getTitle(),
-                form.getDayOfWeek(),
+                schedule.isAddFlag(),
+                schedule.getTitle(),
+                schedule.getDayOfWeek(),
                 schedDate,
                 start,
                 end,
-                form.getLocation(),
-                form.getDetail(),
-                form.getFeedback(),
-                form.getPoint(),
+                schedule.getLocation(),
+                schedule.getDetail(),
+                schedule.getFeedback(),
+                schedule.getPoint(),
                 completed,
-                form.getId());
+                schedule.getId());
     }
 
     @Override
