@@ -22,4 +22,22 @@ public class AwarenessRecordServiceImpl implements AwarenessRecordService {
         log.debug("Fetching all awareness records");
         return repository.findAll();
     }
+
+    @Override
+    public void addRecord(AwarenessRecord record) {
+        log.debug("Adding awareness record");
+        repository.insertRecord(record);
+    }
+
+    @Override
+    public void updateRecord(AwarenessRecord record) {
+        log.debug("Updating awareness record id {}", record.getId());
+        repository.updateRecord(record);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        log.debug("Deleting awareness record id {}", id);
+        repository.deleteById(id);
+    }
 }

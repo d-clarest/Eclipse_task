@@ -6,4 +6,10 @@ import com.example.demo.entity.AwarenessRecord;
 
 public interface AwarenessRecordService {
     List<AwarenessRecord> getAllRecords();
+
+    void addRecord(AwarenessRecord record);
+
+    void updateRecord(AwarenessRecord record);
+
+    void deleteById(int id);
 }
