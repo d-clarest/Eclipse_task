@@ -16,7 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
       title: row.querySelector('.task-title-input').value,
       result: row.querySelector('.task-result-input').value,
       detail: row.querySelector('.task-detail-input').value,
-      level: parseInt(row.querySelector('.task-level-select').value, 10)
+      level: parseInt(row.querySelector('.task-level-select').value, 10),
+      completedAt: row.querySelector('.task-completed-input').value || null
     };
   }
 
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  ['.task-title-input', '.task-result-input', '.task-detail-input', '.task-level-select'].forEach((selector) => {
+  ['.task-title-input', '.task-result-input', '.task-detail-input', '.task-level-select', '.task-completed-input'].forEach((selector) => {
     document.querySelectorAll(selector).forEach((inp) => {
       const handler = () => {
         const row = inp.closest('tr');
@@ -37,6 +38,25 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       inp.addEventListener('change', handler);
       inp.addEventListener('input', handler);
+    });
+  });
+
+  document.querySelectorAll('.task-complete-button').forEach((btn) => {
+    const row = btn.closest('tr');
+    const comp = row ? row.querySelector('.task-completed-input') : null;
+    if (comp && comp.value) {
+      btn.value = '取消';
+    }
+    btn.addEventListener('click', () => {
+      if (!row || !comp) return;
+      if (btn.value === '完了') {
+        comp.value = new Date().toISOString().split('T')[0];
+        btn.value = '取消';
+      } else {
+        comp.value = '';
+        btn.value = '完了';
+      }
+      sendUpdate(row);
     });
   });
 });

@@ -135,6 +135,7 @@
       <div class="database-container">
         <table class="task-database">
           <tr>
+            <th>報告</th>
             <th>タスク名</th>
             <th>区分</th>
             <th>期日</th>
@@ -143,8 +144,9 @@
               <th>レベル</th>
               <th>完了日</th>
             </tr>
-            <tr th:each="task : ${tasks}" class="task-row" th:data-id="${task.id}">
-            <td><input type="text" th:value="${task.title}" class="task-title-input" /></td>
+          <tr th:each="task : ${tasks}" class="task-row" th:data-id="${task.id}">
+          <td><input type="button" value="完了" class="task-complete-button" /></td>
+          <td><input type="text" th:value="${task.title}" class="task-title-input" /></td>
             <td th:text="${task.category}"></td>
             <td th:text="${task.dueDate}"></td>
             <td><input type="text" th:value="${task.result}" class="task-result-input" /></td>
@@ -154,7 +156,7 @@
                   <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == task.level}"></option>
                 </select>
               </td>
-            <td th:text="${task.completedAt}"></td>
+            <td><input type="date" th:value="${task.completedAt}" class="task-completed-input" /></td>
           </tr>
         </table>
       </div>
