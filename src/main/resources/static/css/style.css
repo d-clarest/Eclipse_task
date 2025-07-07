@@ -293,3 +293,17 @@ td {
 .review-list {
   background-color: #afeeee;
 }
+
+/* Hide text in challenge, task, and awareness databases until selected */
+.chalenge-database input[type="text"],
+.task-database input[type="text"],
+.awareness-database input[type="text"] {
+  color: transparent;
+  caret-color: black;
+}
+
+.chalenge-database input[type="text"]::selection,
+.task-database input[type="text"]::selection,
+.awareness-database input[type="text"]::selection {
+  color: black;
+}
