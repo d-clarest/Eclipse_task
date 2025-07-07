@@ -159,5 +159,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  function enableFullTextDisplay(selector) {
+    document.querySelectorAll(selector).forEach((inp) => {
+      let originalWidth = '';
+      const adjustWidth = () => {
+        inp.style.width = 'auto';
+        const w = inp.scrollWidth + 4; // some padding
+        inp.style.width = w + 'px';
+      };
+      inp.addEventListener('focus', () => {
+        originalWidth = inp.style.width || inp.offsetWidth + 'px';
+        adjustWidth();
+      });
+      inp.addEventListener('input', adjustWidth);
+      inp.addEventListener('blur', () => {
+        inp.style.width = originalWidth;
+      });
+    });
+  }
+
+  enableFullTextDisplay('.challenge-title-input, .challenge-risk-input, .challenge-expected-input, .challenge-strategy-input, .challenge-actual-input, .challenge-improvement-input');
+
   refreshTotalPoint();
 });
