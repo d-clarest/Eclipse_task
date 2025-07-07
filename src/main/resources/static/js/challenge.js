@@ -138,7 +138,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   //--------------------------------------------------------------------------------------
-  ['.challenge-title-input', '.challenge-risk-input', '.challenge-expected-input', '.challenge-strategy-input', '.challenge-actual-input', '.challenge-improvement-input'].forEach((selector) => {
+  [
+    '.challenge-title-input',
+    '.challenge-risk-input',
+    '.challenge-expected-input',
+    '.challenge-strategy-input',
+    '.challenge-actual-input',
+    '.challenge-improvement-input',
+    '.challenge-date-input',
+  ].forEach((selector) => {
     document.querySelectorAll(selector).forEach((inp) => {
       const handler = () => {
         const row = inp.closest('tr');
