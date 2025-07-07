@@ -8,4 +8,6 @@ public interface AwarenessPageRepository {
     void insertPage(AwarenessPage page);
 
     void updatePage(AwarenessPage page);
+
+    void deleteByRecordId(int recordId);
 }
