@@ -45,4 +45,10 @@ public class AwarenessPageRepositoryImpl implements AwarenessPageRepository {
         String sql = "UPDATE awareness_pages SET content = ? WHERE id = ?";
         jdbcTemplate.update(sql, page.getContent(), page.getId());
     }
+
+    @Override
+    public void deleteByRecordId(int recordId) {
+        String sql = "DELETE FROM awareness_pages WHERE record_id = ?";
+        jdbcTemplate.update(sql, recordId);
+    }
 }

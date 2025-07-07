@@ -34,4 +34,10 @@ public class AwarenessPageServiceImpl implements AwarenessPageService {
         log.debug("Updating page id {}", page.getId());
         repository.updatePage(page);
     }
+
+    @Override
+    public void deleteByRecordId(int recordId) {
+        log.debug("Deleting page for record {}", recordId);
+        repository.deleteByRecordId(recordId);
+    }
 }
