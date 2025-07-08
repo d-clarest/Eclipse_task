@@ -23,6 +23,31 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository repository;
 
+    /**
+     * カテゴリから締切日時を計算する。
+     */
+    private LocalDateTime calculateDeadline(String category) {
+        LocalDate today = LocalDate.now();
+        LocalDate sundayThisWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+        if (category == null) {
+            return today.plusDays(1).atStartOfDay();
+        }
+        switch (category) {
+        case "今日":
+            return today.plusDays(1).atStartOfDay();
+        case "明日":
+            return today.plusDays(2).atStartOfDay();
+        case "今週":
+            return sundayThisWeek.plusDays(1).atStartOfDay();
+        case "来週":
+            return sundayThisWeek.plusWeeks(1).plusDays(1).atStartOfDay();
+        case "再来週":
+            return sundayThisWeek.plusWeeks(2).plusDays(1).atStartOfDay();
+        default:
+            return today.plusDays(1).atStartOfDay();
+        }
+    }
+
     @Override
     public List<Task> getAllTasks() {
         log.debug("Fetching all tasks");
@@ -85,12 +110,22 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void addTask(Task task) {
         log.debug("Adding task {}", task.getTitle());
+        LocalDateTime deadline = calculateDeadline(task.getCategory());
+        task.setDeadline(deadline);
+        task.setDueDate(deadline.toLocalDate());
         repository.insertTask(task);
     }
 
     @Override
     public void updateTask(Task task) {
         log.debug("Updating task id {}", task.getId());
+        if (task.getCompletedAt() == null) {
+            LocalDateTime deadline = calculateDeadline(task.getCategory());
+            task.setDeadline(deadline);
+            task.setDueDate(deadline.toLocalDate());
+        } else {
+            task.setDueDate(null);
+        }
         repository.updateTask(task);
     }
 
