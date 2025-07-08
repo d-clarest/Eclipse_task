@@ -61,40 +61,43 @@ public class TaskServiceImpl implements TaskService {
                 t.setDeadline(null);
                 continue;
             }
-            LocalDateTime deadline;
-            String category = t.getCategory();
-            if (category == null) {
-                deadline = today.plusDays(1).atStartOfDay();
-            } else {
-                switch (category) {
-                case "今日":
+
+            LocalDateTime deadline = t.getDeadline();
+            if (deadline == null) {
+                String category = t.getCategory();
+                if (category == null) {
                     deadline = today.plusDays(1).atStartOfDay();
-                    break;
-                case "明日":
-                    LocalDateTime startOfTomorrow = today.plusDays(1).atStartOfDay();
-                    if (now.isAfter(startOfTomorrow)) {
-                        t.setCategory("今日");
-                        repository.updateTask(t);
-                        category = "今日";
+                } else {
+                    switch (category) {
+                    case "今日":
                         deadline = today.plusDays(1).atStartOfDay();
                         break;
+                    case "明日":
+                        LocalDateTime startOfTomorrow = today.plusDays(1).atStartOfDay();
+                        if (now.isAfter(startOfTomorrow)) {
+                            t.setCategory("今日");
+                            repository.updateTask(t);
+                            deadline = today.plusDays(1).atStartOfDay();
+                            break;
+                        }
+                        deadline = today.plusDays(2).atStartOfDay();
+                        break;
+                    case "今週":
+                        deadline = sundayThisWeek.plusDays(1).atStartOfDay();
+                        break;
+                    case "来週":
+                        deadline = sundayThisWeek.plusWeeks(1).plusDays(1).atStartOfDay();
+                        break;
+                    case "再来週":
+                        deadline = sundayThisWeek.plusWeeks(2).plusDays(1).atStartOfDay();
+                        break;
+                    default:
+                        deadline = today.plusDays(1).atStartOfDay();
                     }
-                    deadline = today.plusDays(2).atStartOfDay();
-                    break;
-                case "今週":
-                    deadline = sundayThisWeek.plusDays(1).atStartOfDay();
-                    break;
-                case "来週":
-                    deadline = sundayThisWeek.plusWeeks(1).plusDays(1).atStartOfDay();
-                    break;
-                case "再来週":
-                    deadline = sundayThisWeek.plusWeeks(2).plusDays(1).atStartOfDay();
-                    break;
-                default:
-                    deadline = today.plusDays(1).atStartOfDay();
                 }
+                t.setDeadline(deadline);
             }
-            t.setDeadline(deadline);
+
             long minutes = Duration.between(now, deadline).toMinutes();
             if (minutes < 0)
                 minutes = 0;
