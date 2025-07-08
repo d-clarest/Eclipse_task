@@ -45,6 +45,14 @@ public class TaskServiceImpl implements TaskService {
                     deadline = today.plusDays(1).atStartOfDay();
                     break;
                 case "明日":
+                    LocalDateTime startOfTomorrow = today.plusDays(1).atStartOfDay();
+                    if (now.isAfter(startOfTomorrow)) {
+                        t.setCategory("今日");
+                        repository.updateTask(t);
+                        category = "今日";
+                        deadline = today.plusDays(1).atStartOfDay();
+                        break;
+                    }
                     deadline = today.plusDays(2).atStartOfDay();
                     break;
                 case "今週":
