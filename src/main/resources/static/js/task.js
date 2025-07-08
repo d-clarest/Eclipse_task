@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('/task-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: '', category: '今日', result: '', detail: '', level: 1 })
+        body: JSON.stringify({ title: '', category: '今日', result: '', detail: '', level: 1 }),
+        keepalive: true
       }).then(() => location.reload());
     });
   }
@@ -51,7 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return fetch('/task-update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
+      keepalive: true
     });
   }
 
@@ -164,7 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('/task-delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: parseInt(id, 10) })
+        body: JSON.stringify({ id: parseInt(id, 10) }),
+        keepalive: true
       }).then(() => {
         row.remove();
         refreshTotalPoint();
