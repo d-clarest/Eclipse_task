@@ -10,7 +10,6 @@ public class Task {
     private int id; // 自動採番ID
     private String title; // タスク名
     private String category; // 区分
-    private LocalDate dueDate; // 期日
     private LocalDateTime deadline; // 締切日時
     private String timeUntilDue; // 期日までを表す文字列
     private String result; // 結果

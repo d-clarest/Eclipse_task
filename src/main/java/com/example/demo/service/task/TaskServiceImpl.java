@@ -112,7 +112,6 @@ public class TaskServiceImpl implements TaskService {
         log.debug("Adding task {}", task.getTitle());
         LocalDateTime deadline = calculateDeadline(task.getCategory());
         task.setDeadline(deadline);
-        task.setDueDate(deadline.toLocalDate());
         repository.insertTask(task);
     }
 
@@ -122,9 +121,6 @@ public class TaskServiceImpl implements TaskService {
         if (task.getCompletedAt() == null) {
             LocalDateTime deadline = calculateDeadline(task.getCategory());
             task.setDeadline(deadline);
-            task.setDueDate(deadline.toLocalDate());
-        } else {
-            task.setDueDate(null);
         }
         repository.updateTask(task);
     }

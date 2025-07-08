@@ -2,7 +2,6 @@ package com.example.demo.repository.task;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     public List<Task> findAll() {
-        String sql = "SELECT id, title, category, due_date, deadline, result, detail, level, created_at, updated_at, completed_at "
+        String sql = "SELECT id, title, category, deadline, result, detail, level, created_at, updated_at, completed_at "
                 + "FROM tasks ORDER BY CASE category "
                 + "WHEN '今日' THEN 1 "
                 + "WHEN '明日' THEN 2 "
@@ -37,10 +36,6 @@ public class TaskRepositoryImpl implements TaskRepository {
                 t.setId(rs.getInt("id"));
                 t.setTitle(rs.getString("title"));
                 t.setCategory(rs.getString("category"));
-                java.sql.Date due = rs.getDate("due_date");
-                if (due != null) {
-                    t.setDueDate(due.toLocalDate());
-                }
                 java.sql.Timestamp deadline = rs.getTimestamp("deadline");
                 if (deadline != null) {
                     t.setDeadline(deadline.toLocalDateTime());
@@ -67,14 +62,12 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     public void insertTask(Task task) {
-        String sql = "INSERT INTO tasks (title, category, due_date, deadline, result, detail, level, created_at, updated_at, completed_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)";
-        java.sql.Date due = task.getDueDate() != null ? java.sql.Date.valueOf(task.getDueDate()) : null;
+        String sql = "INSERT INTO tasks (title, category, deadline, result, detail, level, created_at, updated_at, completed_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)";
         java.sql.Timestamp deadline = task.getDeadline() != null ? java.sql.Timestamp.valueOf(task.getDeadline()) : null;
         java.sql.Date completed = task.getCompletedAt() != null ? java.sql.Date.valueOf(task.getCompletedAt()) : null;
         jdbcTemplate.update(sql,
                 task.getTitle(),
                 task.getCategory(),
-                due,
                 deadline,
                 task.getResult(),
                 task.getDetail(),
@@ -84,14 +77,12 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     public void updateTask(Task task) {
-        String sql = "UPDATE tasks SET title = ?, category = ?, due_date = ?, deadline = ?, result = ?, detail = ?, level = ?, completed_at = ?, updated_at = NOW() WHERE id = ?";
-        java.sql.Date due = task.getDueDate() != null ? java.sql.Date.valueOf(task.getDueDate()) : null;
+        String sql = "UPDATE tasks SET title = ?, category = ?, deadline = ?, result = ?, detail = ?, level = ?, completed_at = ?, updated_at = NOW() WHERE id = ?";
         java.sql.Timestamp deadline = task.getDeadline() != null ? java.sql.Timestamp.valueOf(task.getDeadline()) : null;
         java.sql.Date completed = task.getCompletedAt() != null ? java.sql.Date.valueOf(task.getCompletedAt()) : null;
         jdbcTemplate.update(sql,
                 task.getTitle(),
                 task.getCategory(),
-                due,
                 deadline,
                 task.getResult(),
                 task.getDetail(),
