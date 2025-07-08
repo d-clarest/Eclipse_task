@@ -102,7 +102,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const mins = diff % 60;
     const deadlineCell = row.cells[5];
     if (deadlineCell) {
-      deadlineCell.textContent = deadline.toISOString().slice(0, 16).replace('T', ' ');
+      const y = deadline.getFullYear();
+      const m = String(deadline.getMonth() + 1).padStart(2, '0');
+      const d = String(deadline.getDate()).padStart(2, '0');
+      const hh = String(deadline.getHours()).padStart(2, '0');
+      const mm = String(deadline.getMinutes()).padStart(2, '0');
+      deadlineCell.textContent = `${y}-${m}-${d} ${hh}:${mm}`;
     }
     const diffCell = row.cells[6];
     if (diffCell) diffCell.textContent = `${days}日${hours}時間${mins}分`;
