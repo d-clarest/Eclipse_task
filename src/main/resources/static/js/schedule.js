@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function sendUpdate(row) {
     const data = {
       id: parseInt(row.dataset.id, 10),
-      oldTitle: row.dataset.oldTitle,
-      oldScheduleDate: row.dataset.oldDate,
+      // oldTitle: row.dataset.oldTitle,
+      // oldScheduleDate: row.dataset.oldDate,
       addFlag: row.querySelector('.schedule-add-flag').checked,
       title: row.querySelector('.schedule-title-input').value,
       dayOfWeek: row.querySelector('.schedule-day-of-week').value,
@@ -65,8 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
       body: JSON.stringify(data),
     }).then((res) => {
       if (res.ok) {
-        row.dataset.oldTitle = data.title;
-        row.dataset.oldDate = data.scheduleDate;
+        // row.dataset.oldTitle = data.title;
+        // row.dataset.oldDate = data.scheduleDate;
         refreshTotalPoint();
       } else {
         console.error('Schedule update failed');
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return item;
   }
 
-  function removeSchedule(name, dateStr) {
+  function removeSchedule(id) {
     const date = new Date(dateStr); //文字列をDate型に変換
     if (isNaN(date.getTime())) return;
     if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth) return;
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const wrapper = cell.querySelector('.schedules');
     if (!wrapper) return;
     wrapper.querySelectorAll('div').forEach((div) => {
-      if (div.dataset.name === name && div.dataset.date === dateStr) {
+      if (div.dataset.id === id ) {
         div.remove();
       }
     });
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const cb = row.querySelector('.schedule-add-flag');
         if (cb && cb.checked) {
-          removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
+          removeSchedule(row.dataset.id);
           addSchedule(row.querySelector('.schedule-title-input').value, inp.value);
         }
         sendUpdate(row);
@@ -263,12 +263,13 @@ document.addEventListener('DOMContentLoaded', () => {
     cb.addEventListener('change', () => {
       const row = cb.closest('tr');
       if (!row) return;
-      const title = row.querySelector('.schedule-title-input').value;
-      const date = row.querySelector('.schedule-date-input').value;
+      // const title = row.querySelector('.schedule-title-input').value;
+      // const date = row.querySelector('.schedule-date-input').value;
+      const id=row.querySelector('.schedule-date-input').value;
       if (cb.checked) {
-        addSchedule(title, date);
+        addSchedule(id);
       } else {
-        removeSchedule(title, date);
+        removeSchedule(id);
       }
       sendUpdate(row);
     });
@@ -280,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (row) {
         const cb = row.querySelector('.schedule-add-flag');
         if (cb && cb.checked) {
-          removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
+          removeSchedule(row.dataset.id);
           addSchedule(inp.value, row.querySelector('.schedule-date-input').value);
         }
         sendUpdate(row);
