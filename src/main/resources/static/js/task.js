@@ -122,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!row) return;
         if (selector === '.task-category-select') {
           updateTimeUntilDue(row);
+          console.log('a');
           sortAllTaskTables();
         }
         sendUpdate(row).then(refreshTotalPoint);
