@@ -106,6 +106,26 @@ public class TaskServiceImpl implements TaskService {
             long hours = (rounded % (60 * 24)) / 60;
             long mins = rounded % 60;
             t.setTimeUntilDue(String.format("%d日%d時間%d分", days, hours, mins));
+
+            String newCategory;
+            if (minutes <= 60 * 24) {
+                newCategory = "今日";
+            } else if (minutes <= 60 * 24 * 2) {
+                newCategory = "明日";
+            } else if (minutes <= 60 * 24 * 7) {
+                newCategory = "今週";
+            } else if (minutes <= 60 * 24 * 14) {
+                newCategory = "来週";
+            } else if (minutes <= 60 * 24 * 21) {
+                newCategory = "再来週";
+            } else {
+                newCategory = t.getCategory();
+            }
+
+            if (newCategory != null && !newCategory.equals(t.getCategory())) {
+                t.setCategory(newCategory);
+                repository.updateTask(t);
+            }
         }
         return list;
     }
