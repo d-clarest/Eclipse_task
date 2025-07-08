@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>タスクページ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="task-body">
+    <div class="link-area">
+      <a th:href="@{'/' + ${username} + '/task-top/task-box'}">一覧へ戻る</a>
+    </div>
+
+    <div class="awareness-title">
+      <span th:text="${task != null ? task.title : ''}"></span>
+    </div>
+
+    <div class="page-container">
+      <textarea id="task-page-content" rows="20" cols="80" th:text="${page.content}"></textarea>
+    </div>
+
+    <script th:src="@{/js/task-page.js}"></script>
+    <script th:inline="javascript">
+      const pageId = [[${page.id}]];
+    </script>
+  </body>
+</html>
