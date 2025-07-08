@@ -36,14 +36,20 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function gatherData(row) {
+    const val = (sel) => {
+      const el = row.querySelector(sel);
+      return el ? el.value : '';
+    };
+    const lvl = row.querySelector('.task-level-select');
+    const lvlValue = lvl ? parseInt(lvl.value, 10) : 1;
     return {
       id: parseInt(row.dataset.id, 10),
-      title: row.querySelector('.task-title-input').value,
-      category: row.querySelector('.task-category-select').value,
-      result: row.querySelector('.task-result-input').value,
-      detail: row.querySelector('.task-detail-input').value,
-      level: parseInt(row.querySelector('.task-level-select').value, 10),
-      completedAt: row.querySelector('.task-completed-input').value || null
+      title: val('.task-title-input'),
+      category: val('.task-category-select'),
+      result: val('.task-result-input'),
+      detail: val('.task-detail-input'),
+      level: lvlValue,
+      completedAt: val('.task-completed-input') || null
     };
   }
 
