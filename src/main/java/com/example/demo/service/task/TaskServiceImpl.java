@@ -33,6 +33,7 @@ public class TaskServiceImpl implements TaskService {
         for (Task t : list) {
             if (t.getCompletedAt() != null) {
                 t.setTimeUntilDue(null);
+                t.setDeadline(null);
                 continue;
             }
             LocalDateTime deadline;
@@ -68,6 +69,7 @@ public class TaskServiceImpl implements TaskService {
                     deadline = today.plusDays(1).atStartOfDay();
                 }
             }
+            t.setDeadline(deadline);
             long minutes = Duration.between(now, deadline).toMinutes();
             if (minutes < 0)
                 minutes = 0;

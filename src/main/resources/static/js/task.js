@@ -100,8 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const days = Math.floor(diff / (60 * 24));
     const hours = Math.floor((diff % (60 * 24)) / 60);
     const mins = diff % 60;
-    const cell = row.cells[5];
-    if (cell) cell.textContent = `${days}日${hours}時間${mins}分`;
+    const deadlineCell = row.cells[5];
+    if (deadlineCell) {
+      deadlineCell.textContent = deadline.toISOString().slice(0, 16).replace('T', ' ');
+    }
+    const diffCell = row.cells[6];
+    if (diffCell) diffCell.textContent = `${days}日${hours}時間${mins}分`;
   }
 
   function sortTaskTable(table) {
@@ -151,8 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
         comp.value = new Date().toISOString().split('T')[0];
         btn.value = '取消';
         moveRow(row, true);
-        const cell = row.cells[5];
-        if (cell) cell.textContent = '';
+        const diffCell = row.cells[6];
+        if (diffCell) diffCell.textContent = '';
         sortAllTaskTables();
       } else {
         comp.value = '';

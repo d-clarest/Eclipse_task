@@ -11,6 +11,7 @@ public class Task {
     private String title; // タスク名
     private String category; // 区分
     private LocalDate dueDate; // 期日
+    private LocalDateTime deadline; // 締切日時
     private String timeUntilDue; // 期日までを表す文字列
     private String result; // 結果
     private String detail; // 詳細

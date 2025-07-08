@@ -142,6 +142,7 @@
             <th>ページ</th>
             <th>タスク・疑問調査</th>
             <th>区分</th>
+            <th>締切</th>
             <th>期日</th>
             <!-- <th>結果</th>
             <th>詳細</th> -->
@@ -162,6 +163,7 @@
                 <option value="再来週" th:selected="${task.category == '再来週'}">再来週</option>
               </select>
             </td>
+            <td th:text="${#temporals.format(task.deadline, 'yyyy-MM-dd HH:mm')}"></td>
             <td th:text="${task.timeUntilDue}"></td>
             <!-- <td><input type="text" th:value="${task.result}" class="task-result-input" /></td>
               <td><input type="text" th:value="${task.detail}" class="task-detail-input" /></td> -->
