@@ -10,6 +10,10 @@
       <a th:href="@{'/' + ${username} + '/task-top/awareness-box'}">一覧へ戻る</a>
     </div>
 
+    <div class="awareness-title">
+      <span th:text="${record != null ? record.awareness : ''}"></span>
+    </div>
+
     <div class="page-container">
       <textarea id="awareness-page-content" rows="20" cols="80" th:text="${page.content}"></textarea>
     </div>
