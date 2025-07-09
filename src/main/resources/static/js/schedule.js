@@ -139,6 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
     item.title = name; //カレンダー表示用
     item.dataset.name = name; //属性値
     item.dataset.date = dateStr; //属性値
+    if (opts.id !== undefined) {
+      item.dataset.id = String(opts.id);
+    }
     if (opts.completed) {
       item.style.color = 'red';
     }
@@ -154,8 +157,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cell) return;
     const wrapper = cell.querySelector('.schedules');
     if (!wrapper) return;
+    const targetId = String(id);
     wrapper.querySelectorAll('div').forEach((div) => {
-      if (div.dataset.id === id) {
+      if (div.dataset.id === targetId) {
         div.remove();
       }
     });
@@ -172,7 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (cb && cb.checked && comp_btn.value == '完了') {
         const name = row.querySelector('.schedule-title-input').value; //予定名
         const date = row.querySelector('.schedule-date-input').value; //何年何月何日
-        addSchedule(name, date);
+        const id = row.dataset.id;
+        addSchedule(name, date, { id });
       }
     });
   }
@@ -191,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cb = row.querySelector('.schedule-add-flag');
         if (cb && cb.checked) {
           removeSchedule(row.dataset.id, row.dataset.oldDate);
-          addSchedule(row.querySelector('.schedule-title-input').value, inp.value);
+          addSchedule(row.querySelector('.schedule-title-input').value, inp.value, { id: row.dataset.id });
         }
         sendUpdate(row);
         updateTimeUntilStart(row);
@@ -268,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const date = row.querySelector('.schedule-date-input').value;
       const id = row.querySelector('.schedule-id').value;
       if (cb.checked) {
-        addSchedule(title, date);
+        addSchedule(title, date, { id });
       } else {
         removeSchedule(id, date);
       }
@@ -283,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cb = row.querySelector('.schedule-add-flag');
         if (cb && cb.checked) {
           removeSchedule(row.dataset.id, row.dataset.oldDate);
-          addSchedule(inp.value, row.querySelector('.schedule-date-input').value);
+          addSchedule(inp.value, row.querySelector('.schedule-date-input').value, { id: row.dataset.id });
         }
         sendUpdate(row);
       }
@@ -358,11 +363,11 @@ document.addEventListener('DOMContentLoaded', () => {
     removeSchedule(id, date);
     if (completed) {
       if (completedShown) {
-        addSchedule(title, date, { completed: true });
+        addSchedule(title, date, { completed: true, id });
         console.log('AAA');
       }
     } else {
-      addSchedule(title, date);
+      addSchedule(title, date, { id });
     }
   }
 
@@ -478,7 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .then((res) => res.json()) //データをjson形式で受け取る、次のthenに結果を返す
       .then((list) => {
         list.forEach((s) => {
-          addSchedule(s.title, s.scheduleDate, { completed: true }); //カレンダーに予定を追加
+          addSchedule(s.title, s.scheduleDate, { completed: true, id: s.id }); //カレンダーに予定を追加
           displayedCompleted.push({ id: s.id, date: s.scheduleDate }); //完了済みスケジュールのうちすでに画面に表示したものを記録・管理するための配列
         });
       });
