@@ -46,6 +46,17 @@ body.task-body {
   margin: 0;
 }
 
+/* spacing between task table and awareness/word tables */
+.database-container + .database-row {
+  margin-top: 40px;
+}
+
+/* unify header height for awareness and word tables */
+.awareness-database th,
+.word-database th {
+  height: 32px;
+}
+
 #new-schedule-button {
   /* 新規ボタン */
   /* margin-top: 10px; 相対位置*/
