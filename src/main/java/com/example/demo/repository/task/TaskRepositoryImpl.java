@@ -61,6 +61,41 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
+    public Task findById(int id) {
+        String sql = "SELECT id, title, category, deadline, result, detail, level, created_at, updated_at, completed_at "
+                + "FROM tasks WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new RowMapper<Task>() {
+            @Override
+            public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Task t = new Task();
+                t.setId(rs.getInt("id"));
+                t.setTitle(rs.getString("title"));
+                t.setCategory(rs.getString("category"));
+                java.sql.Timestamp deadline = rs.getTimestamp("deadline");
+                if (deadline != null) {
+                    t.setDeadline(deadline.toLocalDateTime());
+                }
+                t.setResult(rs.getString("result"));
+                t.setDetail(rs.getString("detail"));
+                t.setLevel(rs.getInt("level"));
+                java.sql.Timestamp created = rs.getTimestamp("created_at");
+                if (created != null) {
+                    t.setCreatedAt(created.toLocalDateTime());
+                }
+                java.sql.Timestamp updated = rs.getTimestamp("updated_at");
+                if (updated != null) {
+                    t.setUpdatedAt(updated.toLocalDateTime());
+                }
+                java.sql.Date completed = rs.getDate("completed_at");
+                if (completed != null) {
+                    t.setCompletedAt(completed.toLocalDate());
+                }
+                return t;
+            }
+        }, id);
+    }
+
+    @Override
     public void insertTask(Task task) {
         String sql = "INSERT INTO tasks (title, category, deadline, result, detail, level, created_at, updated_at, completed_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), ?)";
         java.sql.Timestamp deadline = task.getDeadline() != null ? java.sql.Timestamp.valueOf(task.getDeadline()) : null;

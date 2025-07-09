@@ -53,8 +53,6 @@ public class TaskServiceImpl implements TaskService {
         log.debug("Fetching all tasks");
         List<Task> list = repository.findAll();
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
-        LocalDate today = now.toLocalDate();
-        LocalDate sundayThisWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
         for (Task t : list) {
             if (t.getCompletedAt() != null) {
                 t.setTimeUntilDue(null);
@@ -64,38 +62,7 @@ public class TaskServiceImpl implements TaskService {
 
             LocalDateTime deadline = t.getDeadline();
             if (deadline == null) {
-                String category = t.getCategory();
-                if (category == null) {
-                    deadline = today.plusDays(1).atStartOfDay();
-                } else {
-                    switch (category) {
-                    case "今日":
-                        deadline = today.plusDays(1).atStartOfDay();
-                        break;
-                    case "明日":
-                        LocalDateTime startOfTomorrow = today.plusDays(1).atStartOfDay();
-                        if (now.isAfter(startOfTomorrow)) {
-                            t.setCategory("今日");
-                            repository.updateTask(t);
-                            deadline = today.plusDays(1).atStartOfDay();
-                            break;
-                        }
-                        deadline = today.plusDays(2).atStartOfDay();
-                        break;
-                    case "今週":
-                        deadline = sundayThisWeek.plusDays(1).atStartOfDay();
-                        break;
-                    case "来週":
-                        deadline = sundayThisWeek.plusWeeks(1).plusDays(1).atStartOfDay();
-                        break;
-                    case "再来週":
-                        deadline = sundayThisWeek.plusWeeks(2).plusDays(1).atStartOfDay();
-                        break;
-                    default:
-                        deadline = today.plusDays(1).atStartOfDay();
-                    }
-                }
-                t.setDeadline(deadline);
+                deadline = calculateDeadline(t.getCategory());
             }
 
             long minutes = Duration.between(now, deadline).toMinutes();
@@ -126,7 +93,11 @@ public class TaskServiceImpl implements TaskService {
 
             if (newCategory != null && !newCategory.equals(t.getCategory())) {
                 t.setCategory(newCategory);
+                deadline = calculateDeadline(newCategory);
+                t.setDeadline(deadline);
                 repository.updateTask(t);
+            } else {
+                t.setDeadline(deadline);
             }
         }
         return list;
@@ -143,9 +114,14 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void updateTask(Task task) {
         log.debug("Updating task id {}", task.getId());
-        if (task.getCompletedAt() == null) {
+        Task current = repository.findById(task.getId());
+        boolean categoryChanged = (current.getCategory() == null && task.getCategory() != null)
+                || (current.getCategory() != null && !current.getCategory().equals(task.getCategory()));
+        if (task.getCompletedAt() == null && categoryChanged) {
             LocalDateTime deadline = calculateDeadline(task.getCategory());
             task.setDeadline(deadline);
+        } else {
+            task.setDeadline(current.getDeadline());
         }
         repository.updateTask(task);
     }
