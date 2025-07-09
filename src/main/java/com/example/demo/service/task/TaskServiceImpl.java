@@ -99,6 +99,7 @@ public class TaskServiceImpl implements TaskService {
             }
 
             long minutes = Duration.between(now, deadline).toMinutes();
+            boolean expired = minutes <= 0;
             if (minutes < 0)
                 minutes = 0;
             long rounded = (minutes / 5) * 5;
@@ -106,6 +107,7 @@ public class TaskServiceImpl implements TaskService {
             long hours = (rounded % (60 * 24)) / 60;
             long mins = rounded % 60;
             t.setTimeUntilDue(String.format("%d日%d時間%d分", days, hours, mins));
+            t.setExpired(expired);
 
             String newCategory;
             if (minutes <= 60 * 24) {

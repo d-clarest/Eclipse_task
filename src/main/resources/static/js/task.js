@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     deadline.setHours(0, 0, 0, 0);
     let diff = Math.floor((deadline - now) / 60000);
+    const expired = diff <= 0;
     if (diff < 0) diff = 0;
     diff = Math.floor(diff / 5) * 5;
     const days = Math.floor(diff / (60 * 24));
@@ -110,7 +111,15 @@ document.addEventListener('DOMContentLoaded', () => {
       deadlineCell.textContent = `${y}-${m}-${d} ${hh}:${mm}`;
     }
     const diffCell = row.cells[6];
-    if (diffCell) diffCell.textContent = `${days}日${hours}時間${mins}分`;
+    if (diffCell) {
+      if (expired) {
+        diffCell.textContent = '期限切れ';
+        diffCell.style.color = 'red';
+      } else {
+        diffCell.textContent = `${days}日${hours}時間${mins}分`;
+        diffCell.style.color = '';
+      }
+    }
   }
 
   function sortTaskTable(table) {
