@@ -40,4 +40,10 @@ public class WordRecordServiceImpl implements WordRecordService {
         log.debug("Deleting word record id {}", id);
         repository.deleteById(id);
     }
+
+    @Override
+    public int countRecords() {
+        log.debug("Counting word records");
+        return repository.countRecords();
+    }
 }

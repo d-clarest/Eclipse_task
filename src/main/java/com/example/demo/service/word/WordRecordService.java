@@ -9,4 +9,5 @@ public interface WordRecordService {
     void addRecord(WordRecord record);
     void updateRecord(WordRecord record);
     void deleteById(int id);
+    int countRecords();
 }

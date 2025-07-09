@@ -145,6 +145,7 @@ public class TopController {
         int challengePoints = challengeService.getTotalCompletedPoints();
         int taskPoints = taskService.getTotalCompletedLevels();
         int awareness = awarenessRecordService.getTotalAwarenessLevel();
-        return schedulePoints + challengePoints + taskPoints + awareness * 0.5;
+        int wordCount = wordRecordService.countRecords();
+        return schedulePoints + challengePoints + taskPoints + awareness * 0.5 + wordCount * 0.5;
     }
 }

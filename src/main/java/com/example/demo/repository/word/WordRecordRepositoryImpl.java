@@ -58,4 +58,11 @@ public class WordRecordRepositoryImpl implements WordRecordRepository {
         String sql = "DELETE FROM word_records WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public int countRecords() {
+        String sql = "SELECT COUNT(*) FROM word_records";
+        Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
+        return result != null ? result : 0;
+    }
 }
