@@ -7,20 +7,17 @@
       <link rel="stylesheet" th:href="@{/css/style.css}" />
     </head>
     <body class="task-body">
-      <script>
-        console.log('${schedule.startTime}');
-      </script>
 
       <div class="link-area">
+        <!-- java変数などを埋め込める動的リンクを生成（Thymeleaf使用） @{URLパターン}，java側でusernameをmodel.addAttributeしてる-->
         <a th:href="@{'/' + ${username} + '/task-top/schedule-box'}">予定ボックス</a>
         <a th:href="@{'/' + ${username} + '/task-top/challenge-box'}">挑戦ボックス</a>
         <a th:href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックス</a>
         <a th:href="@{'/' + ${username} + '/task-top/awareness-box'}">気づきボックス</a>
-        <!-- java変数などを埋め込める動的リンクを生成（Thymeleaf使用） @{URLパターン}，java側でusernameをmodel.addAttributeしてる-->
       </div>
 
-      <div id="calendar" class="calendar-area"></div>
       <!-- idの方でjs，classの方でcssの処理を適用-->
+      <div id="calendar" class="calendar-area"></div>
 
       <div class="database-container">
         <!-- 日付の昇順に並べ替えている -->
@@ -185,16 +182,14 @@
         <table class="awareness-database">
           <tr>
             <th>削除</th>
-            <th>ページ</th>
+            <th>詳細</th>
             <th>気づき</th>
-            <th>意見</th>
             <th>気づき度</th>
           </tr>
           <tr th:each="record : ${awarenessRecords}" th:data-id="${record.id}">
             <td><input type="button" value="削除" class="awareness-delete-button" /></td>
-            <td><a th:href="@{'/' + ${username} + '/task-top/awareness-page/' + ${record.id}}">ページ</a></td>
+            <td><a th:href="@{'/' + ${username} + '/task-top/awareness-page/' + ${record.id}}">go</a></td>
             <td><input type="text" th:value="${record.awareness}" class="awareness-input" /></td>
-            <td><input type="text" th:value="${record.opinion}" class="opinion-input" /></td>
             <td>
               <select class="awareness-level-select">
                 <!-- th:selected="${level == record.awarenessLevel}deadlineで現在の値を選択済みにする -->
