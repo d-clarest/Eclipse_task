@@ -18,4 +18,5 @@ public class Task {
     private LocalDateTime createdAt; // 作成日時
     private LocalDateTime updatedAt; // 更新日時
     private LocalDate completedAt; // 完了日
+    private boolean expired; // 期限切れかどうか
 }
