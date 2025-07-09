@@ -102,6 +102,7 @@
         <button id="new-challenge-button">挑戦新規</button>
         <button id="new-task-button">タスク新規</button>
         <button id="new-awareness-button">新規気づき</button>
+        <button id="new-word-button">新規単語</button>
       </div>
 
       <div class="database-container">
@@ -209,14 +210,16 @@
         <div class="database-container">
           <table class="word-database">
             <tr>
+              <th>削除</th>
               <th>単語</th>
               <th>意味</th>
               <th>例</th>
             </tr>
-            <tr>
-              <td><input type="text" class="word-input" /></td>
-              <td><input type="text" class="meaning-input" /></td>
-              <td><input type="text" class="example-input" /></td>
+            <tr th:each="word : ${wordRecords}" th:data-id="${word.id}">
+              <td><input type="button" value="削除" class="word-delete-button" /></td>
+              <td><input type="text" th:value="${word.word}" class="word-input" /></td>
+              <td><input type="text" th:value="${word.meaning}" class="meaning-input" /></td>
+              <td><input type="text" th:value="${word.example}" class="example-input" /></td>
             </tr>
           </table>
         </div>
@@ -235,6 +238,7 @@
       <script th:src="@{/js/schedule.js}"></script>
       <script th:src="@{/js/task.js}"></script>
       <script th:src="@{/js/awareness.js}"></script>
+      <script th:src="@{/js/word.js}"></script>
       <script th:src="@{/js/calendar-detail.js}"></script>
     </body>
   </html>
