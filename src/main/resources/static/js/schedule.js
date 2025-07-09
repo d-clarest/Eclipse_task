@@ -364,10 +364,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (completed) {
       if (completedShown) {
         addSchedule(title, date, { completed: true, id });
-        console.log('AAA');
+        // keep track so the item can be removed when toggling display
+        if (!displayedCompleted.some((d) => d.id === id && d.date === date)) {
+          displayedCompleted.push({ id, date });
+        }
       }
     } else {
       addSchedule(title, date, { id });
+      // remove from tracking list in case it was previously completed
+      displayedCompleted = displayedCompleted.filter(
+        (d) => !(d.id === id && d.date === date)
+      );
     }
   }
 
