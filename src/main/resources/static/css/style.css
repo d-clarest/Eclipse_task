@@ -307,6 +307,8 @@ td {
   margin: 0 auto; /* 横中央寄せ */
   padding: 10px; /* 要素の内側の余白 */
   box-sizing: border-box; /* 例えばwidth: 300px;でpadding: 10px;の場合、実際のコンテンツ領域は 300 - 10*2 = 280px となり、全体幅は300pxに収まる */
+  display: flex; /* 子要素を中央に配置 */
+  justify-content: center;
 }
 
 #task-page-content {
