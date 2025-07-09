@@ -77,29 +77,8 @@ public class TaskServiceImpl implements TaskService {
             t.setTimeUntilDue(String.format("%d日%d時間%d分", days, hours, mins));
             t.setExpired(expired);
 
-            String newCategory;
-            if (minutes <= 60 * 24) {
-                newCategory = "今日";
-            } else if (minutes <= 60 * 24 * 2) {
-                newCategory = "明日";
-            } else if (minutes <= 60 * 24 * 7) {
-                newCategory = "今週";
-            } else if (minutes <= 60 * 24 * 14) {
-                newCategory = "来週";
-            } else if (minutes <= 60 * 24 * 21) {
-                newCategory = "再来週";
-            } else {
-                newCategory = t.getCategory();
-            }
-
-            if (newCategory != null && !newCategory.equals(t.getCategory())) {
-                t.setCategory(newCategory);
-                deadline = calculateDeadline(newCategory);
-                t.setDeadline(deadline);
-                repository.updateTask(t);
-            } else {
-                t.setDeadline(deadline);
-            }
+            // Keep existing deadline without changing category based on it
+            t.setDeadline(deadline);
         }
         return list;
     }
