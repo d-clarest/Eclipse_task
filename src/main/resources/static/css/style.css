@@ -96,6 +96,12 @@ body.task-body {
   left: 50px;
 }
 
+#new-word-button {
+  position: fixed;
+  top: 440px;
+  left: 50px;
+}
+
 /* task-top.html だけの処理*/
 
 .calendar-area {
