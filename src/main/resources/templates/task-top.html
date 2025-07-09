@@ -181,8 +181,9 @@
         </table>
       </div>
 
-      <div class="database-container">
-        <table class="awareness-database">
+      <div class="database-row">
+        <div class="database-container">
+          <table class="awareness-database">
           <tr>
             <th>削除</th>
             <th>ページ</th>
@@ -202,7 +203,23 @@
               </select>
             </td>
           </tr>
-        </table>
+          </table>
+        </div>
+
+        <div class="database-container">
+          <table class="word-database">
+            <tr>
+              <th>単語</th>
+              <th>意味</th>
+              <th>例</th>
+            </tr>
+            <tr>
+              <td><input type="text" class="word-input" /></td>
+              <td><input type="text" class="meaning-input" /></td>
+              <td><input type="text" class="example-input" /></td>
+            </tr>
+          </table>
+        </div>
       </div>
 
       <!-- idはjs，classはcss用 -->

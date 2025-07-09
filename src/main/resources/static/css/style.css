@@ -35,6 +35,17 @@ body.task-body {
   margin-top: -60px;
 }
 
+.database-row {
+  margin-left: 200px;
+  margin-top: -60px;
+  display: flex;
+  gap: 40px;
+}
+
+.database-row .database-container {
+  margin: 0;
+}
+
 #new-schedule-button {
   /* 新規ボタン */
   /* margin-top: 10px; 相対位置*/
