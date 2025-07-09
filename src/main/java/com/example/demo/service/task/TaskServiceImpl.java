@@ -62,7 +62,10 @@ public class TaskServiceImpl implements TaskService {
 
             LocalDateTime deadline = t.getDeadline();
             if (deadline == null) {
-                deadline = calculateDeadline(t.getCategory());
+                // When deadline is missing (表示が "-"), treat task as expired
+                t.setExpired(true);
+                t.setTimeUntilDue("-");
+                continue;
             }
 
             long minutes = Duration.between(now, deadline).toMinutes();
