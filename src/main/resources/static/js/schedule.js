@@ -82,13 +82,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const start = new Date(`${dateStr}T${hourSel.value.padStart(2, '0')}:${minuteSel.value.padStart(2, '0')}:00`);
     const now = new Date();
     let diff = Math.floor((start - now) / 60000); // minutes
+    const expired = diff <= 0;
     if (diff < 0) diff = 0;
     diff = Math.floor(diff / 5) * 5;
     const days = Math.floor(diff / (60 * 24));
     const hours = Math.floor((diff % (60 * 24)) / 60);
     const mins = diff % 60;
     const span = row.querySelector('td:last-child span');
-    if (span) span.textContent = `${days}日${hours}時間${mins}分`;
+    if (span) {
+      if (expired) {
+        span.textContent = '期限切れ';
+        span.style.color = 'red';
+      } else {
+        span.textContent = `${days}日${hours}時間${mins}分`;
+        span.style.color = '';
+      }
+    }
   }
 
   const calendar = document.getElementById('calendar');

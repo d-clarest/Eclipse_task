@@ -45,6 +45,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 if (comp != null) {
                     s.setCompletedDay(comp.toLocalDate());
                 }
+                s.setExpired(false);
                 return s;
             }
         });

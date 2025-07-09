@@ -20,4 +20,5 @@ public class Schedule {
     private int point;               // ポイント
     private LocalDate completedDay;  // 完了日（null 可）
     private String timeUntilStart;   // 開始時刻までを表す文字列
+    private boolean expired;         // 期限切れかどうか
 }
