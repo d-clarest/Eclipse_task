@@ -57,6 +57,15 @@ body.task-body {
   height: 32px;
 }
 
+/* ensure cells in awareness/word tables use the same height */
+.awareness-database td input,
+.awareness-database td select,
+.word-database td input {
+  height: 24px;
+  line-height: 24px;
+  box-sizing: border-box;
+}
+
 #new-schedule-button {
   /* 新規ボタン */
   /* margin-top: 10px; 相対位置*/
