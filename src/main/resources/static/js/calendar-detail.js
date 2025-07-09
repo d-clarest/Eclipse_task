@@ -22,36 +22,46 @@ document.addEventListener('DOMContentLoaded', () => {
     popup.style.display = 'none';
   }
 
-  function show(dateStr) {
-    listEl.innerHTML = '';
-    const rows = document.querySelectorAll('.schedule-row');
-    let items = [];
-    rows.forEach((row) => {
-      const addFlag = row.querySelector('.schedule-add-flag');
-      if (!addFlag || !addFlag.checked) return;
-      const schedDate = row.querySelector('.schedule-date-input').value;
-      if (schedDate !== dateStr) return;
-      const title = row.querySelector('.schedule-title-input').value;
-      const start = row.querySelector('.start-hour').value.padStart(2, '0') + ':' + row.querySelector('.start-minute').value.padStart(2, '0');
-      const end = row.querySelector('.end-hour').value.padStart(2, '0') + ':' + row.querySelector('.end-minute').value.padStart(2, '0');
-      items.push({ start, end, title });
-    });
-    items.sort((a, b) => a.start.localeCompare(b.start));
-    if (items.length === 0) {
-      const li = document.createElement('li');
-      li.textContent = '予定はありません';
-      listEl.appendChild(li);
-    } else {
-      items.forEach((it) => {
-        const li = document.createElement('li');
-        li.textContent = `${it.start} - ${it.end} ${it.title}`;
-        listEl.appendChild(li);
+    function show(dateStr) {
+      listEl.innerHTML = '';
+      const rows = document.querySelectorAll('.schedule-row');
+      let items = [];
+      rows.forEach((row) => {
+        const schedDate = row.querySelector('.schedule-date-input').value;
+        if (schedDate !== dateStr) return;
+        const addFlag = row.querySelector('.schedule-add-flag');
+        const completed = !!row.querySelector('.completed-day-input')?.value;
+        if (!completed && (!addFlag || !addFlag.checked)) return;
+        const title = row.querySelector('.schedule-title-input').value;
+        const start =
+          row.querySelector('.start-hour').value.padStart(2, '0') +
+          ':' +
+          row.querySelector('.start-minute').value.padStart(2, '0');
+        const end =
+          row.querySelector('.end-hour').value.padStart(2, '0') +
+          ':' +
+          row.querySelector('.end-minute').value.padStart(2, '0');
+        items.push({ start, end, title, completed });
       });
+      items.sort((a, b) => a.start.localeCompare(b.start));
+      if (items.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = '予定はありません';
+        listEl.appendChild(li);
+      } else {
+        items.forEach((it) => {
+          const li = document.createElement('li');
+          li.textContent = `${it.start} - ${it.end} ${it.title}`;
+          if (it.completed) {
+            li.style.color = 'red';
+          }
+          listEl.appendChild(li);
+        });
+      }
+      titleEl.textContent = dateStr;
+      overlay.style.display = 'block';
+      popup.style.display = 'block';
     }
-    titleEl.textContent = dateStr;
-    overlay.style.display = 'block';
-    popup.style.display = 'block';
-  }
 
   closeBtn.addEventListener('click', hide);
   overlay.addEventListener('click', hide);
