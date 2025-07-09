@@ -136,6 +136,19 @@ public class TopController {
         model.addAttribute("username", username);
         return "awareness-box";
     }
+
+    @GetMapping("/{username}/task-top/word-box")
+    public String showWordBox(@PathVariable String username, Model model, HttpSession session) {
+        String loginUser = (String) session.getAttribute("loginUser");
+        if (loginUser == null || !loginUser.equals(username)) {
+            return "redirect:/log-in";
+        }
+        log.debug("Displaying word box page");
+        var records = wordRecordService.getAllRecords();
+        model.addAttribute("wordRecords", records);
+        model.addAttribute("username", username);
+        return "word-box";
+    }
     //-------------------------------------------------------------------------------------------------
     @GetMapping("/total-point")
     @ResponseBody
