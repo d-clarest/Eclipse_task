@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return item;
   }
 
-  function removeSchedule(name, dateStr) {
+  function removeSchedule(id, dateStr) {
     const date = new Date(dateStr); //文字列をDate型に変換
     if (isNaN(date.getTime())) return;
     if (date.getFullYear() !== currentYear || date.getMonth() !== currentMonth) return;
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const wrapper = cell.querySelector('.schedules');
     if (!wrapper) return;
     wrapper.querySelectorAll('div').forEach((div) => {
-      if (div.dataset.name === name && div.dataset.date === dateStr) {
+      if (div.dataset.id === id) {
         div.remove();
       }
     });
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const cb = row.querySelector('.schedule-add-flag');
         if (cb && cb.checked) {
-          removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
+          removeSchedule(row.dataset.id, row.dataset.oldDate);
           addSchedule(row.querySelector('.schedule-title-input').value, inp.value);
         }
         sendUpdate(row);
@@ -214,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
       opt.textContent = opt.value;
       minuteSel.appendChild(opt);
     }
+    // 初期値が指定されていたら、その値にセット
     if (time) {
       const [h, m] = time.split(':');
       hourSel.value = h;
@@ -265,10 +266,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!row) return;
       const title = row.querySelector('.schedule-title-input').value;
       const date = row.querySelector('.schedule-date-input').value;
+      const id = row.querySelector('.schedule-id').value;
       if (cb.checked) {
         addSchedule(title, date);
       } else {
-        removeSchedule(title, date);
+        removeSchedule(id, date);
       }
       sendUpdate(row);
     });
@@ -280,14 +282,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (row) {
         const cb = row.querySelector('.schedule-add-flag');
         if (cb && cb.checked) {
-          removeSchedule(row.dataset.oldTitle, row.dataset.oldDate);
+          removeSchedule(row.dataset.id, row.dataset.oldDate);
           addSchedule(inp.value, row.querySelector('.schedule-date-input').value);
         }
         sendUpdate(row);
       }
     };
     inp.addEventListener('change', handler);
-    inp.addEventListener('input', handler);
+    // inp.addEventListener('input', handler);
   });
 
   document.querySelectorAll('.schedule-location-input').forEach((inp) => {
@@ -352,7 +354,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cb || !cb.checked) return;
     const title = row.querySelector('.schedule-title-input').value;
     const date = row.querySelector('.schedule-date-input').value;
-    removeSchedule(title, date);
+    const id = row.querySelector('.schedule-id').value;
+    removeSchedule(id, date);
     if (completed) {
       if (completedShown) {
         addSchedule(title, date, { completed: true });
@@ -476,13 +479,13 @@ document.addEventListener('DOMContentLoaded', () => {
       .then((list) => {
         list.forEach((s) => {
           addSchedule(s.title, s.scheduleDate, { completed: true }); //カレンダーに予定を追加
-          displayedCompleted.push({ name: s.title, date: s.scheduleDate }); //完了済みスケジュールのうちすでに画面に表示したものを記録・管理するための配列
+          displayedCompleted.push({ id: s.id, date: s.scheduleDate }); //完了済みスケジュールのうちすでに画面に表示したものを記録・管理するための配列
         });
       });
   }
 
   function removeDisplayedCompleted() {
-    displayedCompleted.forEach((d) => removeSchedule(d.name, d.date)); //予定完了済みの予定名と予定日から予定をとの除く（削除ではない）
+    displayedCompleted.forEach((d) => removeSchedule(d.id, d.date)); //予定完了済みの予定名と予定日から予定をとの除く（削除ではない）
     displayedCompleted = [];
   }
 

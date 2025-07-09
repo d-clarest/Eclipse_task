@@ -7,7 +7,8 @@
   </head>
   <body class="task-body">
     <div class="link-area">
-      <a th:href="@{'/' + ${username} + '/task-top/task-box'}">一覧へ戻る</a>
+      <a th:href="@{'/' + ${username} + '/task-top'}">TOPへ</a>
+      <a th:href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックスへ</a>
     </div>
 
     <div class="awareness-title">
@@ -19,6 +20,7 @@
     </div>
 
     <script th:src="@{/js/task-page.js}"></script>
+    <!-- task-page.jsで pageIdを使うために-->
     <script th:inline="javascript">
       const pageId = [[${page.id}]];
     </script>

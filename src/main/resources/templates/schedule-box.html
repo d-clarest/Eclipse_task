@@ -1,142 +1,140 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>タスクボックス</title>
-<link rel="stylesheet" th:href="@{/css/style.css}">
-</head>
-<body class="task-body">
-    <div id="calendar" style="display:none;"></div>
-	
-        <div class="link-area">
-            <a th:href="@{'/' + ${username} + '/task-top'}">TOPへ</a>
-    </div>
-	
+  <head>
+    <meta charset="UTF-8" />
+    <title>タスクボックス</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="task-body">
+    <div id="calendar" style="display: none"></div>
 
-	
-	
+    <div class="link-area">
+      <a th:href="@{'/' + ${username} + '/task-top'}">TOPへ</a>
+    </div>
+
     <div class="database-container">
-                <p>予定完了済み</p>
-        <table id="completed-table" class="database-table">
-            <tr>
-                <th>完了</th>
-                <th>削除</th>
-                <th>add</th>
-                <th>予定名</th>
-                <th>予定日</th>
-                <th>曜日</th>
-                <th>開始時刻</th>
-                <th>終了時刻</th>
-                <th>場所</th>
-                <th>詳細</th>
-                <th>feedback</th>
-                <th>point</th>
-                <th>完了日</th>
-                <th>開始まで</th>
-            </tr>
-            <tr th:each="schedule : ${completedSchedules}" class="schedule-row"
-                th:data-id="${schedule.id}" th:data-old-title="${schedule.title}"
-                th:data-old-date="${schedule.scheduleDate}">
-                <td><input type="button" value="完了" class="complete-button"></td>
-                <td><input type="button" value="削除" class="delete-button"></td>
-                <td><input type="checkbox" th:checked="${schedule.addFlag}" class="schedule-add-flag"></td>
-                <td><input type="text" th:value="${schedule.title}" size="8" class="schedule-title-input"></td>
-                <td><input type="date" th:value="${schedule.scheduleDate}" class="schedule-date-input"></td>
-                <td><input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly size="2"></td>
-                <td>
-                    <select class="start-hour" th:data-time="${schedule.startTime}"></select> :
-                    <select class="start-minute" th:data-time="${schedule.startTime}"></select>
-                </td>
-                <td>
-                    <select class="end-hour" th:data-time="${schedule.endTime}"></select> :
-                    <select class="end-minute" th:data-time="${schedule.endTime}"></select>
-                </td>
-                <td><input type="text" th:value="${schedule.location}" size="5" class="schedule-location-input"></td>
-                <td><input type="text" th:value="${schedule.detail}" size="8" class="schedule-detail-input"></td>
-                <td><input type="text" th:value="${schedule.feedback}" size="8" class="schedule-feedback-input"></td>
-                <td><input type="number" th:value="${schedule.point}" size="2" class="point-input"></td>
-                <td><input type="date" th:value="${schedule.completedDay}" class="completed-day-input"></td>
-                <td><span th:text="${schedule.timeUntilStart}"></span></td>
-            </tr>
-        </table>
+      <p>予定完了済み</p>
+      <table id="completed-table" class="database-table">
+        <tr>
+          <th>完了</th>
+          <th>削除</th>
+          <th>add</th>
+          <th>予定名</th>
+          <th>予定日</th>
+          <th>曜日</th>
+          <th>開始時刻</th>
+          <th>終了時刻</th>
+          <th>場所</th>
+          <th>詳細</th>
+          <th>feedback</th>
+          <th>point</th>
+          <th>完了日</th>
+          <th>開始まで</th>
+        </tr>
+        <!-- 範囲for文でレコードの値を追加していく，th:data-とするとjs側でrow.dataset.id，row.dataset.oldTitle，row.dataset.oldDateで使える-->
+        <!-- class="schedule-row"はschedule.jsとcalender-detail.jsの中で -->
+        <tr th:each="schedule : ${completedSchedules}" class="schedule-row" th:data-id="${schedule.id}" th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
+          <td><input type="button" value="完了" class="complete-button" /></td>
+          <td><input type="button" value="削除" class="delete-button" /></td>
+          <td><input type="checkbox" th:checked="${schedule.addFlag}" class="schedule-add-flag" /></td>
+          <td><input type="text" th:value="${schedule.title}" size="8" class="schedule-title-input" /></td>
+          <td><input type="date" th:value="${schedule.scheduleDate}" class="schedule-date-input" /></td>
+          <td><input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly size="2" /></td>
+          <!-- schedule.jsでoptionで0～23、分を5分刻みで設定している。また、js側でdataset.timeが使用可能 -->
+          <td>
+            <select class="start-hour" th:data-time="${schedule.startTime}"></select>
+            :
+            <select class="start-minute"></select>
+          </td>
+          <td>
+            <select class="end-hour" th:data-time="${schedule.endTime}"></select>
+            :
+            <select class="end-minute"></select>
+          </td>
+          <td><input type="text" th:value="${schedule.location}" size="5" class="schedule-location-input" /></td>
+          <td><input type="text" th:value="${schedule.detail}" size="8" class="schedule-detail-input" /></td>
+          <td><input type="text" th:value="${schedule.feedback}" size="8" class="schedule-feedback-input" /></td>
+          <td><input type="number" th:value="${schedule.point}" size="2" class="point-input" /></td>
+          <td><input type="date" th:value="${schedule.completedDay}" class="completed-day-input" /></td>
+          <td><span th:text="${schedule.timeUntilStart}"></span></td>
+          <td><input type="hidden" class="schedule-id" th:value="${schedule.id}" /></td>
+        </tr>
+      </table>
     </div>
-	
-	
-        <div class="database-container">
-                <p>これからの予定</p>
-            <table id="upcoming-table" class="database-table">
-                    <tr>
-                            <th>完了</th>
-							<th>削除</th>
-                            <th>add</th>
-                            <th>予定名</th>
-							<th>予定日</th>
-							<th>曜日</th>
-							<th>開始時刻</th>
-							<th>終了時刻</th>
-							<th>場所</th>
-							<th>詳細</th>
-							<th>feedback</th>
-							<th>point</th>
-							<th>完了日</th>
-							<th>開始まで</th>
-                    </tr>
-                    <tr th:each="schedule : ${upcomingSchedules}" class="schedule-row"
-                        th:data-id="${schedule.id}" th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
-                            <td>
-                                <input type="button" value="完了" class="complete-button">
-                            </td>
-							<td>
-                                <input type="button" value="削除" class="delete-button">
-                            </td>
-                            <td>
-                                <input type="checkbox" th:checked="${schedule.addFlag}" class="schedule-add-flag">
-                            </td>
-                            <td>
-                                <input type="text" th:value="${schedule.title}" size="8" class="schedule-title-input">
-                            </td>
-                            <td>
-                                <input type="date" th:value="${schedule.scheduleDate}" class="schedule-date-input">
-                            </td>
-                            <td>
-                                <input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly size="2">
-                            </td>
-                            <td>
-                                <select class="start-hour" th:data-time="${schedule.startTime}"></select> :
-                                <select class="start-minute" th:data-time="${schedule.startTime}"></select>
-                            </td>
-                            <td>
-                                <select class="end-hour" th:data-time="${schedule.endTime}"></select> :
-                                <select class="end-minute" th:data-time="${schedule.endTime}"></select>
-                            </td>
-                            <td>
-                                <input type="text" th:value="${schedule.location}" size="5" class="schedule-location-input">
-                            </td>
-                            <td>
-                                <input type="text" th:value="${schedule.detail}" size="8" class="schedule-detail-input">
-                            </td>
-                                                            <td>
-                                <input type="text" th:value="${schedule.feedback}" size="8" class="schedule-feedback-input">
-                            </td>
-                            <td>
-                                <input type="number" th:value="${schedule.point}" size="2" class="point-input">
-                            </td>
-                            <td>
-                                <input type="date" th:value="${schedule.completedDay}" class="completed-day-input">
-                            </td>
-                            <td>
-                                <span th:text="${schedule.timeUntilStart}"></span>
-                            </td>
-                    </tr>
-            </table>
-            <button id="new-schedule-button">新規</button>
+
+    <div class="database-container">
+      <p>これからの予定</p>
+      <table id="upcoming-table" class="database-table">
+        <tr>
+          <th>完了</th>
+          <th>削除</th>
+          <th>add</th>
+          <th>予定名</th>
+          <th>予定日</th>
+          <th>曜日</th>
+          <th>開始時刻</th>
+          <th>終了時刻</th>
+          <th>場所</th>
+          <th>詳細</th>
+          <th>feedback</th>
+          <th>point</th>
+          <th>完了日</th>
+          <th>開始まで</th>
+        </tr>
+        <tr th:each="schedule : ${upcomingSchedules}" class="schedule-row" th:data-id="${schedule.id}" th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
+          <td>
+            <input type="button" value="完了" class="complete-button" />
+          </td>
+          <td>
+            <input type="button" value="削除" class="delete-button" />
+          </td>
+          <td>
+            <input type="checkbox" th:checked="${schedule.addFlag}" class="schedule-add-flag" />
+          </td>
+          <td>
+            <input type="text" th:value="${schedule.title}" size="8" class="schedule-title-input" />
+          </td>
+          <td>
+            <input type="date" th:value="${schedule.scheduleDate}" class="schedule-date-input" />
+          </td>
+          <td>
+            <input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly size="2" />
+          </td>
+          <!-- schedule.jsでoptionで0～23、分を5分刻みで設定している。また、js側でdataset.timeが使用可能 -->
+          <td>
+            <select class="start-hour" th:data-time="${schedule.startTime}"></select>
+            :
+            <select class="start-minute"></select>
+          </td>
+          <td>
+            <select class="end-hour" th:data-time="${schedule.endTime}"></select>
+            :
+            <select class="end-minute"></select>
+          </td>
+          <td>
+            <input type="text" th:value="${schedule.location}" size="5" class="schedule-location-input" />
+          </td>
+          <td>
+            <input type="text" th:value="${schedule.detail}" size="8" class="schedule-detail-input" />
+          </td>
+          <td>
+            <input type="text" th:value="${schedule.feedback}" size="8" class="schedule-feedback-input" />
+          </td>
+          <td>
+            <input type="number" th:value="${schedule.point}" size="2" class="point-input" />
+          </td>
+          <td>
+            <input type="date" th:value="${schedule.completedDay}" class="completed-day-input" />
+          </td>
+          <td>
+            <span th:text="${schedule.timeUntilStart}"></span>
+          </td>
+          <td><input type="hidden" class="schedule-id" th:value="${schedule.id}" /></td>
+        </tr>
+      </table>
+      <button id="new-schedule-button">新規</button>
     </div>
-	
-	
-	
-	
-	
-	
+
     <script th:src="@{/js/schedule.js}"></script>
-</body>
+  </body>
 </html>

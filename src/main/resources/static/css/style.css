@@ -273,7 +273,7 @@ td {
 
 .tbtn:hover {
   color: #fff;
-  background: steelblue;
+  background: rgb(192, 155, 22);
 }
 
 /* 確認画面用 */
@@ -294,3 +294,29 @@ td {
   background-color: #afeeee;
 }
 
+/* task-page.htmlのスタイル---------------------------------------------------------------------------- */
+.awareness-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.page-container {
+  width: 100%;
+  max-width: 800px; /* 最大幅 */
+  margin: 0 auto; /* 横中央寄せ */
+  padding: 10px; /* 要素の内側の余白 */
+  box-sizing: border-box; /* 例えばwidth: 300px;でpadding: 10px;の場合、実際のコンテンツ領域は 300 - 10*2 = 280px となり、全体幅は300pxに収まる */
+}
+
+#task-page-content {
+  width: 100%; /* 親の幅いっぱい */
+  height: 400px; /* 高さを固定したい場合 */
+  font-family: monospace, monospace; /* 等幅フォントでコードや文章が見やすい */
+  font-size: 16px;
+  padding: 10px;
+  resize: vertical; /* 高さだけリサイズ可能 */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}

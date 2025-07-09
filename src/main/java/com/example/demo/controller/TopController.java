@@ -38,6 +38,7 @@ public class TopController {
         var list = scheduleService.getAllSchedules().stream()
                 .filter(s -> s.getCompletedDay() == null)
                 .toList();
+        System.out.println(list);
         model.addAttribute("schedules", list);
         var challengeList = challengeService.getAllChallenges().stream()
                 .filter(c -> c.getChallengeDate() == null)
