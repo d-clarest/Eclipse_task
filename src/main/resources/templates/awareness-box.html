@@ -16,14 +16,12 @@
           <th>削除</th>
           <th>ページ</th>
           <th>気づき</th>
-          <th>意見</th>
           <th>気づき度</th>
         </tr>
         <tr th:each="record : ${awarenessRecords}" th:data-id="${record.id}">
           <td><input type="button" value="削除" class="awareness-delete-button" /></td>
           <td><a th:href="@{'/' + ${username} + '/task-top/awareness-page/' + ${record.id}}">ページ</a></td>
           <td><input type="text" th:value="${record.awareness}" class="awareness-input" /></td>
-          <td><input type="text" th:value="${record.opinion}" class="opinion-input" /></td>
           <td>
             <select class="awareness-level-select">
               <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == record.awarenessLevel}"></option>
