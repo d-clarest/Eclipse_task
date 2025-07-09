@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>単語ボックス</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="task-body">
+    <div class="link-area">
+      <a th:href="@{'/' + ${username} + '/task-top'}">TOPへ</a>
+    </div>
+
+    <div class="database-container">
+      <table class="word-database">
+        <tr>
+          <th>削除</th>
+          <th>単語</th>
+          <th>意味</th>
+          <th>例</th>
+        </tr>
+        <tr th:each="word : ${wordRecords}" th:data-id="${word.id}">
+          <td><input type="button" value="削除" class="word-delete-button" /></td>
+          <td><input type="text" th:value="${word.word}" class="word-input" /></td>
+          <td><input type="text" th:value="${word.meaning}" class="meaning-input" /></td>
+          <td><input type="text" th:value="${word.example}" class="example-input" /></td>
+        </tr>
+      </table>
+      <button id="new-word-button">新規単語</button>
+    </div>
+
+    <script th:src="@{/js/word.js}"></script>
+  </body>
+</html>
