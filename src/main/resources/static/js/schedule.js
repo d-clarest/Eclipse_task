@@ -119,6 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function getStartEnd(row) {
+    const sh = row.querySelector('.start-hour').value.padStart(2, '0');
+    const sm = row.querySelector('.start-minute').value.padStart(2, '0');
+    const eh = row.querySelector('.end-hour').value.padStart(2, '0');
+    const em = row.querySelector('.end-minute').value.padStart(2, '0');
+    return { start: `${sh}:${sm}`, end: `${eh}:${em}` };
+  }
+
   function addSchedule(name, dateStr, opts = {}) {
     const date = new Date(dateStr); //文字列をDate型に変換
     if (isNaN(date.getTime())) return; //日付をミリ秒に変換して，変な数字じゃないか判定
@@ -139,11 +147,14 @@ document.addEventListener('DOMContentLoaded', () => {
     item.title = name; //カレンダー表示用
     item.dataset.name = name; //属性値
     item.dataset.date = dateStr; //属性値
+    if (opts.start) item.dataset.start = opts.start;
+    if (opts.end) item.dataset.end = opts.end;
     if (opts.id !== undefined) {
       item.dataset.id = String(opts.id);
     }
     if (opts.completed) {
       item.style.color = 'red';
+      item.dataset.completed = 'true';
     }
     wrapper.appendChild(item); //<div>name</div>をwrapperの子要素に
     return item;
@@ -177,7 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = row.querySelector('.schedule-title-input').value; //予定名
         const date = row.querySelector('.schedule-date-input').value; //何年何月何日
         const id = row.dataset.id;
-        addSchedule(name, date, { id });
+        const times = getStartEnd(row);
+        addSchedule(name, date, { id, start: times.start, end: times.end });
       }
     });
   }
@@ -196,7 +208,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const cb = row.querySelector('.schedule-add-flag');
         if (cb && cb.checked) {
           removeSchedule(row.dataset.id, row.dataset.oldDate);
-          addSchedule(row.querySelector('.schedule-title-input').value, inp.value, { id: row.dataset.id });
+          const times = getStartEnd(row);
+          addSchedule(
+            row.querySelector('.schedule-title-input').value,
+            inp.value,
+            { id: row.dataset.id, start: times.start, end: times.end }
+          );
         }
         sendUpdate(row);
         updateTimeUntilStart(row);
@@ -273,7 +290,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const date = row.querySelector('.schedule-date-input').value;
       const id = row.querySelector('.schedule-id').value;
       if (cb.checked) {
-        addSchedule(title, date, { id });
+        const times = getStartEnd(row);
+        addSchedule(title, date, { id, start: times.start, end: times.end });
       } else {
         removeSchedule(id, date);
       }
@@ -288,7 +306,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const cb = row.querySelector('.schedule-add-flag');
         if (cb && cb.checked) {
           removeSchedule(row.dataset.id, row.dataset.oldDate);
-          addSchedule(inp.value, row.querySelector('.schedule-date-input').value, { id: row.dataset.id });
+          const times = getStartEnd(row);
+          addSchedule(
+            inp.value,
+            row.querySelector('.schedule-date-input').value,
+            { id: row.dataset.id, start: times.start, end: times.end }
+          );
         }
         sendUpdate(row);
       }
@@ -360,17 +383,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = row.querySelector('.schedule-title-input').value;
     const date = row.querySelector('.schedule-date-input').value;
     const id = row.querySelector('.schedule-id').value;
+    const times = getStartEnd(row);
     removeSchedule(id, date);
     if (completed) {
       if (completedShown) {
-        addSchedule(title, date, { completed: true, id });
+        addSchedule(title, date, {
+          completed: true,
+          id,
+          start: times.start,
+          end: times.end,
+        });
         // keep track so the item can be removed when toggling display
         if (!displayedCompleted.some((d) => d.id === id && d.date === date)) {
           displayedCompleted.push({ id, date });
         }
       }
     } else {
-      addSchedule(title, date, { id });
+      addSchedule(title, date, { id, start: times.start, end: times.end });
       // remove from tracking list in case it was previously completed
       displayedCompleted = displayedCompleted.filter(
         (d) => !(d.id === id && d.date === date)
@@ -490,7 +519,14 @@ document.addEventListener('DOMContentLoaded', () => {
       .then((res) => res.json()) //データをjson形式で受け取る、次のthenに結果を返す
       .then((list) => {
         list.forEach((s) => {
-          addSchedule(s.title, s.scheduleDate, { completed: true, id: s.id }); //カレンダーに予定を追加
+          const start = (s.startTime || '').slice(0, 5);
+          const end = (s.endTime || '').slice(0, 5);
+          addSchedule(s.title, s.scheduleDate, {
+            completed: true,
+            id: s.id,
+            start,
+            end,
+          }); //カレンダーに予定を追加
           displayedCompleted.push({ id: s.id, date: s.scheduleDate }); //完了済みスケジュールのうちすでに画面に表示したものを記録・管理するための配列
         });
       });
