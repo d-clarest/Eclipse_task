@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
       listEl.innerHTML = '';
       const rows = document.querySelectorAll('.schedule-row');
       let items = [];
+      const seen = new Set();
       rows.forEach((row) => {
         const schedDate = row.querySelector('.schedule-date-input').value;
         if (schedDate !== dateStr) return;
@@ -41,8 +42,23 @@ document.addEventListener('DOMContentLoaded', () => {
           row.querySelector('.end-hour').value.padStart(2, '0') +
           ':' +
           row.querySelector('.end-minute').value.padStart(2, '0');
-        items.push({ start, end, title, completed });
+        const id = row.dataset.id;
+        items.push({ start, end, title, completed, id });
+        if (id) seen.add(id);
       });
+      document
+        .querySelectorAll('#calendar .schedules div')
+        .forEach((div) => {
+          if (div.dataset.date !== dateStr) return;
+          const id = div.dataset.id;
+          if (id && seen.has(id)) return;
+          const start = (div.dataset.start || '').slice(0, 5);
+          const end = (div.dataset.end || '').slice(0, 5);
+          const title = div.dataset.name || div.textContent;
+          const completed =
+            div.dataset.completed === 'true' || div.style.color === 'red';
+          items.push({ start, end, title, completed });
+        });
       items.sort((a, b) => a.start.localeCompare(b.start));
       if (items.length === 0) {
         const li = document.createElement('li');
