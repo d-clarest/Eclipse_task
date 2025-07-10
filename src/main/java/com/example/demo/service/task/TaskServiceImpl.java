@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
@@ -29,22 +30,23 @@ public class TaskServiceImpl implements TaskService {
     private LocalDateTime calculateDeadline(String category) {
         LocalDate today = LocalDate.now();
         LocalDate sundayThisWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+        LocalTime cutOff = LocalTime.of(23, 59);
         if (category == null) {
-            return today.plusDays(1).atStartOfDay();
+            return today.plusDays(1).atTime(cutOff);
         }
         switch (category) {
         case "今日":
-            return today.plusDays(1).atStartOfDay();
+            return today.plusDays(1).atTime(cutOff);
         case "明日":
-            return today.plusDays(2).atStartOfDay();
+            return today.plusDays(2).atTime(cutOff);
         case "今週":
-            return sundayThisWeek.plusDays(1).atStartOfDay();
+            return sundayThisWeek.plusDays(1).atTime(cutOff);
         case "来週":
-            return sundayThisWeek.plusWeeks(1).plusDays(1).atStartOfDay();
+            return sundayThisWeek.plusWeeks(1).plusDays(1).atTime(cutOff);
         case "再来週":
-            return sundayThisWeek.plusWeeks(2).plusDays(1).atStartOfDay();
+            return sundayThisWeek.plusWeeks(2).plusDays(1).atTime(cutOff);
         default:
-            return today.plusDays(1).atStartOfDay();
+            return today.plusDays(1).atTime(cutOff);
         }
     }
 

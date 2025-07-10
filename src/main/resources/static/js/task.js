@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
       default:
         deadline.setDate(today.getDate() + 1);
     }
-    deadline.setHours(0, 0, 0, 0);
+    deadline.setHours(23, 59, 0, 0);
     let diff = Math.floor((deadline - now) / 60000);
     const expired = diff <= 0;
     if (diff < 0) diff = 0;
