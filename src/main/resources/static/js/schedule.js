@@ -1,5 +1,29 @@
 //ページが全部読み込まれたら、中の処理を始める
 document.addEventListener('DOMContentLoaded', () => {
+  const completedTable = document.getElementById('completed-table'); //schedule-box.htmlの完了済みテーブル
+  const upcomingTable = document.getElementById('upcoming-table'); //schedule-box.htmlのこれからの予定テーブル
+  const calendar = document.getElementById('calendar');
+  let dayCells = {}; //連想配列の定義
+  let currentYear = new Date().getFullYear();
+  let currentMonth = new Date().getMonth();
+  const newButton = document.getElementById('new-schedule-button');
+  const toggleBtn = document.getElementById('toggle-completed-button');
+  const STORAGE_KEY = 'completedShown';
+  let completedShown = localStorage.getItem(STORAGE_KEY) === 'true'; //
+  let displayedCompleted = [];
+  const pointDisplay = document.getElementById('total-point-display');
+   enableFullTextDisplay('.schedule-title-input, .schedule-location-input, .schedule-detail-input, .schedule-feedback-input');
+   refreshTotalPoint(); //ページにポイント表示する部分があれば，表示
+  sortAllTables(); //予定データベーステーブルを日付と時間の昇順に並べ替える,初期化
+  initSchedules(); //今表示されているカレンダーに予定を埋め込む
+
+
+
+
+
+
+
+
   function sortScheduleTable(table) {
     if (!table) return; //引数が無効の場合の安全対策
     const tbody = table.tBodies[0] || table; //テーブルの中には通常 <tbody> があります.tBodies[0] は「最初の <tbody>」を指し，なければ table 自体を使う．
@@ -21,9 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //classのdatabase-tableすべてに対して、それぞれsortScheduleTable関数を呼び出している、引数はforEachによって渡されている
     document.querySelectorAll('.database-table').forEach(sortScheduleTable);
   }
-
-  const completedTable = document.getElementById('completed-table'); //schedule-box.htmlの完了済みテーブル
-  const upcomingTable = document.getElementById('upcoming-table'); //schedule-box.htmlのこれからの予定テーブル
 
   function moveRow(row, table) {
     if (!row || !table) return;
@@ -100,10 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  const calendar = document.getElementById('calendar');
-  let dayCells = {}; //連想配列の定義
-  let currentYear = new Date().getFullYear();
-  let currentMonth = new Date().getMonth();
 
   function updateCurrentYearMonth() {
     const title = document.getElementById('calendar-title');
@@ -375,8 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  enableFullTextDisplay('.schedule-title-input, .schedule-location-input, .schedule-detail-input, .schedule-feedback-input');
-
   document.querySelectorAll('.point-input').forEach((inp) => {
     const handler = () => {
       const row = inp.closest('tr');
@@ -482,7 +497,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  const newButton = document.getElementById('new-schedule-button');
   //このif文はnewButtonがnullの時の可能性もあるので必要，nullの時，newButton.addEventListenerでエラーになる
   if (newButton) {
     newButton.addEventListener('click', () => {
@@ -512,12 +526,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
-
-  // ----- completed schedule display toggle -----
-  const toggleBtn = document.getElementById('toggle-completed-button');
-  const STORAGE_KEY = 'completedShown';
-  let completedShown = localStorage.getItem(STORAGE_KEY) === 'true'; //
-  let displayedCompleted = [];
 
   //完了済みの予定を赤文字で表示する関数
   function fetchCompletedAndShow() {
@@ -579,8 +587,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const pointDisplay = document.getElementById('total-point-display');
-
   function refreshTotalPoint() {
     if (!pointDisplay) return; //ページにポイント表示するとことがない場合は，return
     fetch('/total-point')
@@ -590,8 +596,5 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  refreshTotalPoint(); //ページにポイント表示する部分があれば，表示
-  sortAllTables(); //予定データベーステーブルを日付と時間の昇順に並べ替える,初期化
-  initSchedules(); //今表示されているカレンダーに予定を埋め込む
   document.addEventListener('calendarRendered', initSchedules); //calendarRendered というイベントが起きたら initSchedules 関数を実行．つまり，カレンダーの描画が終わってから，予定を埋め込むということ．
 });
