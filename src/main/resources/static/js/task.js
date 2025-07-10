@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-
   const uncompletedTable = document.getElementById('uncompleted-task-table');
   const completedTable = document.getElementById('completed-task-table');
   const pointDisplay = document.getElementById('total-point-display');
@@ -19,6 +18,71 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  //削除ボタンが押されたら
+  document.querySelectorAll('.task-delete-button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('tr');
+      if (!row) return;
+      const id = row.dataset.id;
+      fetch('/task-delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id, 10) }),
+        keepalive: true,//POSTしたらすぐリロードなら、つけておくと安全
+      }).then(() => location.reload());
+    });
+  });
+
+  //完了ボタンか取消ボタンのどっちを表示するかというのと，完了ボタンが押されたときのイベントを
+  document.querySelectorAll('.task-complete-button').forEach((btn) => {
+    const row = btn.closest('tr');
+    const comp = row ? row.querySelector('.task-completed-input') : null;
+    //完了日が書いているなら既に完了しているので，取消ボタンになるよ
+    if (comp && comp.value) {
+      btn.value = '取消';
+      moveRow(row, true);//完了済みタスクのとこにレコード追加
+    }
+    //完了ボタンが押されたら
+    btn.addEventListener('click', () => {
+      if (!row || !comp) return;
+      //もし完了ボタンを押したら
+      if (btn.value === '完了') {
+        comp.value = new Date().toISOString().split('T')[0];//完了日を入れる
+        btn.value = '取消';
+        moveRow(row, true);//完了済みに移動させる
+        const expiration=row ? row.querySelector('.task-completed-input') : null;
+        const diffCell = row.cells[6];//期日を取得
+        if (diffCell) diffCell.textContent = '';//期日をnull
+        sortAllTaskTables();//締切が速い順に並び替え
+      } else {
+        comp.value = '';
+        btn.value = '完了';
+        moveRow(row, false);//未完了に移動させる
+        updateTimeUntilDue(row);//期日を再計算，期日は区分に依存している
+        sortAllTaskTables();//締切が速い順に
+      }
+      sendUpdate(row).then(refreshTotalPoint);//サーバーサイドのデータベース更新＆ポイント更新
+    });
+  });
+
+    //インプット欄に何か入力されたらサーバーへデータ更新
+  ['.task-title-input', '.task-result-input', '.task-detail-input', '.task-level-select', '.task-completed-input', '.task-category-select'].forEach((selector) => {
+    document.querySelectorAll(selector).forEach((inp) => {
+      const handler = () => {
+        const row = inp.closest('tr');
+        if (!row) return;
+        if (selector === '.task-category-select') {
+          updateTimeUntilDue(row);
+          console.log('a');
+          sortAllTaskTables();
+        }
+        sendUpdate(row).then(refreshTotalPoint);
+      };
+      inp.addEventListener('change', handler);
+      inp.addEventListener('input', handler);
+    });
+  });
+
   //各データベースのすべてのポイントを取得（task-top.htmlで表示用）
   function refreshTotalPoint() {
     if (!pointDisplay) return;
@@ -29,15 +93,14 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
-  //
+  //完了済みのテーブルに入れるか，未完了のテーブルに入れるかを決定する
   function moveRow(row, completed) {
     if (!row) return;
+    //タスクボックスの中なら
     if (uncompletedTable && completedTable) {
       const target = completed ? completedTable : uncompletedTable;
       const tbody = target.tBodies[0] || target;
       tbody.appendChild(row);
-    } else {
-      row.style.display = completed ? 'none' : '';
     }
   }
 
@@ -144,73 +207,11 @@ document.addEventListener('DOMContentLoaded', () => {
     rows.forEach((r) => tbody.appendChild(r));
   }
 
+  //テーブルを締切の早い順にソート
   function sortAllTaskTables() {
+    //task-topのやつも，タスクボックスにあるやつも適用
     document.querySelectorAll('.task-database').forEach(sortTaskTable);
   }
-
-  ['.task-title-input', '.task-result-input', '.task-detail-input', '.task-level-select', '.task-completed-input', '.task-category-select'].forEach((selector) => {
-    document.querySelectorAll(selector).forEach((inp) => {
-      const handler = () => {
-        const row = inp.closest('tr');
-        if (!row) return;
-        if (selector === '.task-category-select') {
-          updateTimeUntilDue(row);
-          console.log('a');
-          sortAllTaskTables();
-        }
-        sendUpdate(row).then(refreshTotalPoint);
-      };
-      inp.addEventListener('change', handler);
-      inp.addEventListener('input', handler);
-    });
-  });
-
-  document.querySelectorAll('.task-complete-button').forEach((btn) => {
-    const row = btn.closest('tr');
-    const comp = row ? row.querySelector('.task-completed-input') : null;
-    if (comp && comp.value) {
-      btn.value = '取消';
-      moveRow(row, true);
-    }
-    btn.addEventListener('click', () => {
-      if (!row || !comp) return;
-      if (btn.value === '完了') {
-        comp.value = new Date().toISOString().split('T')[0];
-        btn.value = '取消';
-        moveRow(row, true);
-        const diffCell = row.cells[6];
-        if (diffCell) diffCell.textContent = '';
-        sortAllTaskTables();
-      } else {
-        comp.value = '';
-        btn.value = '完了';
-        moveRow(row, false);
-        updateTimeUntilDue(row);
-        sortAllTaskTables();
-      }
-      sendUpdate(row).then(refreshTotalPoint);
-    });
-  });
-
-  //削除ボタンが押されたら
-  document.querySelectorAll('.task-delete-button').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const row = btn.closest('tr');
-      if (!row) return;
-      const id = row.dataset.id;
-      fetch('/task-delete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: parseInt(id, 10) }),
-        keepalive: true,
-        // }).then(() => location.reload());
-      }).then(() => {
-        row.remove();
-        refreshTotalPoint();
-        // location.reload();
-      });
-    });
-  });
 
   //入力欄を選択または、入力中に幅が自動で変わる
   function enableFullTextDisplay(selector) {

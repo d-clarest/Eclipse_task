@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  //入力欄を選択または、入力中に幅が自動で変わる
   enableFullTextDisplay('.word-input, .meaning-input,.example-input ');
   // 新規単語ボタンが押されたら
   document.querySelectorAll('#new-word-button').forEach((btn) => {
