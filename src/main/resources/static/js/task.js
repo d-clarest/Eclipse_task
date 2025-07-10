@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+  const uncompletedTable = document.getElementById('uncompleted-task-table');
+  const completedTable = document.getElementById('completed-task-table');
+  const pointDisplay = document.getElementById('total-point-display');
   enableFullTextDisplay('.task-title-input, .task-result-input, .task-detail-input');
+  refreshTotalPoint();
 
   //タスク新規のボタンを押されたら、
   const newButton = document.getElementById('new-task-button');
@@ -13,12 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }).then(() => location.reload());
     });
   }
-
-  const uncompletedTable = document.getElementById('uncompleted-task-table');
-  const completedTable = document.getElementById('completed-task-table');
-  const pointDisplay = document.getElementById('total-point-display');
-
-  refreshTotalPoint();
 
   //各データベースのすべてのポイントを取得（task-top.htmlで表示用）
   function refreshTotalPoint() {
