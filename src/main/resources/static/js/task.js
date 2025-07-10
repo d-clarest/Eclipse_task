@@ -101,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const target = completed ? completedTable : uncompletedTable;
       const tbody = target.tBodies[0] || target;
       tbody.appendChild(row);
+    }else {
+      row.style.display = completed ? 'none' : '';//task-top画面で完了済みが押されたら非表示にするために，未完了なら表示にする
     }
   }
 
