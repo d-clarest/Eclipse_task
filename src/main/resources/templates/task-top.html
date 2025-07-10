@@ -1,188 +1,186 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-      <meta charset="UTF-8" />
-      <title>トップ画面</title>
-      <link rel="stylesheet" th:href="@{/css/style.css}" />
-    </head>
-    <body class="task-body">
+    <meta charset="UTF-8" />
+    <title>トップ画面</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="task-body">
+    <div class="link-area">
+      <!-- java変数などを埋め込める動的リンクを生成（Thymeleaf使用） @{URLパターン}，java側でusernameをmodel.addAttributeしてる-->
+      <a th:href="@{'/' + ${username} + '/task-top/schedule-box'}">予定ボックス</a>
+      <a th:href="@{'/' + ${username} + '/task-top/challenge-box'}">挑戦ボックス</a>
+      <a th:href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックス</a>
+      <a th:href="@{'/' + ${username} + '/task-top/awareness-box'}">気づきボックス</a>
+      <a th:href="@{'/' + ${username} + '/task-top/word-box'}">単語ボックス</a>
+    </div>
 
-      <div class="link-area">
-        <!-- java変数などを埋め込める動的リンクを生成（Thymeleaf使用） @{URLパターン}，java側でusernameをmodel.addAttributeしてる-->
-        <a th:href="@{'/' + ${username} + '/task-top/schedule-box'}">予定ボックス</a>
-        <a th:href="@{'/' + ${username} + '/task-top/challenge-box'}">挑戦ボックス</a>
-        <a th:href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックス</a>
-        <a th:href="@{'/' + ${username} + '/task-top/awareness-box'}">気づきボックス</a>
-        <a th:href="@{'/' + ${username} + '/task-top/word-box'}">単語ボックス</a>
-      </div>
+    <!-- idの方でjs，classの方でcssの処理を適用-->
+    <div id="calendar" class="calendar-area"></div>
 
-      <!-- idの方でjs，classの方でcssの処理を適用-->
-      <div id="calendar" class="calendar-area"></div>
+    <div class="database-container">
+      <!-- 日付の昇順に並べ替えている -->
+      <table class="database-table">
+        <tr>
+          <th>報告</th>
+          <th>削除</th>
+          <th>add</th>
+          <th>予定名</th>
+          <th>予定日</th>
+          <th>曜日</th>
+          <th>開始時刻</th>
+          <th>終了時刻</th>
+          <th>場所</th>
+          <th>詳細</th>
+          <th>結果</th>
+          <th>point</th>
+          <th>完了日</th>
+          <th>開始まで</th>
+        </tr>
+        <!-- 範囲for文でレコードの値を追加していく，th:data-とするとjs側でrow.dataset.id，row.dataset.oldTitle，row.dataset.oldDateで使える-->
+        <!-- class="schedule-row"はschedule.jsとcalender-detail.jsの中で -->
+        <tr th:each="schedule : ${schedules}" class="schedule-row" th:data-id="${schedule.id}" th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
+          <!-- schedule.jsにイベントハンドラーが書いてる -->
+          <td>
+            <input type="button" value="完了" class="complete-button" />
+          </td>
+          <td>
+            <input type="button" value="削除" class="delete-button" />
+          </td>
+          <td>
+            <input type="checkbox" th:checked="${schedule.addFlag}" class="schedule-add-flag" />
+          </td>
+          <td>
+            <input type="text" th:value="${schedule.title}" size="8" class="schedule-title-input" />
+          </td>
+          <td>
+            <input type="date" th:value="${schedule.scheduleDate}" class="schedule-date-input" />
+          </td>
+          <td>
+            <input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly size="2" />
+          </td>
+          <!-- schedule.jsでoptionで0～23、分を5分刻みで設定している。また、js側でdataset.timeが使用可能 -->
+          <td>
+            <select class="start-hour" th:data-time="${schedule.startTime}"></select>
+            :
+            <select class="start-minute"></select>
+          </td>
+          <td>
+            <select class="end-hour" th:data-time="${schedule.endTime}"></select>
+            :
+            <select class="end-minute"></select>
+          </td>
+          <td>
+            <input type="text" th:value="${schedule.location}" size="5" class="schedule-location-input" />
+          </td>
+          <td>
+            <input type="text" th:value="${schedule.detail}" size="8" class="schedule-detail-input" />
+          </td>
+          <td>
+            <input type="text" th:value="${schedule.feedback}" size="8" class="schedule-feedback-input" />
+          </td>
+          <td>
+            <input type="number" th:value="${schedule.point}" size="2" class="point-input" />
+          </td>
+          <td>
+            <input type="date" th:value="${schedule.completedDay}" class="completed-day-input" />
+          </td>
+          <td>
+            <span th:text="${schedule.expired ? '期限切れ' : schedule.timeUntilStart}" th:style="${schedule.expired} ? 'color:red' : ''"></span>
+          </td>
+          <td><input type="hidden" class="schedule-id" th:value="${schedule.id}" /></td>
+        </tr>
+      </table>
+      <!-- cssとschedule.jsの両方 -->
+      <button id="new-schedule-button">予定新規</button>
+      <button id="toggle-completed-button">表示</button>
+      <div id="total-point-display"></div>
+      <button id="new-challenge-button">挑戦新規</button>
+      <button id="new-task-button">タスク新規</button>
+      <button id="new-awareness-button">新規気づき</button>
+      <button id="new-word-button">新規単語</button>
+    </div>
 
+    <div class="database-container">
+      <table class="chalenge-database">
+        <tr>
+          <th>報告</th>
+          <th>削除</th>
+          <th>挑戦名</th>
+          <th>リスク</th>
+          <th>求める結果</th>
+          <th>戦略</th>
+          <th>結果</th>
+          <th>改善案</th>
+          <th>挑戦度</th>
+          <th>挑戦日</th>
+        </tr>
+        <!-- th:if="${challenge.challengeDate} == null"によって未挑戦のレコードのみ取得している -->
+        <!-- th:data-id="${challenge.id}によって javaからの型challengeをjsで使う -->
+        <tr th:each="challenge : ${challenges}" th:if="${challenge.challengeDate} == null" class="challenge-row" th:data-id="${challenge.id}">
+          <td>
+            <input type="button" value="成功" class="challenge-suc-button" />
+            <input type="button" value="失敗" class="challenge-fail-button" />
+          </td>
+          <td><input type="button" value="削除" class="challenge-delete-button" /></td>
+          <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>
+          <td><input type="text" th:value="${challenge.risk}" size="8" class="challenge-risk-input" /></td>
+          <td><input type="text" th:value="${challenge.expectedResult}" size="8" class="challenge-expected-input" /></td>
+          <td><input type="text" th:value="${challenge.strategy}" size="8" class="challenge-strategy-input" /></td>
+          <td><input type="text" th:value="${challenge.actualResult}" size="8" class="challenge-actual-input" /></td>
+          <td><input type="text" th:value="${challenge.improvementPlan}" size="8" class="challenge-improvement-input" /></td>
+          <td>
+            <select class="challenge-level-input">
+              <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == challenge.challengeLevel}"></option>
+            </select>
+          </td>
+          <td><input type="date" th:value="${challenge.challengeDate}" class="challenge-date-input" /></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="database-container">
+      <table class="task-database">
+        <tr>
+          <th>報告</th>
+          <th>削除</th>
+          <th>詳細</th>
+          <th>タスク・疑問調査</th>
+          <th>区分</th>
+          <th>締切</th>
+          <th>期日</th>
+          <th>レベル</th>
+          <th>完了日</th>
+        </tr>
+        <tr th:each="task : ${tasks}" class="task-row" th:data-id="${task.id}">
+          <td><input type="button" value="完了" class="task-complete-button" /></td>
+          <td><input type="button" value="削除" class="task-delete-button" /></td>
+          <td><a th:href="@{'/' + ${username} + '/task-top/task-page/' + ${task.id}}">go</a></td>
+          <td><input type="text" th:value="${task.title}" class="task-title-input" /></td>
+          <td>
+            <select class="task-category-select">
+              <option value="今日" th:selected="${task.category == '今日'}">今日</option>
+              <option value="明日" th:selected="${task.category == '明日'}">明日</option>
+              <option value="今週" th:selected="${task.category == '今週'}">今週</option>
+              <option value="来週" th:selected="${task.category == '来週'}">来週</option>
+              <option value="再来週" th:selected="${task.category == '再来週'}">再来週</option>
+            </select>
+          </td>
+          <td th:text="${#temporals.format(task.deadline, 'yyyy-MM-dd HH:mm')}"></td>
+          <td th:text="${task.expired ? '期限切れ' : task.timeUntilDue}" th:style="${task.expired} ? 'color:red' : ''"></td>
+          <td>
+            <select class="task-level-select">
+              <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == task.level}"></option>
+            </select>
+          </td>
+          <td><input type="date" th:value="${task.completedAt}" class="task-completed-input" /></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="database-row">
       <div class="database-container">
-        <!-- 日付の昇順に並べ替えている -->
-        <table class="database-table">
-          <tr>
-            <th>報告</th>
-            <th>削除</th>
-            <th>add</th>
-            <th>予定名</th>
-            <th>予定日</th>
-            <th>曜日</th>
-            <th>開始時刻</th>
-            <th>終了時刻</th>
-            <th>場所</th>
-            <th>詳細</th>
-            <th>結果</th>
-            <th>point</th>
-            <th>完了日</th>
-            <th>開始まで</th>
-          </tr>
-          <!-- 範囲for文でレコードの値を追加していく，th:data-とするとjs側でrow.dataset.id，row.dataset.oldTitle，row.dataset.oldDateで使える-->
-          <!-- class="schedule-row"はschedule.jsとcalender-detail.jsの中で -->
-          <tr th:each="schedule : ${schedules}" class="schedule-row" th:data-id="${schedule.id}" th:data-old-title="${schedule.title}" th:data-old-date="${schedule.scheduleDate}">
-            <!-- schedule.jsにイベントハンドラーが書いてる -->
-            <td>
-              <input type="button" value="完了" class="complete-button" />
-            </td>
-            <td>
-              <input type="button" value="削除" class="delete-button" />
-            </td>
-            <td>
-              <input type="checkbox" th:checked="${schedule.addFlag}" class="schedule-add-flag" />
-            </td>
-            <td>
-              <input type="text" th:value="${schedule.title}" size="8" class="schedule-title-input" />
-            </td>
-            <td>
-              <input type="date" th:value="${schedule.scheduleDate}" class="schedule-date-input" />
-            </td>
-            <td>
-              <input type="text" th:value="${schedule.dayOfWeek}" class="schedule-day-of-week" readonly size="2" />
-            </td>
-            <!-- schedule.jsでoptionで0～23、分を5分刻みで設定している。また、js側でdataset.timeが使用可能 -->
-            <td>
-              <select class="start-hour" th:data-time="${schedule.startTime}"></select>
-              :
-              <select class="start-minute"></select>
-            </td>
-            <td>
-              <select class="end-hour" th:data-time="${schedule.endTime}"></select>
-              :
-              <select class="end-minute"></select>
-            </td>
-            <td>
-              <input type="text" th:value="${schedule.location}" size="5" class="schedule-location-input" />
-            </td>
-            <td>
-              <input type="text" th:value="${schedule.detail}" size="8" class="schedule-detail-input" />
-            </td>
-            <td>
-              <input type="text" th:value="${schedule.feedback}" size="8" class="schedule-feedback-input" />
-            </td>
-            <td>
-              <input type="number" th:value="${schedule.point}" size="2" class="point-input" />
-            </td>
-            <td>
-              <input type="date" th:value="${schedule.completedDay}" class="completed-day-input" />
-            </td>
-            <td>
-              <span th:text="${schedule.expired ? '期限切れ' : schedule.timeUntilStart}"
-                    th:style="${schedule.expired} ? 'color:red' : ''"></span>
-            </td>
-            <td><input type="hidden" class="schedule-id" th:value="${schedule.id}" /></td>
-          </tr>
-        </table>
-        <!-- cssとschedule.jsの両方 -->
-        <button id="new-schedule-button">予定新規</button>
-        <button id="toggle-completed-button">表示</button>
-        <div id="total-point-display"></div>
-        <button id="new-challenge-button">挑戦新規</button>
-        <button id="new-task-button">タスク新規</button>
-        <button id="new-awareness-button">新規気づき</button>
-        <button id="new-word-button">新規単語</button>
-      </div>
-
-      <div class="database-container">
-        <table class="chalenge-database">
-          <tr>
-            <th>報告</th>
-            <th>削除</th>
-            <th>挑戦名</th>
-            <th>リスク</th>
-            <th>求める結果</th>
-            <th>戦略</th>
-            <th>結果</th>
-            <th>改善案</th>
-            <th>挑戦度</th>
-            <th>挑戦日</th>
-          </tr>
-          <!-- th:if="${challenge.challengeDate} == null"によって未挑戦のレコードのみ取得している -->
-          <!-- th:data-id="${challenge.id}によって javaからの型challengeをjsで使う -->
-          <tr th:each="challenge : ${challenges}" th:if="${challenge.challengeDate} == null" class="challenge-row" th:data-id="${challenge.id}">
-            <td>
-              <input type="button" value="成功" class="challenge-suc-button" />
-              <input type="button" value="失敗" class="challenge-fail-button" />
-            </td>
-            <td><input type="button" value="削除" class="challenge-delete-button" /></td>
-            <td><input type="text" th:value="${challenge.title}" size="8" class="challenge-title-input" /></td>
-            <td><input type="text" th:value="${challenge.risk}" size="8" class="challenge-risk-input" /></td>
-            <td><input type="text" th:value="${challenge.expectedResult}" size="8" class="challenge-expected-input" /></td>
-            <td><input type="text" th:value="${challenge.strategy}" size="8" class="challenge-strategy-input" /></td>
-            <td><input type="text" th:value="${challenge.actualResult}" size="8" class="challenge-actual-input" /></td>
-            <td><input type="text" th:value="${challenge.improvementPlan}" size="8" class="challenge-improvement-input" /></td>
-            <td>
-              <select class="challenge-level-input">
-                <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == challenge.challengeLevel}"></option>
-              </select>
-            </td>
-            <td><input type="date" th:value="${challenge.challengeDate}" class="challenge-date-input" /></td>
-          </tr>
-        </table>
-      </div>
-
-      <div class="database-container">
-        <table class="task-database">
-          <tr>
-            <th>報告</th>
-            <th>削除</th>
-            <th>詳細</th>
-            <th>タスク・疑問調査</th>
-            <th>区分</th>
-            <th>締切</th>
-            <th>期日</th>
-            <th>レベル</th>
-            <th>完了日</th>
-          </tr>
-          <tr th:each="task : ${tasks}" class="task-row" th:data-id="${task.id}">
-            <td><input type="button" value="完了" class="task-complete-button" /></td>
-            <td><input type="button" value="削除" class="task-delete-button" /></td>
-            <td><a th:href="@{'/' + ${username} + '/task-top/task-page/' + ${task.id}}">go</a></td>
-            <td><input type="text" th:value="${task.title}" class="task-title-input" /></td>
-            <td>
-              <select class="task-category-select">
-                <option value="今日" th:selected="${task.category == '今日'}">今日</option>
-                <option value="明日" th:selected="${task.category == '明日'}">明日</option>
-                <option value="今週" th:selected="${task.category == '今週'}">今週</option>
-                <option value="来週" th:selected="${task.category == '来週'}">来週</option>
-                <option value="再来週" th:selected="${task.category == '再来週'}">再来週</option>
-              </select>
-            </td>
-            <td th:text="${#temporals.format(task.deadline, 'yyyy-MM-dd HH:mm')}"></td>
-            <td th:text="${task.expired ? '期限切れ' : task.timeUntilDue}" th:style="${task.expired} ? 'color:red' : ''"></td>
-            <td>
-              <select class="task-level-select">
-                <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == task.level}"></option>
-              </select>
-            </td>
-            <td><input type="date" th:value="${task.completedAt}" class="task-completed-input" /></td>
-          </tr>
-        </table>
-      </div>
-
-      <div class="database-row">
-        <div class="database-container">
-          <table class="awareness-database">
+        <table class="awareness-database">
           <tr>
             <th>削除</th>
             <th>詳細</th>
@@ -200,41 +198,47 @@
               </select>
             </td>
           </tr>
-          </table>
-        </div>
-
-        <div class="database-container">
-          <table class="word-database">
-            <tr>
-              <th>削除</th>
-              <th>単語</th>
-              <th>意味</th>
-              <th>例</th>
-            </tr>
-            <tr th:each="word : ${wordRecords}" th:data-id="${word.id}">
-              <td><input type="button" value="削除" class="word-delete-button" /></td>
-              <td><input type="text" th:value="${word.word}" class="word-input" /></td>
-              <td><input type="text" th:value="${word.meaning}" class="meaning-input" /></td>
-              <td><input type="text" th:value="${word.example}" class="example-input" /></td>
-            </tr>
-          </table>
-        </div>
+        </table>
       </div>
 
-      <!-- idはjs，classはcss用 -->
-      <div id="schedule-overlay" class="schedule-overlay"></div>
-      <div id="schedule-popup" class="schedule-popup">
-        <button id="close-schedule-popup">&#x2715;</button>
-        <h3 id="schedule-popup-title"></h3>
-        <ul id="schedule-popup-list"></ul>
+      <div class="database-container">
+        <table class="word-database">
+          <tr>
+            <th>削除</th>
+            <th>ミス</th>
+            <th>単語</th>
+            <th>意味</th>
+            <th>例</th>
+            <th>ミス数</th>
+          </tr>
+          <tr th:each="word : ${wordRecords}" th:data-id="${word.id}">
+            <td><input type="button" value="削除" class="word-delete-button" /></td>
+            <td><input type="button" value="ミス" class="word-mistake-button" /></td>
+            <td><input type="text" th:value="${word.word}" class="word-input" /></td>
+            <td><input type="text" th:value="${word.meaning}" class="meaning-input" /></td>
+            <td><input type="text" th:value="${word.example}" class="example-input" /></td>
+            <td>
+              <input type="number" th:value="${word.count}" size="2" class="count-input" />
+            </td>
+          </tr>
+        </table>
       </div>
+    </div>
 
-      <script th:src="@{/js/calende.js}"></script>
-      <script th:src="@{/js/challenge.js}"></script>
-      <script th:src="@{/js/schedule.js}"></script>
-      <script th:src="@{/js/task.js}"></script>
-      <script th:src="@{/js/awareness.js}"></script>
-      <script th:src="@{/js/word.js}"></script>
-      <script th:src="@{/js/calendar-detail.js}"></script>
-    </body>
+    <!-- idはjs，classはcss用 -->
+    <div id="schedule-overlay" class="schedule-overlay"></div>
+    <div id="schedule-popup" class="schedule-popup">
+      <button id="close-schedule-popup">&#x2715;</button>
+      <h3 id="schedule-popup-title"></h3>
+      <ul id="schedule-popup-list"></ul>
+    </div>
+
+    <script th:src="@{/js/calende.js}"></script>
+    <script th:src="@{/js/challenge.js}"></script>
+    <script th:src="@{/js/schedule.js}"></script>
+    <script th:src="@{/js/task.js}"></script>
+    <script th:src="@{/js/awareness.js}"></script>
+    <script th:src="@{/js/word.js}"></script>
+    <script th:src="@{/js/calendar-detail.js}"></script>
+  </body>
 </html>

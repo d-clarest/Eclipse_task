@@ -14,15 +14,21 @@
       <table class="word-database">
         <tr>
           <th>削除</th>
+          <th>ミス</th>
           <th>単語</th>
           <th>意味</th>
           <th>例</th>
+          <th>ミス数</th>
         </tr>
         <tr th:each="word : ${wordRecords}" th:data-id="${word.id}">
           <td><input type="button" value="削除" class="word-delete-button" /></td>
+          <td><input type="button" value="ミス" class="word-mistake-button" /></td>
           <td><input type="text" th:value="${word.word}" class="word-input" /></td>
           <td><input type="text" th:value="${word.meaning}" class="meaning-input" /></td>
           <td><input type="text" th:value="${word.example}" class="example-input" /></td>
+          <td>
+            <input type="number" th:value="${word.count}" size="2" class="count-input" />
+          </td>
         </tr>
       </table>
       <button id="new-word-button">新規単語</button>

@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+  enableFullTextDisplay('.task-title-input, .task-result-input, .task-detail-input');
+
+  //タスク新規のボタンを押されたら、
   const newButton = document.getElementById('new-task-button');
   if (newButton) {
     newButton.addEventListener('click', () => {
@@ -6,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: '', category: '今日', result: '', detail: '', level: 1 }),
-        keepalive: true
+        keepalive: true, //POSTしたらすぐリロードなら、つけておくと安全
       }).then(() => location.reload());
     });
   }
@@ -15,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const completedTable = document.getElementById('completed-task-table');
   const pointDisplay = document.getElementById('total-point-display');
 
+  refreshTotalPoint();
+
+  //各データベースのすべてのポイントを取得（task-top.htmlで表示用）
   function refreshTotalPoint() {
     if (!pointDisplay) return;
     fetch('/total-point')
@@ -24,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
+  //
   function moveRow(row, completed) {
     if (!row) return;
     if (uncompletedTable && completedTable) {
@@ -35,7 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // javaからhtml、htmlからjsにデータを取得用
   function gatherData(row) {
+    //.valueをつける関数
     const val = (sel) => {
       const el = row.querySelector(sel);
       return el ? el.value : '';
@@ -49,17 +58,18 @@ document.addEventListener('DOMContentLoaded', () => {
       result: val('.task-result-input'),
       detail: val('.task-detail-input'),
       level: lvlValue,
-      completedAt: val('.task-completed-input') || null
+      completedAt: val('.task-completed-input') || null,
     };
   }
 
+  // サーバ側のデータベース更新用
   function sendUpdate(row) {
     const data = gatherData(row);
     return fetch('/task-update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
-      keepalive: true
+      keepalive: true,
     });
   }
 
@@ -126,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!table) return;
     const tbody = table.tBodies[0] || table;
     const rows = Array.from(tbody.querySelectorAll('tr.task-row'));
-    const order = { '今日': 1, '明日': 2, '今週': 3, '来週': 4, '再来週': 5 };
+    const order = { 今日: 1, 明日: 2, 今週: 3, 来週: 4, 再来週: 5 };
     rows.sort((a, b) => {
       const catA = a.querySelector('.task-category-select').value;
       const catB = b.querySelector('.task-category-select').value;
@@ -183,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  //削除ボタンが押されたら
   document.querySelectorAll('.task-delete-button').forEach((btn) => {
     btn.addEventListener('click', () => {
       const row = btn.closest('tr');
@@ -192,34 +203,36 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: parseInt(id, 10) }),
-        keepalive: true
+        keepalive: true,
+        // }).then(() => location.reload());
       }).then(() => {
         row.remove();
         refreshTotalPoint();
+        // location.reload();
       });
     });
   });
 
+  //入力欄を選択または、入力中に幅が自動で変わる
   function enableFullTextDisplay(selector) {
     document.querySelectorAll(selector).forEach((inp) => {
-      let originalWidth = '';
+      let originalWidth = ''; //フォーカスが外れたときにこの幅に戻す
+      //入力欄の幅を内容に合わせて調整する関数
       const adjustWidth = () => {
-        inp.style.width = 'auto';
-        const w = inp.scrollWidth + 4; // some padding
+        inp.style.width = 'auto'; //幅を自動に設定し、幅の計算をリセット
+        const w = inp.scrollWidth + 4; //「4px」の余裕を足して、文字が切れないように
         inp.style.width = w + 'px';
       };
+      // フォーカスが当たった瞬間に、現在の幅を originalWidth に保存
       inp.addEventListener('focus', () => {
-        originalWidth = inp.style.width || inp.offsetWidth + 'px';
-        adjustWidth();
+        originalWidth = inp.style.width || inp.offsetWidth + 'px'; //inp.style.width が設定されていればそれを使う.なければ、現在の見た目の幅である offsetWidth を使う。
+        adjustWidth(); //幅を内容に合わせて拡げる
       });
-      inp.addEventListener('input', adjustWidth);
+      inp.addEventListener('input', adjustWidth); //ユーザーが文字を入力するたびに adjustWidth を呼び、入力内容に合わせて幅を動的に変更
+      // フォーカスが外れたら、保存しておいた元の幅に戻す
       inp.addEventListener('blur', () => {
         inp.style.width = originalWidth;
       });
     });
   }
-
-  enableFullTextDisplay('.task-title-input, .task-result-input, .task-detail-input');
-
-  refreshTotalPoint();
 });

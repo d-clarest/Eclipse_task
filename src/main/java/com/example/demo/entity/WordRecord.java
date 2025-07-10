@@ -8,4 +8,5 @@ public class WordRecord {
     private String word; // 単語
     private String meaning; // 意味
     private String example; // 例文
+    private int count;//ミス数
 }
