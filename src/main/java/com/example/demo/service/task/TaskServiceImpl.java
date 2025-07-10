@@ -36,17 +36,17 @@ public class TaskServiceImpl implements TaskService {
         }
         switch (category) {
         case "今日":
-            return today.plusDays(1).atTime(cutOff);
+            return today.atTime(cutOff);
         case "明日":
-            return today.plusDays(2).atTime(cutOff);
-        case "今週":
-            return sundayThisWeek.plusDays(1).atTime(cutOff);
-        case "来週":
-            return sundayThisWeek.plusWeeks(1).plusDays(1).atTime(cutOff);
-        case "再来週":
-            return sundayThisWeek.plusWeeks(2).plusDays(1).atTime(cutOff);
-        default:
             return today.plusDays(1).atTime(cutOff);
+        case "今週":
+            return sundayThisWeek.atTime(cutOff);
+        case "来週":
+            return sundayThisWeek.plusWeeks(1).atTime(cutOff);
+        case "再来週":
+            return sundayThisWeek.plusWeeks(2).atTime(cutOff);
+        default:
+            return today.atTime(cutOff);
         }
     }
 

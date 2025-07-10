@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const handler = () => {
         const row = inp.closest('tr');
         if (!row) return;
+        //区分で変更されたときのみ締切と期日を変更されるようにしている
         if (selector === '.task-category-select') {
           updateTimeUntilDue(row);
           console.log('a');
@@ -137,55 +138,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  //区分から締切を，締切から期日を作成
   function updateTimeUntilDue(row) {
     const sel = row.querySelector('.task-category-select');
     if (!sel) return;
     const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const sunday = new Date(today);
-    sunday.setDate(today.getDate() + ((7 - today.getDay()) % 7));
-    let deadline = new Date(today);
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());//「今日の0:00」のDateオブジェクトを作成
+    const sunday = new Date(today);//今週の日曜
+    sunday.setDate(today.getDate() + ((7 - today.getDay()) % 7));//今日に今週末まで何日かを足してます
+    let deadline = new Date(today);//最終的な締切日時を入れる変数を初期化
+    //deadlineに日付を
     switch (sel.value) {
       case '今日':
-        deadline.setDate(today.getDate() + 1);
+        deadline.setDate(today.getDate() );
         break;
       case '明日':
-        deadline.setDate(today.getDate() + 2);
+        deadline.setDate(today.getDate() + 1);
         break;
       case '今週':
         deadline = new Date(sunday);
-        deadline.setDate(deadline.getDate() + 1);
+        deadline.setDate(deadline.getDate() );
         break;
       case '来週':
         deadline = new Date(sunday);
-        deadline.setDate(deadline.getDate() + 8);
+        deadline.setDate(deadline.getDate() + 7);
         break;
       case '再来週':
         deadline = new Date(sunday);
-        deadline.setDate(deadline.getDate() + 15);
+        deadline.setDate(deadline.getDate() + 14);
         break;
       default:
-        deadline.setDate(today.getDate() + 1);
+        deadline.setDate(today.getDate() );
     }
-    deadline.setHours(23, 59, 0, 0);
-    let diff = Math.floor((deadline - now) / 60000);
-    const expired = diff <= 0;
+    deadline.setHours(23, 59, 0, 0);//deadlineに時間を
+    let diff = Math.floor((deadline - now) / 60000);//締切までの分を算出
+    const expired = diff <= 0;//マイナスなら期限切れと表示するために
     if (diff < 0) diff = 0;
-    diff = Math.floor(diff / 5) * 5;
+    diff = Math.floor(diff / 5) * 5;//5の倍数に強制的に
     const days = Math.floor(diff / (60 * 24));
     const hours = Math.floor((diff % (60 * 24)) / 60);
     const mins = diff % 60;
-    const deadlineCell = row.cells[5];
+    const deadlineCell = row.cells[5];//締切プロパティのとこ
     if (deadlineCell) {
       const y = deadline.getFullYear();
       const m = String(deadline.getMonth() + 1).padStart(2, '0');
       const d = String(deadline.getDate()).padStart(2, '0');
       const hh = String(deadline.getHours()).padStart(2, '0');
       const mm = String(deadline.getMinutes()).padStart(2, '0');
-      deadlineCell.textContent = `${y}-${m}-${d} ${hh}:${mm}`;
+      deadlineCell.textContent = `${y}-${m}-${d} ${hh}:${mm}`;//締切のとこの表示
     }
-    const diffCell = row.cells[6];
+    const diffCell = row.cells[6];//期日のとこ
     if (diffCell) {
+      //期限切れなら
       if (expired) {
         diffCell.textContent = '期限切れ';
         diffCell.style.color = 'red';
