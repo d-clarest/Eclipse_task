@@ -56,7 +56,6 @@ public class TaskServiceImpl implements TaskService {
         for (Task t : list) {
             if (t.getCompletedAt() != null) {
                 t.setTimeUntilDue(null);
-                t.setDeadline(null);
                 continue;
             }
 

@@ -196,20 +196,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // 締切でソート
   function sortTaskTable(table) {
     if (!table) return;
     const tbody = table.tBodies[0] || table;
-    const rows = Array.from(tbody.querySelectorAll('tr.task-row'));
+    const rows = Array.from(tbody.querySelectorAll('tr.task-row'));//ソートするためにarray配列に
     // parse deadline text like "2024-06-07 14:30"; if invalid, place at the end
     const parseDeadline = (row) => {
-      const cell = row.cells[5];
-      if (!cell) return Number.POSITIVE_INFINITY;
-      const text = cell.textContent.trim();
-      const time = Date.parse(text.replace(/-/g, '/')); // Safari compatibility
-      return isNaN(time) ? Number.POSITIVE_INFINITY : time;
+      const cell = row.cells[5];//締切プロパティの要素
+      if (!cell) return Number.POSITIVE_INFINITY;//締切プロパティがない，不正なものを一番後ろにするため
+      const text = cell.textContent.trim();//セルの中の文字列を取得して、前後の空白を取り除く
+      const time = Date.parse(text.replace(/-/g, '/')); // 文字列の日付を Date.parse でミリ秒に変換
+      return isNaN(time) ? Number.POSITIVE_INFINITY : time;//不正な日付は無限，不正でないなら日付
     };
-    rows.sort((a, b) => parseDeadline(a) - parseDeadline(b));
-    rows.forEach((r) => tbody.appendChild(r));
+    rows.sort((a, b) => parseDeadline(a) - parseDeadline(b));//aの方が小さいとaが前（a-bがマイナス），
+    rows.forEach((r) => tbody.appendChild(r));//tbodyに並べ替えたやつを追加していく
   }
 
   //テーブルを締切の早い順にソート
