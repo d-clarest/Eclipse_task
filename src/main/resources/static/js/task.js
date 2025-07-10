@@ -198,12 +198,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!table) return;
     const tbody = table.tBodies[0] || table;
     const rows = Array.from(tbody.querySelectorAll('tr.task-row'));
-    const order = { 今日: 1, 明日: 2, 今週: 3, 来週: 4, 再来週: 5 };
-    rows.sort((a, b) => {
-      const catA = a.querySelector('.task-category-select').value;
-      const catB = b.querySelector('.task-category-select').value;
-      return (order[catA] || 6) - (order[catB] || 6);
-    });
+    // parse deadline text like "2024-06-07 14:30"; if invalid, place at the end
+    const parseDeadline = (row) => {
+      const cell = row.cells[5];
+      if (!cell) return Number.POSITIVE_INFINITY;
+      const text = cell.textContent.trim();
+      const time = Date.parse(text.replace(/-/g, '/')); // Safari compatibility
+      return isNaN(time) ? Number.POSITIVE_INFINITY : time;
+    };
+    rows.sort((a, b) => parseDeadline(a) - parseDeadline(b));
     rows.forEach((r) => tbody.appendChild(r));
   }
 
