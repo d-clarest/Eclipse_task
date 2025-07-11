@@ -61,8 +61,31 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTimeUntilDue(row);//期日を再計算，期日は区分に依存している
         sortAllTaskTables();//締切が速い順に
       }
-      sendUpdate(row).then(refreshTotalPoint);//サーバーサイドのデータベース更新＆ポイント更新
-    });
+    sendUpdate(row).then(refreshTotalPoint);//サーバーサイドのデータベース更新＆ポイント更新
+  });
+});
+
+  //完了日の入力欄が直接変更されたときの処理
+  document.querySelectorAll('.task-completed-input').forEach((inp) => {
+    const row = inp.closest('tr');
+    const btn = row ? row.querySelector('.task-complete-button') : null;
+    const handler = () => {
+      if (!row || !btn) return;
+      if (inp.value) {
+        btn.value = '取消';
+        moveRow(row, true);
+        const diffCell = row.cells[6];
+        if (diffCell) diffCell.textContent = '';
+      } else {
+        btn.value = '完了';
+        moveRow(row, false);
+        updateTimeUntilDue(row);
+      }
+      sortAllTaskTables();
+      sendUpdate(row).then(refreshTotalPoint);
+    };
+    inp.addEventListener('change', handler);
+    inp.addEventListener('input', handler);
   });
 
     //インプット欄に何か入力されたらサーバーへデータ更新
