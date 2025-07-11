@@ -163,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
     inp.addEventListener('input', handler);
-    inp.addEventListener('change', handler);
   });
 
   //場所、詳細、feedback、ポイントに入力されたら
@@ -353,7 +352,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!dateStr || !hourSel || !minuteSel) return;
     const start = new Date(`${dateStr}T${hourSel.value.padStart(2, '0')}:${minuteSel.value.padStart(2, '0')}:00`);
     const now = new Date();
-    console.log(start);
     let diff = Math.floor((start - now) / 60000); // minutes
     const expired = diff <= 0;
     if (diff < 0) diff = 0;
@@ -362,7 +360,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const hours = Math.floor((diff % (60 * 24)) / 60);
     const mins = diff % 60;
     const span = row.querySelector('.time-until-start');
-    console.log(days);
     if (span) {
       if (expired) {
         span.textContent = '期限切れ';
