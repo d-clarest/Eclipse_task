@@ -155,6 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const times = getStartEnd(row);
           addSchedule(row.querySelector('.schedule-title-input').value, inp.value, { id: row.dataset.id, start: times.start, end: times.end });
         }
+        
         updateTimeUntilStart(row); //開始までの時間を更新
         sortAllTables(); //予定を日付順に並び替え
         sendUpdate(row); //サーバサイドのデータベースを更新
@@ -162,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
     inp.addEventListener('input', handler);
+    inp.addEventListener('change', handler); // 入力が確定したときも更新
   });
 
   //場所、詳細、feedback、ポイントに入力されたら
