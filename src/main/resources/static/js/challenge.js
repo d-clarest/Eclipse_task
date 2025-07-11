@@ -105,7 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const row = btn.closest('tr');
       if (!row) return;
       const actual = row.querySelector('.challenge-actual-input');
-      if (actual) actual.value = '';
+      if (actual) {
+        actual.value = actual.value
+          .replace(/^（成功）/, '')
+          .replace(/^（失敗）/, '')
+          .replace(/^\(成功\)/, '')
+          .replace(/^\(失敗\)/, '');
+      }
       const date = row.querySelector('.challenge-date-input');
       if (date) date.value = '';//挑戦日をnullに
       sendUpdate(row).then(refreshTotalPoint);//サーバサイドのデータベースを更新後，ポイント更新
