@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     inp.addEventListener('change', handler);
   });
 
-  //日付が変更されたら
+  //予定日が変更されたら
   document.querySelectorAll('.schedule-date-input').forEach((inp) => {
     const handler = () => {
       const date = new Date(inp.value);
@@ -158,9 +158,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTimeUntilStart(row); //開始までの時間を更新
         sortAllTables(); //予定を日付順に並び替え
         sendUpdate(row); //サーバサイドのデータベースを更新
+        row.dataset.oldDate = inp.value;//// 値を送信したら現在の日付を oldDate として保持しておく
       }
     };
-    inp.addEventListener('change', handler);
+    inp.addEventListener('input', handler);
   });
 
   //場所、詳細、feedback、ポイントに入力されたら

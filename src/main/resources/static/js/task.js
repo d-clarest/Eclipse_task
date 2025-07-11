@@ -71,20 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = row ? row.querySelector('.task-complete-button') : null;
     const handler = () => {
       if (!row || !btn) return;
+      //すでに完了日に日付入っているなら
       if (inp.value) {
         btn.value = '取消';
-        moveRow(row, true);
+        moveRow(row, true);//完了済みテーブルに移動,top画面なら非表示に
         const diffCell = row.cells[6];
-        if (diffCell) diffCell.textContent = '';
+        if (diffCell) diffCell.textContent = '';//期日をnullに
       } else {
         btn.value = '完了';
-        moveRow(row, false);
-        updateTimeUntilDue(row);
+        moveRow(row, false);//未完了テーブルに移動
+        updateTimeUntilDue(row);//区分から締切を，締切から期日を作成
       }
-      sortAllTaskTables();
-      sendUpdate(row).then(refreshTotalPoint);
+      sortAllTaskTables();//締切が速い順に
+      sendUpdate(row).then(refreshTotalPoint);//サーバサイドのデータベースを更新した後に，ポイントも更新
     };
-    inp.addEventListener('change', handler);
     inp.addEventListener('input', handler);
   });
 
