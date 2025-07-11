@@ -56,7 +56,7 @@
           <td><input type="text" th:value="${schedule.feedback}" size="8" class="schedule-feedback-input" /></td>
           <td><input type="number" th:value="${schedule.point}" size="2" class="point-input" /></td>
           <td><input type="date" th:value="${schedule.completedDay}" class="completed-day-input" /></td>
-          <td><span class="time-until-start" th:text="${schedule.expired ? '期限切れ' : schedule.timeUntilStart}"
+          <td><span th:text="${schedule.expired ? '期限切れ' : schedule.timeUntilStart}"
                     th:style="${schedule.expired} ? 'color:red' : ''"></span></td>
           <td><input type="hidden" class="schedule-id" th:value="${schedule.id}" /></td>
         </tr>
@@ -128,7 +128,7 @@
             <input type="date" th:value="${schedule.completedDay}" class="completed-day-input" />
           </td>
           <td>
-            <span class="time-until-start" th:text="${schedule.expired ? '期限切れ' : schedule.timeUntilStart}"
+            <span th:text="${schedule.expired ? '期限切れ' : schedule.timeUntilStart}"
                   th:style="${schedule.expired} ? 'color:red' : ''"></span>
           </td>
           <td><input type="hidden" class="schedule-id" th:value="${schedule.id}" /></td>
