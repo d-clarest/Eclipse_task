@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.value = '取消';
         updateCalendarCompletion(row, true); //今表示中のやつ一回非表示にして、赤文字でカレンダーに表示
         moveRowBasedOnCompletion(row, true); //表面上の予定テーブルの更新
-        const span = row.querySelector('td:last-child span');
+        const span = row.querySelector('.time-until-start');
         //開始までの時間に何か入っているなら、nullに
         if (span) span.textContent = '';
         //取消ボタンが押されたら
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
       moveRowBasedOnCompletion(row, completed); //予定テーブルの移動や表示（表面上の）
       //完了日があるなら
       if (completed) {
-        const span = row.querySelector('td:last-child span');
+        const span = row.querySelector('.time-until-start');
         if (span) span.textContent = ''; //開始までをnullに
       } else {
         updateTimeUntilStart(row); //開始までの時間を表示
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const days = Math.floor(diff / (60 * 24));
     const hours = Math.floor((diff % (60 * 24)) / 60);
     const mins = diff % 60;
-    const span = row.querySelector('td:last-child span');
+    const span = row.querySelector('.time-until-start');
     console.log(days);
     if (span) {
       if (expired) {
