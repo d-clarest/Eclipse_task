@@ -163,14 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
     inp.addEventListener('input', handler);
-<<<<<<< HEAD
-<<<<<<< HEAD
-    inp.addEventListener('change', handler); // 入力が確定したときも更新
-=======
-    inp.addEventListener('change', handler); // 入力確定時も更新
->>>>>>> branch 'master' of https://github.com/d-clarest/Eclipse_task.git
-=======
->>>>>>> branch 'master' of https://github.com/d-clarest/Eclipse_task.git
+    inp.addEventListener('change', handler);
   });
 
   //場所、詳細、feedback、ポイントに入力されたら
@@ -354,11 +347,13 @@ document.addEventListener('DOMContentLoaded', () => {
   //開始までの時間を表示する、または期限切れにする
   function updateTimeUntilStart(row) {
     const dateStr = row.querySelector('.schedule-date-input').value;
+    // console.log(dateStr);
     const hourSel = row.querySelector('.start-hour');
     const minuteSel = row.querySelector('.start-minute');
     if (!dateStr || !hourSel || !minuteSel) return;
     const start = new Date(`${dateStr}T${hourSel.value.padStart(2, '0')}:${minuteSel.value.padStart(2, '0')}:00`);
     const now = new Date();
+    console.log(start);
     let diff = Math.floor((start - now) / 60000); // minutes
     const expired = diff <= 0;
     if (diff < 0) diff = 0;
@@ -367,12 +362,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const hours = Math.floor((diff % (60 * 24)) / 60);
     const mins = diff % 60;
     const span = row.querySelector('td:last-child span');
+    console.log(days);
     if (span) {
       if (expired) {
         span.textContent = '期限切れ';
         span.style.color = 'red';
       } else {
         span.textContent = `${days}日${hours}時間${mins}分`;
+        console.log("AA");
         span.style.color = '';
       }
     }
@@ -421,7 +418,6 @@ document.addEventListener('DOMContentLoaded', () => {
       //現在表示されているカレンダーの年月とデータベースの予定テーブルの年月が一致しているやつだけ追加．一致してないのは入れない．
       return;
     const cell = dayCells[date.getDate()]; //日付に対応する<td>1</td>みたいなのを代入
-    console.log(cell);
     if (!cell) return;
     let wrapper = cell.querySelector('.schedules'); //cellには<td>1</td>の中に，classのschedulesがあるか検索
     //td要素の中にclass="schedules"はない場合は，作る
