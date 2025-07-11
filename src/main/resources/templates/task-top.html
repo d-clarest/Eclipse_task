@@ -86,7 +86,7 @@
             <input type="date" th:value="${schedule.completedDay}" class="completed-day-input" />
           </td>
           <td>
-            <span class="time-until-start" th:text="${schedule.expired ? '期限切れ' : schedule.timeUntilStart}" th:style="${schedule.expired} ? 'color:red' : ''"></span>
+            <span th:text="${schedule.expired ? '期限切れ' : schedule.timeUntilStart}" th:style="${schedule.expired} ? 'color:red' : ''"></span>
           </td>
           <td><input type="hidden" class="schedule-id" th:value="${schedule.id}" /></td>
         </tr>
