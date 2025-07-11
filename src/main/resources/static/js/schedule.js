@@ -158,6 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTimeUntilStart(row); //開始までの時間を更新
         sortAllTables(); //予定を日付順に並び替え
         sendUpdate(row); //サーバサイドのデータベースを更新
+        // 値を送信したら現在の日付を oldDate として保持しておく
+        row.dataset.oldDate = inp.value;
       }
     };
     inp.addEventListener('change', handler);
