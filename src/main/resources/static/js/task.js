@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
     //インプット欄に何か入力されたらサーバーへデータ更新
-  ['.task-title-input', '.task-result-input', '.task-detail-input', '.task-level-select', '.task-completed-input', '.task-category-select'].forEach((selector) => {
+  ['.task-title-input', '.task-result-input', '.task-detail-input', '.task-level-select', '.task-category-select'].forEach((selector) => {
     document.querySelectorAll(selector).forEach((inp) => {
       const handler = () => {
         const row = inp.closest('tr');

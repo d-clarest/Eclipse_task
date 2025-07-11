@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //テキストに何か入力されたら
   document.querySelectorAll('.word-input, .meaning-input, .example-input, .count-input').forEach((el) => {
-    el.addEventListener('input', () => {
+    el.addEventListener('change', () => {
       const row = el.closest('tr'); //入力された行を取得
       if (row) sendUpdate(row); //あれば更新
     });

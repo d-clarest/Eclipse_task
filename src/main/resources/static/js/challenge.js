@@ -1,6 +1,17 @@
 //ページが全部読み込まれたら、中の処理を始める
 document.addEventListener('DOMContentLoaded', () => {
+  const unchallengedTable = document.getElementById('unchallenged-table');
+  const completedTable = document.getElementById('completed-challenge-table');
+  const pointDisplay = document.getElementById('total-point-display');
   const newButton = document.getElementById('new-challenge-button');
+  document.querySelectorAll('.challenge-suc-button').forEach(addSuccessListener);
+  document.querySelectorAll('.challenge-fail-button').forEach(addFailListener);
+  document.querySelectorAll('.challenge-cancel-button').forEach(addCancelListener);
+  refreshTotalPoint();
+  enableFullTextDisplay('.challenge-title-input, .challenge-risk-input, .challenge-expected-input, .challenge-strategy-input, .challenge-actual-input, .challenge-improvement-input');
+
+
+  //挑戦ボタンが押されたら
   if (newButton) {
     newButton.addEventListener('click', () => {
       fetch('/challenge-add', {
@@ -13,9 +24,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const unchallengedTable = document.getElementById('unchallenged-table');
-  const completedTable = document.getElementById('completed-challenge-table');
-  const pointDisplay = document.getElementById('total-point-display');
+  //削除ボタンが押されたら
+  document.querySelectorAll('.challenge-delete-button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('tr');
+      if (!row) return;
+      const id = row.dataset.id;
+      fetch('/challenge-delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(id, 10) }),
+      }).then(() => {
+        location.reload();
+      });
+    });
+  });
+
+  //テキストに何か入力されたら
+  [
+    '.challenge-title-input',
+    '.challenge-risk-input',
+    '.challenge-expected-input',
+    '.challenge-strategy-input',
+    '.challenge-actual-input',
+    '.challenge-improvement-input',
+  ].forEach((selector) => {
+    document.querySelectorAll(selector).forEach((inp) => {
+      inp.addEventListener('change', () => {
+        const row = inp.closest('tr');
+        if (row) sendUpdate(row);
+      });
+    });
+  });
+
+  
+
+
 
   function refreshTotalPoint() {
     if (!pointDisplay) return;
@@ -118,46 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  document.querySelectorAll('.challenge-suc-button').forEach(addSuccessListener);
-  document.querySelectorAll('.challenge-fail-button').forEach(addFailListener);
-  document.querySelectorAll('.challenge-cancel-button').forEach(addCancelListener);
-
-  document.querySelectorAll('.challenge-delete-button').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const row = btn.closest('tr');
-      if (!row) return;
-      const id = row.dataset.id;
-      fetch('/challenge-delete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: parseInt(id, 10) }),
-      }).then(() => {
-        row.remove();
-      });
-    });
-  });
-
   //--------------------------------------------------------------------------------------
-  [
-    '.challenge-title-input',
-    '.challenge-risk-input',
-    '.challenge-expected-input',
-    '.challenge-strategy-input',
-    '.challenge-actual-input',
-    '.challenge-improvement-input',
-    '.challenge-date-input',
-  ].forEach((selector) => {
-    document.querySelectorAll(selector).forEach((inp) => {
-      const handler = () => {
-        const row = inp.closest('tr');
-        if (row) sendUpdate(row).then(refreshTotalPoint);
-
-        
-      };
-      inp.addEventListener('change', handler);
-      inp.addEventListener('input', handler);
-    });
-  });
 
   function enableFullTextDisplay(selector) {
     document.querySelectorAll(selector).forEach((inp) => {
@@ -177,8 +182,4 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
-
-  enableFullTextDisplay('.challenge-title-input, .challenge-risk-input, .challenge-expected-input, .challenge-strategy-input, .challenge-actual-input, .challenge-improvement-input');
-
-  refreshTotalPoint();
 });
