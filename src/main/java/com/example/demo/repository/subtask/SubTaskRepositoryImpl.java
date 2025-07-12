@@ -64,4 +64,18 @@ public class SubTaskRepositoryImpl implements SubTaskRepository {
         String sql = "DELETE FROM sub_tasks WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public int countByTaskId(int taskId) {
+        String sql = "SELECT COUNT(*) FROM sub_tasks WHERE task_id = ?";
+        Integer result = jdbcTemplate.queryForObject(sql, Integer.class, taskId);
+        return result != null ? result : 0;
+    }
+
+    @Override
+    public int countCompletedByTaskId(int taskId) {
+        String sql = "SELECT COUNT(*) FROM sub_tasks WHERE task_id = ? AND completed_at IS NOT NULL";
+        Integer result = jdbcTemplate.queryForObject(sql, Integer.class, taskId);
+        return result != null ? result : 0;
+    }
 }

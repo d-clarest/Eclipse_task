@@ -17,4 +17,5 @@ public class Task {
     private LocalDateTime updatedAt; // 更新日時
     private LocalDate completedAt; // 完了日
     private boolean expired; // 期限切れかどうか
+    private String progressRate; // 進捗率
 }

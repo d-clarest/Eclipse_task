@@ -9,4 +9,6 @@ public interface SubTaskService {
     void addSubTask(SubTask subTask);
     void updateSubTask(SubTask subTask);
     void deleteSubTaskById(int id);
+    int countSubTasks(int taskId);
+    int countCompletedSubTasks(int taskId);
 }
