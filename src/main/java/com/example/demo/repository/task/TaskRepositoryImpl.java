@@ -17,6 +17,33 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TaskRepositoryImpl implements TaskRepository {
 
+    private static final String BASE_SELECT = "SELECT id, title, category, deadline, level, created_at, updated_at, completed_at FROM tasks";
+
+    private static final RowMapper<Task> ROW_MAPPER = (rs, rowNum) -> {
+        Task t = new Task();
+        t.setId(rs.getInt("id"));
+        t.setTitle(rs.getString("title"));
+        t.setCategory(rs.getString("category"));
+        java.sql.Timestamp deadline = rs.getTimestamp("deadline");
+        if (deadline != null) {
+            t.setDeadline(deadline.toLocalDateTime());
+        }
+        t.setLevel(rs.getInt("level"));
+        java.sql.Timestamp created = rs.getTimestamp("created_at");
+        if (created != null) {
+            t.setCreatedAt(created.toLocalDateTime());
+        }
+        java.sql.Timestamp updated = rs.getTimestamp("updated_at");
+        if (updated != null) {
+            t.setUpdatedAt(updated.toLocalDateTime());
+        }
+        java.sql.Date completed = rs.getDate("completed_at");
+        if (completed != null) {
+            t.setCompletedAt(completed.toLocalDate());
+        }
+        return t;
+    };
+
     private final JdbcTemplate jdbcTemplate;
 
     @Override
