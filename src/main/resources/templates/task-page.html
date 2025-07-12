@@ -30,7 +30,7 @@
           <th>期日</th>
           <th>完了日</th>
         </tr>
-        <tr th:each="st : ${subTasks}" class="subtask-row" th:data-id="${st.id}" th:data-deadline="${#temporals.format(st.deadline, 'yyyy-MM-dd\'T\'HH:mm')}">
+        <tr th:each="st : ${subTasks}" class="subtask-row" th:data-id="${st.id}" th:data-deadline="${#temporals.format(st.deadline, 'yyyy-MM-dd''T''HH:mm')}">
           <td><input type="button" value="完了" class="subtask-complete-button" /></td>
           <td><input type="button" value="削除" class="subtask-delete-button" /></td>
           <td><input type="text" th:value="${st.title}" class="subtask-title-input" /></td>
