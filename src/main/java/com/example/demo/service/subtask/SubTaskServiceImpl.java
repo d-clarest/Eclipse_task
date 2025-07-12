@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entity.SubTask;
 import com.example.demo.entity.Task;
 import com.example.demo.repository.subtask.SubTaskRepository;
+import com.example.demo.repository.task.TaskRepository;
 import com.example.demo.service.task.TaskService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SubTaskServiceImpl implements SubTaskService {
 
     private final SubTaskRepository repository;
+    private final TaskRepository taskRepository;
     private final TaskService taskService;
 
     @Override
@@ -86,15 +88,21 @@ public class SubTaskServiceImpl implements SubTaskService {
         }
         repository.updateSubTask(subTask);
 
-        // If all subtasks are completed, record completion date for the parent task
-        if (subTask.getCompletedAt() != null) {
-            int total = repository.countByTaskId(subTask.getTaskId());
-            int completed = repository.countCompletedByTaskId(subTask.getTaskId());
-            if (total > 0 && total == completed) {
-                Task parent = taskService.getTaskById(subTask.getTaskId());
+        int total = repository.countByTaskId(subTask.getTaskId());
+        int completed = repository.countCompletedByTaskId(subTask.getTaskId());
+        if (total > 0) {
+            Task parent = taskService.getTaskById(subTask.getTaskId());
+            if (completed == total) {
+                // all subtasks done -> ensure parent marked completed
                 if (parent.getCompletedAt() == null) {
                     parent.setCompletedAt(LocalDate.now());
-                    taskService.updateTask(parent);
+                    taskRepository.updateTask(parent); // avoid resetting subtasks
+                }
+            } else {
+                // some subtasks not done -> ensure parent marked uncompleted
+                if (parent.getCompletedAt() != null) {
+                    parent.setCompletedAt(null);
+                    taskRepository.updateTask(parent); // avoid resetting subtasks
                 }
             }
         }
