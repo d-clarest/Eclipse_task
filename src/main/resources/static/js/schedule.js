@@ -163,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
     inp.addEventListener('input', handler);
+    inp.addEventListener('change', handler); // 入力が確定したときも更新
   });
 
   //場所、詳細、feedback、ポイントに入力されたら
