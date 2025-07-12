@@ -1,11 +1,6 @@
-// Calendar with month navigation
-
 document.addEventListener('DOMContentLoaded', () => {
-  //ページが全部読み込まれたら、中の処理を始める
   const container = document.getElementById('calendar');
-  //innerHTML で HTMLの中身を上書きする
-  //divtタグはブロック要素で、横幅全体を占めるのが特徴、改行が入る。
-  //spanタグは、インライン要素で、文章中の1部分に適用したいときなどに使う
+  //innerHTML で HTMLの中身を上書きする．divタグはブロック要素で、横幅全体を占めるのが特徴、改行が入る。spanタグは、インライン要素で、文章中の1部分に適用したいときなどに使う
   container.innerHTML = `
         <div class="calendar-nav">
             <button id="prev-month">\u2190</button>
@@ -14,13 +9,21 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div id="calendar-table"></div>
     `;
-
   const titleEl = container.querySelector('#calendar-title');
   const tableWrap = container.querySelector('#calendar-table');
   let current = new Date();
+  renderCalendar(current.getFullYear(), current.getMonth());//初期化、西暦と月を引数とする.ただし、getMonth()は(現在の月-1)であることに注意
 
-  //カレンダーを表示する処理,例えば renderCalendar(2025, 5) なら、「2025年6月」のカレンダーを作ります
-  //月が0スタートです
+  //ボタンクリック処理、←、→ボタンの処理、ボタンにidを振っており、e.target.idで取得している
+  container.addEventListener('click', (e) => {
+    if (e.target.id === 'prev-month') {
+      changeMonth(-1); //前の月に変更
+    } else if (e.target.id === 'next-month') {
+      changeMonth(1); //次の月に変更
+    }
+  });
+
+  //カレンダーを表示する処理,例えば renderCalendar(2025, 5) なら、「2025年6月」のカレンダーを作ります．//月が0スタートです
   function renderCalendar(year, month) {
     const today = new Date();
     const firstDay = (new Date(year, month, 1).getDay() + 6) % 7; //指定した年月の1日目の曜日を.getDay()で取得。戻り値は0～6で日曜スタートである。よって、月曜スタートとして、何曜日かを取得。
@@ -38,8 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //その月の1日～末までの日付を表に
     for (let day = 1; day <= lastDate; day++) {
+      //day!==1はfirstDayが0の時（月曜）の時に改行しないための条件
       if ((firstDay + day - 1) % 7 === 0 && day !== 1) {
-        //day!==1はfirstDayが0の時（月曜）の時に改行しないための条件
         html += '</tr><tr>'; //改行
       }
 
@@ -70,15 +73,4 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCalendar(current.getFullYear(), current.getMonth());
   }
 
-  //ボタンクリック処理、←、→ボタンの処理、ボタンにidを振っており、e.target.idで取得している
-  container.addEventListener('click', (e) => {
-    if (e.target.id === 'prev-month') {
-      changeMonth(-1); //前の月に変更
-    } else if (e.target.id === 'next-month') {
-      changeMonth(1); //次の月に変更
-    }
-  });
-
-  //初期化、西暦と月を引数とする.ただし、getMonth()は(現在の月-1)であることに注意
-  renderCalendar(current.getFullYear(), current.getMonth());
 });

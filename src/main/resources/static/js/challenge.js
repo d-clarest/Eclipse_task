@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!row) return;
       const actual = row.querySelector('.challenge-actual-input');
       if (actual) {
+        //成功または失敗を削除,それ以外の文字は残す
         actual.value = actual.value
           .replace(/^（成功）/, '')
           .replace(/^（失敗）/, '')
