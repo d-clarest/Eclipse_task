@@ -19,8 +19,7 @@
       <textarea id="task-page-content" rows="20" cols="80" th:text="${page.content}"></textarea>
     </div>
 
-    <div class="database-row">
-      <div class="database-container">
+    <div class="database-container">
         <p>未完了子タスク</p>
         <table id="uncompleted-subtask-table" class="task-database">
         <tr>
@@ -41,8 +40,8 @@
         </tr>
         </table>
         <button id="new-subtask-button">子タスク新規</button>
-      </div>
-      <div class="database-container">
+    </div>
+    <div class="database-container">
         <p>完了済み子タスク</p>
         <table id="completed-subtask-table" class="task-database">
           <tr>
@@ -62,8 +61,7 @@
             <td><input type="date" th:value="${st.completedAt}" class="subtask-completed-input" /></td>
           </tr>
         </table>
-      </div>
-    </div>
+        </div>
 
     <script th:src="@{/js/task-page.js}"></script>
     <!-- task-page.jsで pageIdを使うために-->
