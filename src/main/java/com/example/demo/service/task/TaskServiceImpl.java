@@ -91,9 +91,17 @@ public class TaskServiceImpl implements TaskService {
 
                 // When all subtasks are completed but the task itself is not marked
                 // completed, automatically set the completion date.
-                if (completed == total && t.getCompletedAt() == null) {
-                    t.setCompletedAt(LocalDate.now());
-                    updateTask(t);
+                if (completed == total) {
+                    if (t.getCompletedAt() == null) {
+                        t.setCompletedAt(LocalDate.now());
+                        updateTask(t);
+                    }
+                } else {
+                    // Some subtasks remain -> clear completion date if set
+                    if (t.getCompletedAt() != null) {
+                        t.setCompletedAt(null);
+                        updateTask(t);
+                    }
                 }
             } else {
                 t.setProgressRate(null);
@@ -155,10 +163,17 @@ public class TaskServiceImpl implements TaskService {
             double rate = ((double) completed / total) * 100.0;
             t.setProgressRate(String.format("%.0f%%", rate));
 
-            // Ensure completion date is set when all subtasks are finished.
-            if (completed == total && t.getCompletedAt() == null) {
-                t.setCompletedAt(LocalDate.now());
-                updateTask(t);
+            // Ensure completion date reflects subtask progress
+            if (completed == total) {
+                if (t.getCompletedAt() == null) {
+                    t.setCompletedAt(LocalDate.now());
+                    updateTask(t);
+                }
+            } else {
+                if (t.getCompletedAt() != null) {
+                    t.setCompletedAt(null);
+                    updateTask(t);
+                }
             }
         } else {
             t.setProgressRate(null);
