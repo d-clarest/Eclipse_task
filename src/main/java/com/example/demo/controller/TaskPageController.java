@@ -41,7 +41,15 @@ public class TaskPageController {
                 .filter(t -> t.getId() == taskId)
                 .findFirst()
                 .orElse(null);
-        model.addAttribute("subTasks", subTaskService.getSubTasks(taskId));
+        var allSubTasks = subTaskService.getSubTasks(taskId);
+        var uncompleted = allSubTasks.stream()
+                .filter(st -> st.getCompletedAt() == null)
+                .toList();
+        var completed = allSubTasks.stream()
+                .filter(st -> st.getCompletedAt() != null)
+                .toList();
+        model.addAttribute("uncompletedSubTasks", uncompleted);
+        model.addAttribute("completedSubTasks", completed);
         model.addAttribute("page", page);
         model.addAttribute("task", task);
         model.addAttribute("username", username);
