@@ -35,12 +35,14 @@
           <td th:text="${st.completedAt}"></td>
         </tr>
       </table>
+      <button id="new-subtask-button">子タスク新規</button>
     </div>
 
     <script th:src="@{/js/task-page.js}"></script>
     <!-- task-page.jsで pageIdを使うために-->
     <script th:inline="javascript">
       const pageId = [[${page.id}]];
+      const taskId = [[${task.id}]];
     </script>
   </body>
 </html>
