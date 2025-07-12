@@ -22,8 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isNaN(day)) return;
       const { year, month } = getYearMonth();//カレンダー上部のタイトルから年月を取得
       const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;//年月日を "YYYY-MM-DD" 形式の文字列に整形
-      console.log("DD");
-      show(dateStr);//
+      show(dateStr);//ポップアップの中身作成
     });
   }
 
@@ -46,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     popup.style.display = 'none';
   }
 
-  //dateStrの
+  //ポップアップの中身作成
   function show(dateStr) {
     listEl.innerHTML = '';
     const rows = document.querySelectorAll('.schedule-row');
@@ -69,8 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
         row.querySelector('.end-minute').value.padStart(2, '0');
       const id = row.dataset.id;
       items.push({ start, end, title, completed, id });
-              console.log(items);
-
       if (id) seen.add(id);//配列と違って、同じ値を何度追加しても、1つしか保存されない
     });
     document.querySelectorAll('#calendar .schedules div')
@@ -83,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = div.dataset.name || div.textContent;//nameは全部，textContentの方は6文字まで
         const completed =div.dataset.completed === 'true' || div.style.color === 'red';//完了済みの予定フラグ
         items.push({ start, end, title, completed });// カレンダーに表示されていた予定も items に追加。完了済みの予定を表示用だと思う
-        console.log(items);
       });
     items.sort((a, b) => a.start.localeCompare(b.start));// 開始時刻順に並べ替え
     if (items.length === 0) {

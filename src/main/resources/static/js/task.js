@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const uncompletedTable = document.getElementById('uncompleted-task-table');
   const completedTable = document.getElementById('completed-task-table');
   const pointDisplay = document.getElementById('total-point-display');
-  enableFullTextDisplay('.task-title-input, .task-result-input, .task-detail-input');
+  enableFullTextDisplay('.task-title-input');
   refreshTotalPoint();
 
   //タスク新規のボタンを押されたら、
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('/task-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: '', category: '今日', result: '', detail: '', level: 1 }),
+        body: JSON.stringify({ title: '', category: '今日', level: 1 }),
         keepalive: true, //POSTしたらすぐリロードなら、つけておくと安全
       }).then(() => location.reload());
     });
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
     //インプット欄に何か入力されたらサーバーへデータ更新
-  ['.task-title-input', '.task-result-input', '.task-detail-input', '.task-level-select', '.task-category-select'].forEach((selector) => {
+  ['.task-title-input', '.task-level-select', '.task-category-select'].forEach((selector) => {
     document.querySelectorAll(selector).forEach((inp) => {
       const handler = () => {
         const row = inp.closest('tr');
@@ -143,8 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
       id: parseInt(row.dataset.id, 10),
       title: val('.task-title-input'),
       category: val('.task-category-select'),
-      result: val('.task-result-input'),
-      detail: val('.task-detail-input'),
       level: lvlValue,
       completedAt: val('.task-completed-input') || null,
     };

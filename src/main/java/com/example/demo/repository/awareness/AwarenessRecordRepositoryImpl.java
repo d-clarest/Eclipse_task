@@ -20,14 +20,13 @@ public class AwarenessRecordRepositoryImpl implements AwarenessRecordRepository 
 
     @Override
     public List<AwarenessRecord> findAll() {
-        String sql = "SELECT id, awareness, opinion, awareness_level FROM awareness_records ORDER BY id DESC";
+        String sql = "SELECT id, awareness, awareness_level FROM awareness_records ORDER BY id DESC";
         return jdbcTemplate.query(sql, new RowMapper<AwarenessRecord>() {
             @Override
             public AwarenessRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
                 AwarenessRecord r = new AwarenessRecord();
                 r.setId(rs.getInt("id"));
                 r.setAwareness(rs.getString("awareness"));
-                r.setOpinion(rs.getString("opinion"));
                 r.setAwarenessLevel(rs.getInt("awareness_level"));
                 return r;
             }
@@ -36,19 +35,17 @@ public class AwarenessRecordRepositoryImpl implements AwarenessRecordRepository 
 
     @Override
     public void insertRecord(AwarenessRecord record) {
-        String sql = "INSERT INTO awareness_records (awareness, opinion, awareness_level) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO awareness_records (awareness, awareness_level) VALUES (?, ?)";
         jdbcTemplate.update(sql,
                 record.getAwareness(),
-                record.getOpinion(),
                 record.getAwarenessLevel());
     }
 
     @Override
     public void updateRecord(AwarenessRecord record) {
-        String sql = "UPDATE awareness_records SET awareness = ?, opinion = ?, awareness_level = ? WHERE id = ?";
+        String sql = "UPDATE awareness_records SET awareness = ?, awareness_level = ? WHERE id = ?";
         jdbcTemplate.update(sql,
                 record.getAwareness(),
-                record.getOpinion(),
                 record.getAwarenessLevel(),
                 record.getId());
     }
