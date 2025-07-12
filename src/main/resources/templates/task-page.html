@@ -23,16 +23,20 @@
       <p>子タスクデータベース</p>
       <table class="task-database">
         <tr>
+          <th>完了</th>
+          <th>削除</th>
           <th>子タスク名</th>
           <th>締切</th>
           <th>期日</th>
           <th>完了日</th>
         </tr>
-        <tr th:each="st : ${subTasks}">
-          <td th:text="${st.title}"></td>
+        <tr th:each="st : ${subTasks}" class="subtask-row" th:data-id="${st.id}" th:data-deadline="${#temporals.format(st.deadline, 'yyyy-MM-dd\'T\'HH:mm')}">
+          <td><input type="button" value="完了" class="subtask-complete-button" /></td>
+          <td><input type="button" value="削除" class="subtask-delete-button" /></td>
+          <td><input type="text" th:value="${st.title}" class="subtask-title-input" /></td>
           <td th:text="${#temporals.format(st.deadline, 'yyyy-MM-dd HH:mm')}"></td>
           <td th:text="${st.expired ? '期限切れ' : st.timeUntilDue}" th:style="${st.expired} ? 'color:red' : ''"></td>
-          <td th:text="${st.completedAt}"></td>
+          <td><input type="date" th:value="${st.completedAt}" class="subtask-completed-input" /></td>
         </tr>
       </table>
       <button id="new-subtask-button">子タスク新規</button>
