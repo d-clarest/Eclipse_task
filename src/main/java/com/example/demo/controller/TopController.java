@@ -6,14 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.entity.Schedule;
+import com.example.demo.service.awareness.AwarenessRecordService;
 import com.example.demo.service.challenge.ChallengeService;
 import com.example.demo.service.schedule.ScheduleService;
 import com.example.demo.service.task.TaskService;
-import com.example.demo.service.awareness.AwarenessRecordService;
 import com.example.demo.service.word.WordRecordService;
 
 import lombok.RequiredArgsConstructor;
@@ -47,10 +45,8 @@ public class TopController {
                 .toList();
         model.addAttribute("challenges", challengeList);
         var taskList = taskService.getAllTasks().stream()
-                .filter(t -> t.getCompletedAt() == null
-                        || (t.getCompletedAt() != null
-                                && t.getProgressRate() != null
-                                && !"100%".equals(t.getProgressRate())))
+        		.filter(t -> t.getCompletedAt() == null)
+                .filter(t -> !"100%".equals(t.getProgressRate()))
                 .toList();
         model.addAttribute("tasks", taskList);
         var awarenessList = awarenessRecordService.getAllRecords()
@@ -116,15 +112,11 @@ public class TopController {
         log.debug("Displaying task box page");
         var all = taskService.getAllTasks();
         var uncompleted = all.stream()
-                .filter(t -> t.getCompletedAt() == null
-                        || (t.getCompletedAt() != null
-                                && t.getProgressRate() != null
-                                && !"100%".equals(t.getProgressRate())))
+        		.filter(t -> t.getCompletedAt() == null)
+                .filter(t -> !"100%".equals(t.getProgressRate()))
                 .toList();
         var completedTasks = all.stream()
-                .filter(t -> t.getCompletedAt() != null
-                        && (t.getProgressRate() == null
-                                || "100%".equals(t.getProgressRate())))
+        		.filter(t -> t.getCompletedAt() != null || "100%".equals(t.getProgressRate()))
                 .toList();
         model.addAttribute("uncompletedTasks", uncompleted);
         model.addAttribute("completedTasks", completedTasks);
