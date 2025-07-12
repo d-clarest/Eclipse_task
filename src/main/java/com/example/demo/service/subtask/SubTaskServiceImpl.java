@@ -1,6 +1,7 @@
 package com.example.demo.service.subtask;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.SubTask;
+import com.example.demo.entity.Task;
 import com.example.demo.repository.subtask.SubTaskRepository;
 import com.example.demo.service.task.TaskService;
 
@@ -83,6 +85,19 @@ public class SubTaskServiceImpl implements SubTaskService {
             }
         }
         repository.updateSubTask(subTask);
+
+        // If all subtasks are completed, record completion date for the parent task
+        if (subTask.getCompletedAt() != null) {
+            int total = repository.countByTaskId(subTask.getTaskId());
+            int completed = repository.countCompletedByTaskId(subTask.getTaskId());
+            if (total > 0 && total == completed) {
+                Task parent = taskService.getTaskById(subTask.getTaskId());
+                if (parent.getCompletedAt() == null) {
+                    parent.setCompletedAt(LocalDate.now());
+                    taskService.updateTask(parent);
+                }
+            }
+        }
     }
 
     @Override
