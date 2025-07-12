@@ -88,6 +88,13 @@ public class TaskServiceImpl implements TaskService {
                 int completed = subTaskRepository.countCompletedByTaskId(t.getId());
                 double rate = ((double) completed / total) * 100.0;
                 t.setProgressRate(String.format("%.0f%%", rate));
+
+                // When all subtasks are completed but the task itself is not marked
+                // completed, automatically set the completion date.
+                if (completed == total && t.getCompletedAt() == null) {
+                    t.setCompletedAt(LocalDate.now());
+                    updateTask(t);
+                }
             } else {
                 t.setProgressRate(null);
             }
@@ -147,6 +154,12 @@ public class TaskServiceImpl implements TaskService {
             int completed = subTaskRepository.countCompletedByTaskId(id);
             double rate = ((double) completed / total) * 100.0;
             t.setProgressRate(String.format("%.0f%%", rate));
+
+            // Ensure completion date is set when all subtasks are finished.
+            if (completed == total && t.getCompletedAt() == null) {
+                t.setCompletedAt(LocalDate.now());
+                updateTask(t);
+            }
         } else {
             t.setProgressRate(null);
         }
