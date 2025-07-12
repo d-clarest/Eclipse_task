@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
           moveRow(row, false);//未完了に移動させる
           updateTimeUntilDue(row);//期日を再計算，期日は区分に依存している
           const progCell = row.cells[7];
-          if (progCell) progCell.textContent = '0%';
+          if (progCell) progCell.textContent = row.dataset.progressNull === 'true' ? '' : '0%';
           sortAllTaskTables();//締切が速い順に
         }
       sendUpdate(row).then(refreshTotalPoint);//サーバーサイドのデータベース更新＆ポイント更新
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
           moveRow(row, false);//未完了テーブルに移動
           updateTimeUntilDue(row);//区分から締切を，締切から期日を作成
           const progCell = row.cells[7];
-          if (progCell) progCell.textContent = '0%';
+          if (progCell) progCell.textContent = row.dataset.progressNull === 'true' ? '' : '0%';
         }
       sortAllTaskTables();//締切が速い順に
       sendUpdate(row).then(refreshTotalPoint);//サーバサイドのデータベースを更新した後に，ポイントも更新
