@@ -48,6 +48,7 @@ public class TopController {
         model.addAttribute("challenges", challengeList);
         var taskList = taskService.getAllTasks().stream()
                 .filter(t -> t.getCompletedAt() == null)
+                .filter(t -> !"100%".equals(t.getProgressRate()))
                 .toList();
         model.addAttribute("tasks", taskList);
         var awarenessList = awarenessRecordService.getAllRecords()
@@ -114,9 +115,10 @@ public class TopController {
         var all = taskService.getAllTasks();
         var uncompleted = all.stream()
                 .filter(t -> t.getCompletedAt() == null)
+                .filter(t -> !"100%".equals(t.getProgressRate()))
                 .toList();
         var completedTasks = all.stream()
-                .filter(t -> t.getCompletedAt() != null)
+                .filter(t -> t.getCompletedAt() != null || "100%".equals(t.getProgressRate()))
                 .toList();
         model.addAttribute("uncompletedTasks", uncompleted);
         model.addAttribute("completedTasks", completedTasks);
