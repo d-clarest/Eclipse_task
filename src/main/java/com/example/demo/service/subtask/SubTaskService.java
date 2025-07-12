@@ -11,4 +11,12 @@ public interface SubTaskService {
     void deleteSubTaskById(int id);
     int countSubTasks(int taskId);
     int countCompletedSubTasks(int taskId);
+
+    /**
+     * 親タスクの未完了の子タスクをまとめて完了状態にする。
+     *
+     * @param taskId 親タスクのID
+     * @param completedAt 完了日
+     */
+    void markAllCompletedByTaskId(int taskId, java.time.LocalDate completedAt);
 }
