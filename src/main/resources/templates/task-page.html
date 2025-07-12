@@ -19,6 +19,24 @@
       <textarea id="task-page-content" rows="20" cols="80" th:text="${page.content}"></textarea>
     </div>
 
+    <div class="database-container">
+      <p>子タスクデータベース</p>
+      <table class="task-database">
+        <tr>
+          <th>子タスク名</th>
+          <th>締切</th>
+          <th>期日</th>
+          <th>完了日</th>
+        </tr>
+        <tr th:each="st : ${subTasks}">
+          <td th:text="${st.title}"></td>
+          <td th:text="${#temporals.format(st.deadline, 'yyyy-MM-dd HH:mm')}"></td>
+          <td th:text="${st.expired ? '期限切れ' : st.timeUntilDue}" th:style="${st.expired} ? 'color:red' : ''"></td>
+          <td th:text="${st.completedAt}"></td>
+        </tr>
+      </table>
+    </div>
+
     <script th:src="@{/js/task-page.js}"></script>
     <!-- task-page.jsで pageIdを使うために-->
     <script th:inline="javascript">
