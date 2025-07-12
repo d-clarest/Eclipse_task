@@ -85,4 +85,10 @@ public class SubTaskRepositoryImpl implements SubTaskRepository {
         java.sql.Date completed = completedAt != null ? java.sql.Date.valueOf(completedAt) : null;
         jdbcTemplate.update(sql, completed, taskId);
     }
+
+    @Override
+    public void markAllUncompletedByTaskId(int taskId) {
+        String sql = "UPDATE sub_tasks SET completed_at = NULL WHERE task_id = ?";
+        jdbcTemplate.update(sql, taskId);
+    }
 }

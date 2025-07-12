@@ -46,24 +46,28 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       if (!row || !comp) return;
       //もし完了ボタンを押したら
-      if (btn.value === '完了') {
-        comp.value = new Date().toISOString().split('T')[0];//完了日を入れる
-        btn.value = '取消';
-        moveRow(row, true);//完了済みに移動させる
-        const expiration=row ? row.querySelector('.task-completed-input') : null;
-        const diffCell = row.cells[6];//期日を取得
-        if (diffCell) diffCell.textContent = '';//期日をnull
-        sortAllTaskTables();//締切が速い順に並び替え
-      } else {
-        comp.value = '';
-        btn.value = '完了';
-        moveRow(row, false);//未完了に移動させる
-        updateTimeUntilDue(row);//期日を再計算，期日は区分に依存している
-        sortAllTaskTables();//締切が速い順に
-      }
-    sendUpdate(row).then(refreshTotalPoint);//サーバーサイドのデータベース更新＆ポイント更新
+        if (btn.value === '完了') {
+          comp.value = new Date().toISOString().split('T')[0];//完了日を入れる
+          btn.value = '取消';
+          moveRow(row, true);//完了済みに移動させる
+          const expiration=row ? row.querySelector('.task-completed-input') : null;
+          const diffCell = row.cells[6];//期日を取得
+          if (diffCell) diffCell.textContent = '';//期日をnull
+          const progCell = row.cells[7];
+          if (progCell) progCell.textContent = '100%';
+          sortAllTaskTables();//締切が速い順に並び替え
+        } else {
+          comp.value = '';
+          btn.value = '完了';
+          moveRow(row, false);//未完了に移動させる
+          updateTimeUntilDue(row);//期日を再計算，期日は区分に依存している
+          const progCell = row.cells[7];
+          if (progCell) progCell.textContent = '0%';
+          sortAllTaskTables();//締切が速い順に
+        }
+      sendUpdate(row).then(refreshTotalPoint);//サーバーサイドのデータベース更新＆ポイント更新
+    });
   });
-});
 
   //完了日の入力欄が直接変更されたときの処理
   document.querySelectorAll('.task-completed-input').forEach((inp) => {
@@ -72,16 +76,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const handler = () => {
       if (!row || !btn) return;
       //すでに完了日に日付入っているなら
-      if (inp.value) {
-        btn.value = '取消';
-        moveRow(row, true);//完了済みテーブルに移動,top画面なら非表示に
-        const diffCell = row.cells[6];
-        if (diffCell) diffCell.textContent = '';//期日をnullに
-      } else {
-        btn.value = '完了';
-        moveRow(row, false);//未完了テーブルに移動
-        updateTimeUntilDue(row);//区分から締切を，締切から期日を作成
-      }
+        if (inp.value) {
+          btn.value = '取消';
+          moveRow(row, true);//完了済みテーブルに移動,top画面なら非表示に
+          const diffCell = row.cells[6];
+          if (diffCell) diffCell.textContent = '';//期日をnullに
+          const progCell = row.cells[7];
+          if (progCell) progCell.textContent = '100%';
+        } else {
+          btn.value = '完了';
+          moveRow(row, false);//未完了テーブルに移動
+          updateTimeUntilDue(row);//区分から締切を，締切から期日を作成
+          const progCell = row.cells[7];
+          if (progCell) progCell.textContent = '0%';
+        }
       sortAllTaskTables();//締切が速い順に
       sendUpdate(row).then(refreshTotalPoint);//サーバサイドのデータベースを更新した後に，ポイントも更新
     };
