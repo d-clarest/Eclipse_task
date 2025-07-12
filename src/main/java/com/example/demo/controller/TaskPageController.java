@@ -14,6 +14,7 @@ import com.example.demo.entity.Task;
 import com.example.demo.entity.TaskPage;
 import com.example.demo.service.page.TaskPageService;
 import com.example.demo.service.task.TaskService;
+import com.example.demo.service.subtask.SubTaskService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class TaskPageController {
 
     private final TaskPageService service;
     private final TaskService taskService;
+    private final SubTaskService subTaskService;
 
     @GetMapping("/{username}/task-top/task-page/{taskId}")
     public String showTaskPage(@PathVariable String username, @PathVariable int taskId,
@@ -39,6 +41,7 @@ public class TaskPageController {
                 .filter(t -> t.getId() == taskId)
                 .findFirst()
                 .orElse(null);
+        model.addAttribute("subTasks", subTaskService.getSubTasks(taskId));
         model.addAttribute("page", page);
         model.addAttribute("task", task);
         model.addAttribute("username", username);
