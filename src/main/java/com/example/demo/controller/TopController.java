@@ -45,8 +45,9 @@ public class TopController {
                 .toList();
         model.addAttribute("challenges", challengeList);
         var taskList = taskService.getAllTasks().stream()
-        		.filter(t -> t.getCompletedAt() == null)
-                .filter(t -> !"100%".equals(t.getProgressRate()))
+                        .filter(t -> !(t.getCompletedAt() != null
+                                && ("100%".equals(t.getProgressRate())
+                                        || t.getProgressRate() == null)))
                 .toList();
         model.addAttribute("tasks", taskList);
         var awarenessList = awarenessRecordService.getAllRecords()
@@ -111,12 +112,14 @@ public class TopController {
         }
         log.debug("Displaying task box page");
         var all = taskService.getAllTasks();
-        var uncompleted = all.stream()
-        		.filter(t -> t.getCompletedAt() == null)
-                .filter(t -> !"100%".equals(t.getProgressRate()))
-                .toList();
         var completedTasks = all.stream()
-        		.filter(t -> t.getCompletedAt() != null || "100%".equals(t.getProgressRate()))
+                        .filter(t -> t.getCompletedAt() != null)
+                        .filter(t -> "100%".equals(t.getProgressRate()) || t.getProgressRate() == null)
+                .toList();
+        var uncompleted = all.stream()
+                        .filter(t -> !(t.getCompletedAt() != null
+                                && ("100%".equals(t.getProgressRate())
+                                        || t.getProgressRate() == null)))
                 .toList();
         model.addAttribute("uncompletedTasks", uncompleted);
         model.addAttribute("completedTasks", completedTasks);
