@@ -106,4 +106,10 @@ public class SubTaskServiceImpl implements SubTaskService {
         log.debug("Marking all subtasks of task {} completed", taskId);
         repository.markAllCompletedByTaskId(taskId, completedAt);
     }
+
+    @Override
+    public void markAllUncompletedByTaskId(int taskId) {
+        log.debug("Marking all subtasks of task {} uncompleted", taskId);
+        repository.markAllUncompletedByTaskId(taskId);
+    }
 }

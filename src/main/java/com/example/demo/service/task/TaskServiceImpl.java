@@ -121,6 +121,8 @@ public class TaskServiceImpl implements TaskService {
         boolean isCompleted = task.getCompletedAt() != null;
         if (!wasCompleted && isCompleted) {
             subTaskRepository.markAllCompletedByTaskId(task.getId(), task.getCompletedAt());
+        } else if (wasCompleted && !isCompleted) {
+            subTaskRepository.markAllUncompletedByTaskId(task.getId());
         }
     }
 

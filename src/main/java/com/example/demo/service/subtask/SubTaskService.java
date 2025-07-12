@@ -19,4 +19,11 @@ public interface SubTaskService {
      * @param completedAt 完了日
      */
     void markAllCompletedByTaskId(int taskId, java.time.LocalDate completedAt);
+
+    /**
+     * 親タスクの子タスクをすべて未完了に戻す。
+     *
+     * @param taskId 親タスクのID
+     */
+    void markAllUncompletedByTaskId(int taskId);
 }
