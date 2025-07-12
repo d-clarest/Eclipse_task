@@ -17,82 +17,54 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TaskRepositoryImpl implements TaskRepository {
 
+    private static final String BASE_SELECT = "SELECT id, title, category, deadline, result, detail, level, created_at, updated_at, completed_at FROM tasks";
+
+    private static final RowMapper<Task> ROW_MAPPER = (rs, rowNum) -> {
+        Task t = new Task();
+        t.setId(rs.getInt("id"));
+        t.setTitle(rs.getString("title"));
+        t.setCategory(rs.getString("category"));
+        java.sql.Timestamp deadline = rs.getTimestamp("deadline");
+        if (deadline != null) {
+            t.setDeadline(deadline.toLocalDateTime());
+        }
+        t.setResult(rs.getString("result"));
+        t.setDetail(rs.getString("detail"));
+        t.setLevel(rs.getInt("level"));
+        java.sql.Timestamp created = rs.getTimestamp("created_at");
+        if (created != null) {
+            t.setCreatedAt(created.toLocalDateTime());
+        }
+        java.sql.Timestamp updated = rs.getTimestamp("updated_at");
+        if (updated != null) {
+            t.setUpdatedAt(updated.toLocalDateTime());
+        }
+        java.sql.Date completed = rs.getDate("completed_at");
+        if (completed != null) {
+            t.setCompletedAt(completed.toLocalDate());
+        }
+        return t;
+    };
+
     private final JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Task> findAll() {
-        String sql = "SELECT id, title, category, deadline, result, detail, level, created_at, updated_at, completed_at "
-                + "FROM tasks ORDER BY CASE category "
-                + "WHEN '今日' THEN 1 "
-                + "WHEN '明日' THEN 2 "
-                + "WHEN '今週' THEN 3 "
-                + "WHEN '来週' THEN 4 "
-                + "WHEN '再来週' THEN 5 "
-                + "ELSE 6 END";
-        return jdbcTemplate.query(sql, new RowMapper<Task>() {
-            @Override
-            public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Task t = new Task();
-                t.setId(rs.getInt("id"));
-                t.setTitle(rs.getString("title"));
-                t.setCategory(rs.getString("category"));
-                java.sql.Timestamp deadline = rs.getTimestamp("deadline");
-                if (deadline != null) {
-                    t.setDeadline(deadline.toLocalDateTime());
-                }
-                t.setResult(rs.getString("result"));
-                t.setDetail(rs.getString("detail"));
-                t.setLevel(rs.getInt("level"));
-                java.sql.Timestamp created = rs.getTimestamp("created_at");
-                if (created != null) {
-                    t.setCreatedAt(created.toLocalDateTime());
-                }
-                java.sql.Timestamp updated = rs.getTimestamp("updated_at");
-                if (updated != null) {
-                    t.setUpdatedAt(updated.toLocalDateTime());
-                }
-                java.sql.Date completed = rs.getDate("completed_at");
-                if (completed != null) {
-                    t.setCompletedAt(completed.toLocalDate());
-                }
-                return t;
-            }
-        });
+        String sql = BASE_SELECT +
+                " ORDER BY CASE category " +
+                "WHEN '今日' THEN 1 " +
+                "WHEN '明日' THEN 2 " +
+                "WHEN '今週' THEN 3 " +
+                "WHEN '来週' THEN 4 " +
+                "WHEN '再来週' THEN 5 " +
+                "ELSE 6 END";
+        return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     @Override
     public Task findById(int id) {
-        String sql = "SELECT id, title, category, deadline, result, detail, level, created_at, updated_at, completed_at "
-                + "FROM tasks WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, new RowMapper<Task>() {
-            @Override
-            public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
-                Task t = new Task();
-                t.setId(rs.getInt("id"));
-                t.setTitle(rs.getString("title"));
-                t.setCategory(rs.getString("category"));
-                java.sql.Timestamp deadline = rs.getTimestamp("deadline");
-                if (deadline != null) {
-                    t.setDeadline(deadline.toLocalDateTime());
-                }
-                t.setResult(rs.getString("result"));
-                t.setDetail(rs.getString("detail"));
-                t.setLevel(rs.getInt("level"));
-                java.sql.Timestamp created = rs.getTimestamp("created_at");
-                if (created != null) {
-                    t.setCreatedAt(created.toLocalDateTime());
-                }
-                java.sql.Timestamp updated = rs.getTimestamp("updated_at");
-                if (updated != null) {
-                    t.setUpdatedAt(updated.toLocalDateTime());
-                }
-                java.sql.Date completed = rs.getDate("completed_at");
-                if (completed != null) {
-                    t.setCompletedAt(completed.toLocalDate());
-                }
-                return t;
-            }
-        }, id);
+        String sql = BASE_SELECT + " WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
     }
 
     @Override
