@@ -27,6 +27,42 @@ public class SubTaskServiceImpl implements SubTaskService {
     private final TaskService taskService;
 
     @Override
+    public List<SubTask> getAllSubTasks() {
+        log.debug("Fetching all subtasks");
+        return repository.findAll().stream().map(st -> {
+            LocalDateTime parentDeadline = null;
+            try {
+                parentDeadline = taskRepository.findById(st.getTaskId()).getDeadline();
+            } catch (Exception e) {
+                log.debug("Parent task not found for {}", st.getTaskId());
+            }
+            LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+            if (st.getDeadline() == null) {
+                st.setDeadline(parentDeadline);
+            }
+            if (st.getCompletedAt() != null) {
+                st.setTimeUntilDue(null);
+            } else {
+                LocalDateTime deadline = st.getDeadline();
+                if (deadline == null) {
+                    st.setExpired(true);
+                    st.setTimeUntilDue("-");
+                } else {
+                    long minutes = Duration.between(now, deadline).toMinutes();
+                    boolean expired = minutes <= 0;
+                    if (minutes < 0) minutes = 0;
+                    long days = minutes / (60 * 24);
+                    long hours = (minutes % (60 * 24)) / 60;
+                    long mins = minutes % 60;
+                    st.setTimeUntilDue(String.format("%d日%d時間%d分", days, hours, mins));
+                    st.setExpired(expired);
+                }
+            }
+            return st;
+        }).toList();
+    }
+
+    @Override
     public List<SubTask> getSubTasks(int taskId) {
         log.debug("Fetching subtasks for task {}", taskId);
         List<SubTask> list = repository.findByTaskId(taskId);

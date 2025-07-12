@@ -38,6 +38,12 @@ public class SubTaskRepositoryImpl implements SubTaskRepository {
     };
 
     @Override
+    public List<SubTask> findAll() {
+        String sql = "SELECT id, task_id, title, deadline, completed_at FROM sub_tasks ORDER BY id";
+        return jdbcTemplate.query(sql, ROW_MAPPER);
+    }
+
+    @Override
     public List<SubTask> findByTaskId(int taskId) {
         String sql = "SELECT id, task_id, title, deadline, completed_at FROM sub_tasks WHERE task_id = ? ORDER BY id";
         return jdbcTemplate.query(sql, ROW_MAPPER, taskId);
