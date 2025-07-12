@@ -116,6 +116,12 @@ public class TaskServiceImpl implements TaskService {
             task.setDeadline(current.getDeadline());
         }
         repository.updateTask(task);
+
+        boolean wasCompleted = current.getCompletedAt() != null;
+        boolean isCompleted = task.getCompletedAt() != null;
+        if (!wasCompleted && isCompleted) {
+            subTaskRepository.markAllCompletedByTaskId(task.getId(), task.getCompletedAt());
+        }
     }
 
     @Override

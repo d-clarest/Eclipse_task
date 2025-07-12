@@ -100,4 +100,10 @@ public class SubTaskServiceImpl implements SubTaskService {
     public int countCompletedSubTasks(int taskId) {
         return repository.countCompletedByTaskId(taskId);
     }
+
+    @Override
+    public void markAllCompletedByTaskId(int taskId, java.time.LocalDate completedAt) {
+        log.debug("Marking all subtasks of task {} completed", taskId);
+        repository.markAllCompletedByTaskId(taskId, completedAt);
+    }
 }

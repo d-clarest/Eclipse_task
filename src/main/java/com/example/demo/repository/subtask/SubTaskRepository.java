@@ -11,4 +11,12 @@ public interface SubTaskRepository {
     void deleteById(int id);
     int countByTaskId(int taskId);
     int countCompletedByTaskId(int taskId);
+
+    /**
+     * 指定したタスクIDの未完了の子タスクをすべて完了済みにする。
+     *
+     * @param taskId 親タスクのID
+     * @param completedAt 完了日
+     */
+    void markAllCompletedByTaskId(int taskId, java.time.LocalDate completedAt);
 }
