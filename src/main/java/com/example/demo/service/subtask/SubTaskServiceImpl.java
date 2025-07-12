@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.SubTask;
 import com.example.demo.repository.subtask.SubTaskRepository;
+import com.example.demo.service.task.TaskService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,13 +20,23 @@ import lombok.extern.slf4j.Slf4j;
 public class SubTaskServiceImpl implements SubTaskService {
 
     private final SubTaskRepository repository;
+    private final TaskService taskService;
 
     @Override
     public List<SubTask> getSubTasks(int taskId) {
         log.debug("Fetching subtasks for task {}", taskId);
         List<SubTask> list = repository.findByTaskId(taskId);
+        LocalDateTime parentDeadline = null;
+        try {
+            parentDeadline = taskService.getTaskById(taskId).getDeadline();
+        } catch (Exception e) {
+            log.debug("Parent task not found for {}", taskId);
+        }
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         for (SubTask st : list) {
+            if (st.getDeadline() == null) {
+                st.setDeadline(parentDeadline);
+            }
             if (st.getCompletedAt() != null) {
                 st.setTimeUntilDue(null);
                 continue;
@@ -51,12 +62,26 @@ public class SubTaskServiceImpl implements SubTaskService {
     @Override
     public void addSubTask(SubTask subTask) {
         log.debug("Adding subtask {}", subTask.getTitle());
+        if (subTask.getDeadline() == null) {
+            try {
+                subTask.setDeadline(taskService.getTaskById(subTask.getTaskId()).getDeadline());
+            } catch (Exception e) {
+                log.debug("Parent task not found for {}", subTask.getTaskId());
+            }
+        }
         repository.insertSubTask(subTask);
     }
 
     @Override
     public void updateSubTask(SubTask subTask) {
         log.debug("Updating subtask id {}", subTask.getId());
+        if (subTask.getDeadline() == null) {
+            try {
+                subTask.setDeadline(taskService.getTaskById(subTask.getTaskId()).getDeadline());
+            } catch (Exception e) {
+                log.debug("Parent task not found for {}", subTask.getTaskId());
+            }
+        }
         repository.updateSubTask(subTask);
     }
 

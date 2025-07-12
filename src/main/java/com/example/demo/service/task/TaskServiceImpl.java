@@ -120,4 +120,10 @@ public class TaskServiceImpl implements TaskService {
         log.debug("Fetching total completed task levels");
         return repository.sumCompletedLevels();
     }
+
+    @Override
+    public Task getTaskById(int id) {
+        log.debug("Fetching task by id {}", id);
+        return repository.findById(id);
+    }
 }
