@@ -71,44 +71,44 @@ body.task-body {
   /* 新規ボタン */
   /* margin-top: 10px; 相対位置*/
   position: fixed;
-  top: 200px;
+  top: 480px;
   left: 50px;
 }
 
 #toggle-completed-button {
   position: fixed;
-  top: 240px;
-  left: 50px;
+  top: 300px;
+  right: 150px;
 }
 
 #total-point-display {
   position: fixed;
-  top: 280px;
+  top: 450px;
   left: 50px;
   font-weight: bold;
 }
 
 #new-challenge-button {
   position: fixed;
-  top: 320px;
+  top: 510px;
   left: 50px;
 }
 
 #new-task-button {
   position: fixed;
-  top: 360px;
+  top: 540px;
   left: 50px;
 }
 
 #new-awareness-button {
   position: fixed;
-  top: 400px;
+  top: 570px;
   left: 50px;
 }
 
 #new-word-button {
   position: fixed;
-  top: 440px;
+  top: 600px;
   left: 50px;
 }
 
