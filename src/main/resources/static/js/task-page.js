@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       title: row.querySelector('.subtask-title-input').value,
       deadline: row.dataset.deadline || null,
       completedAt: row.querySelector('.subtask-completed-input').value || null,
+      taskId: taskId,
     };
   }
 
