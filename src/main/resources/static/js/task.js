@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const diffCell = row.cells[6];//期日を取得
           if (diffCell) diffCell.textContent = '';//期日をnull
           const progCell = row.cells[7];
-          if (progCell) progCell.textContent = '100%';
+          if (progCell) progCell.textContent = row.dataset.progressNull === 'true' ? '' : '100%';
           sortAllTaskTables();//締切が速い順に並び替え
         } else {
           comp.value = '';
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const diffCell = row.cells[6];
           if (diffCell) diffCell.textContent = '';//期日をnullに
           const progCell = row.cells[7];
-          if (progCell) progCell.textContent = '100%';
+          if (progCell) progCell.textContent = row.dataset.progressNull === 'true' ? '' : '100%';
         } else {
           btn.value = '完了';
           moveRow(row, false);//未完了テーブルに移動
