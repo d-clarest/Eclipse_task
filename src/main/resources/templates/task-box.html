@@ -25,7 +25,7 @@
           <th>レベル</th>
           <th>完了日</th>
         </tr>
-        <tr th:each="task : ${uncompletedTasks}" class="task-row" th:data-id="${task.id}">
+          <tr th:each="task : ${uncompletedTasks}" class="task-row" th:data-id="${task.id}" th:data-progress-null="${task.progressRate == null}">
           <td><input type="button" value="完了" class="task-complete-button" /></td>
           <td><input type="button" value="削除" class="task-delete-button" /></td>
           <td><a th:href="@{'/' + ${username} + '/task-top/task-page/' + ${task.id}}">go</a></td>
@@ -70,7 +70,7 @@
           <th>レベル</th>
           <th>完了日</th>
         </tr>
-        <tr th:each="task : ${completedTasks}" class="task-row" th:data-id="${task.id}">
+          <tr th:each="task : ${completedTasks}" class="task-row" th:data-id="${task.id}" th:data-progress-null="${task.progressRate == null}">
           <td><input type="button" value="取消" class="task-complete-button" /></td>
           <td><input type="button" value="削除" class="task-delete-button" /></td>
           <td><a th:href="@{'/' + ${username} + '/task-top/task-page/' + ${task.id}}">go</a></td>
