@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.Task;
 import com.example.demo.repository.task.TaskRepository;
+import com.example.demo.repository.subtask.SubTaskRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository repository;
+    private final SubTaskRepository subTaskRepository;
 
     /**
      * カテゴリから締切日時を計算する。
@@ -58,30 +60,37 @@ public class TaskServiceImpl implements TaskService {
         for (Task t : list) {
             if (t.getCompletedAt() != null) {
                 t.setTimeUntilDue(null);
-                continue;
+            } else {
+                LocalDateTime deadline = t.getDeadline();
+                if (deadline == null) {
+                    // When deadline is missing (表示が "-")
+                    t.setExpired(true);
+                    t.setTimeUntilDue("-");
+                } else {
+                    long minutes = Duration.between(now, deadline).toMinutes();
+                    boolean expired = minutes <= 0;
+                    if (minutes < 0)
+                        minutes = 0;
+                    long rounded = (minutes / 5) * 5;
+                    long days = rounded / (60 * 24);
+                    long hours = (rounded % (60 * 24)) / 60;
+                    long mins = rounded % 60;
+                    t.setTimeUntilDue(String.format("%d日%d時間%d分", days, hours, mins));
+                    t.setExpired(expired);
+
+                    // Keep existing deadline without changing category based on it
+                    t.setDeadline(deadline);
+                }
             }
 
-            LocalDateTime deadline = t.getDeadline();
-            if (deadline == null) {
-                // When deadline is missing (表示が "-"), treat task as expired
-                t.setExpired(true);
-                t.setTimeUntilDue("-");
-                continue;
+            int total = subTaskRepository.countByTaskId(t.getId());
+            if (total > 0) {
+                int completed = subTaskRepository.countCompletedByTaskId(t.getId());
+                double rate = ((double) completed / total) * 100.0;
+                t.setProgressRate(String.format("%.0f%%", rate));
+            } else {
+                t.setProgressRate(null);
             }
-
-            long minutes = Duration.between(now, deadline).toMinutes();
-            boolean expired = minutes <= 0;
-            if (minutes < 0)
-                minutes = 0;
-            long rounded = (minutes / 5) * 5;
-            long days = rounded / (60 * 24);
-            long hours = (rounded % (60 * 24)) / 60;
-            long mins = rounded % 60;
-            t.setTimeUntilDue(String.format("%d日%d時間%d分", days, hours, mins));
-            t.setExpired(expired);
-
-            // Keep existing deadline without changing category based on it
-            t.setDeadline(deadline);
         }
         return list;
     }
@@ -124,6 +133,15 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task getTaskById(int id) {
         log.debug("Fetching task by id {}", id);
-        return repository.findById(id);
+        Task t = repository.findById(id);
+        int total = subTaskRepository.countByTaskId(id);
+        if (total > 0) {
+            int completed = subTaskRepository.countCompletedByTaskId(id);
+            double rate = ((double) completed / total) * 100.0;
+            t.setProgressRate(String.format("%.0f%%", rate));
+        } else {
+            t.setProgressRate(null);
+        }
+        return t;
     }
 }

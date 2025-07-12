@@ -90,4 +90,14 @@ public class SubTaskServiceImpl implements SubTaskService {
         log.debug("Deleting subtask id {}", id);
         repository.deleteById(id);
     }
+
+    @Override
+    public int countSubTasks(int taskId) {
+        return repository.countByTaskId(taskId);
+    }
+
+    @Override
+    public int countCompletedSubTasks(int taskId) {
+        return repository.countCompletedByTaskId(taskId);
+    }
 }

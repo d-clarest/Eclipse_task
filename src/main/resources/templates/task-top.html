@@ -149,6 +149,7 @@
           <th>区分</th>
           <th>締切</th>
           <th>期日</th>
+          <th>進捗率</th>
           <th>レベル</th>
           <th>完了日</th>
         </tr>
@@ -168,6 +169,7 @@
           </td>
           <td th:text="${#temporals.format(task.deadline, 'yyyy-MM-dd HH:mm')}"></td>
           <td th:text="${task.expired ? '期限切れ' : task.timeUntilDue}" th:style="${task.expired} ? 'color:red' : ''"></td>
+          <td th:text="${task.progressRate}"></td>
           <td>
             <select class="task-level-select">
               <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == task.level}"></option>
