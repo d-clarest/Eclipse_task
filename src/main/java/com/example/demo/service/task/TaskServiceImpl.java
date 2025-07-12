@@ -94,13 +94,15 @@ public class TaskServiceImpl implements TaskService {
                 if (completed == total) {
                     if (t.getCompletedAt() == null) {
                         t.setCompletedAt(LocalDate.now());
-                        updateTask(t);
+                        // Update parent task only to avoid changing subtask status
+                        repository.updateTask(t);
                     }
                 } else {
                     // Some subtasks remain -> clear completion date if set
                     if (t.getCompletedAt() != null) {
                         t.setCompletedAt(null);
-                        updateTask(t);
+                        // Update parent task only to avoid changing subtask status
+                        repository.updateTask(t);
                     }
                 }
             } else {
@@ -167,12 +169,14 @@ public class TaskServiceImpl implements TaskService {
             if (completed == total) {
                 if (t.getCompletedAt() == null) {
                     t.setCompletedAt(LocalDate.now());
-                    updateTask(t);
+                    // Update parent task only to avoid modifying subtasks
+                    repository.updateTask(t);
                 }
             } else {
                 if (t.getCompletedAt() != null) {
                     t.setCompletedAt(null);
-                    updateTask(t);
+                    // Update parent task only to avoid modifying subtasks
+                    repository.updateTask(t);
                 }
             }
         } else {
