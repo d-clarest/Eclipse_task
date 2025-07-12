@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>子タスクボックス</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="task-body">
+    <div class="link-area">
+      <a th:href="@{'/' + ${username} + '/task-top'}">TOPへ</a>
+    </div>
+
+    <div class="database-container">
+      <p>未完了子タスク</p>
+      <table id="uncompleted-subtask-table" class="task-database">
+        <tr>
+          <th>完了</th>
+          <th>削除</th>
+          <th>親ID</th>
+          <th>子タスク名</th>
+          <th>締切</th>
+          <th>期日</th>
+          <th>完了日</th>
+        </tr>
+        <tr th:each="st : ${uncompletedSubTasks}" class="subtask-row" th:data-id="${st.id}" th:data-task-id="${st.taskId}" th:data-deadline="${#temporals.format(st.deadline, 'yyyy-MM-dd''T''HH:mm')}">
+          <td><input type="button" value="完了" class="subtask-complete-button" /></td>
+          <td><input type="button" value="削除" class="subtask-delete-button" /></td>
+          <td th:text="${st.taskId}"></td>
+          <td><input type="text" th:value="${st.title}" class="subtask-title-input" /></td>
+          <td th:text="${#temporals.format(st.deadline, 'yyyy-MM-dd HH:mm')}"></td>
+          <td th:text="${st.expired ? '期限切れ' : st.timeUntilDue}" th:style="${st.expired} ? 'color:red' : ''"></td>
+          <td><input type="date" th:value="${st.completedAt}" class="subtask-completed-input" /></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="database-container">
+      <p>完了済み子タスク</p>
+      <table id="completed-subtask-table" class="task-database">
+        <tr>
+          <th>完了</th>
+          <th>削除</th>
+          <th>親ID</th>
+          <th>子タスク名</th>
+          <th>締切</th>
+          <th>期日</th>
+          <th>完了日</th>
+        </tr>
+        <tr th:each="st : ${completedSubTasks}" class="subtask-row" th:data-id="${st.id}" th:data-task-id="${st.taskId}" th:data-deadline="${#temporals.format(st.deadline, 'yyyy-MM-dd''T''HH:mm')}">
+          <td><input type="button" value="取消" class="subtask-complete-button" /></td>
+          <td><input type="button" value="削除" class="subtask-delete-button" /></td>
+          <td th:text="${st.taskId}"></td>
+          <td><input type="text" th:value="${st.title}" class="subtask-title-input" /></td>
+          <td th:text="${#temporals.format(st.deadline, 'yyyy-MM-dd HH:mm')}"></td>
+          <td th:text="${st.expired ? '期限切れ' : st.timeUntilDue}" th:style="${st.expired} ? 'color:red' : ''"></td>
+          <td><input type="date" th:value="${st.completedAt}" class="subtask-completed-input" /></td>
+        </tr>
+      </table>
+    </div>
+
+    <script th:src="@{/js/subtask.js}"></script>
+  </body>
+</html>

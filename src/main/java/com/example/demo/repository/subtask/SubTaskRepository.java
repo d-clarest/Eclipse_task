@@ -5,6 +5,11 @@ import java.util.List;
 import com.example.demo.entity.SubTask;
 
 public interface SubTaskRepository {
+    /**
+     * 全ての子タスクを取得する。
+     * @return 子タスク一覧
+     */
+    List<SubTask> findAll();
     List<SubTask> findByTaskId(int taskId);
     void insertSubTask(SubTask subTask);
     void updateSubTask(SubTask subTask);

@@ -12,6 +12,7 @@ import com.example.demo.service.awareness.AwarenessRecordService;
 import com.example.demo.service.challenge.ChallengeService;
 import com.example.demo.service.schedule.ScheduleService;
 import com.example.demo.service.task.TaskService;
+import com.example.demo.service.subtask.SubTaskService;
 import com.example.demo.service.word.WordRecordService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class TopController {
     private final ScheduleService scheduleService;
     private final ChallengeService challengeService;
     private final TaskService taskService;
+    private final SubTaskService subTaskService;
     private final AwarenessRecordService awarenessRecordService;
     private final WordRecordService wordRecordService;
 
@@ -151,6 +153,26 @@ public class TopController {
         model.addAttribute("wordRecords", records);
         model.addAttribute("username", username);
         return "word-box";
+    }
+
+    @GetMapping("/{username}/task-top/sub-task-box")
+    public String showSubTaskBox(@PathVariable String username, Model model, HttpSession session) {
+        String loginUser = (String) session.getAttribute("loginUser");
+        if (loginUser == null || !loginUser.equals(username)) {
+            return "redirect:/log-in";
+        }
+        log.debug("Displaying sub task box page");
+        var all = subTaskService.getAllSubTasks();
+        var uncompleted = all.stream()
+                .filter(st -> st.getCompletedAt() == null)
+                .toList();
+        var completed = all.stream()
+                .filter(st -> st.getCompletedAt() != null)
+                .toList();
+        model.addAttribute("uncompletedSubTasks", uncompleted);
+        model.addAttribute("completedSubTasks", completed);
+        model.addAttribute("username", username);
+        return "sub-task-box";
     }
     //-------------------------------------------------------------------------------------------------
     @GetMapping("/total-point")

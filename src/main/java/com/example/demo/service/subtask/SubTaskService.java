@@ -5,6 +5,11 @@ import java.util.List;
 import com.example.demo.entity.SubTask;
 
 public interface SubTaskService {
+    /**
+     * すべての子タスクを取得する。
+     * @return 子タスク一覧
+     */
+    List<SubTask> getAllSubTasks();
     List<SubTask> getSubTasks(int taskId);
     void addSubTask(SubTask subTask);
     void updateSubTask(SubTask subTask);
