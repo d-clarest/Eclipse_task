@@ -32,7 +32,7 @@ public class SubTaskServiceImpl implements SubTaskService {
         List<SubTask> list = repository.findByTaskId(taskId);
         LocalDateTime parentDeadline = null;
         try {
-            parentDeadline = taskService.getTaskById(taskId).getDeadline();
+            parentDeadline = taskRepository.findById(taskId).getDeadline();
         } catch (Exception e) {
             log.debug("Parent task not found for {}", taskId);
         }
@@ -68,7 +68,7 @@ public class SubTaskServiceImpl implements SubTaskService {
         log.debug("Adding subtask {}", subTask.getTitle());
         if (subTask.getDeadline() == null) {
             try {
-                subTask.setDeadline(taskService.getTaskById(subTask.getTaskId()).getDeadline());
+                subTask.setDeadline(taskRepository.findById(subTask.getTaskId()).getDeadline());
             } catch (Exception e) {
                 log.debug("Parent task not found for {}", subTask.getTaskId());
             }
@@ -81,7 +81,7 @@ public class SubTaskServiceImpl implements SubTaskService {
         log.debug("Updating subtask id {}", subTask.getId());
         if (subTask.getDeadline() == null) {
             try {
-                subTask.setDeadline(taskService.getTaskById(subTask.getTaskId()).getDeadline());
+                subTask.setDeadline(taskRepository.findById(subTask.getTaskId()).getDeadline());
             } catch (Exception e) {
                 log.debug("Parent task not found for {}", subTask.getTaskId());
             }
@@ -91,7 +91,7 @@ public class SubTaskServiceImpl implements SubTaskService {
         int total = repository.countByTaskId(subTask.getTaskId());
         int completed = repository.countCompletedByTaskId(subTask.getTaskId());
         if (total > 0) {
-            Task parent = taskService.getTaskById(subTask.getTaskId());
+            Task parent = taskRepository.findById(subTask.getTaskId());
             if (completed == total) {
                 // all subtasks done -> ensure parent marked completed
                 if (parent.getCompletedAt() == null) {
