@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('/routine-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: '', type: '予定' }),
+        body: JSON.stringify({ name: '', type: '予定', frequency: '毎日' }),
       }).then(() => location.reload());
     });
   });
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 入力変更
   document
-    .querySelectorAll('.routine-name-input, .routine-type-select')
+    .querySelectorAll('.routine-name-input, .routine-type-select, .routine-frequency-select')
     .forEach((el) => {
       el.addEventListener('change', () => {
         const row = el.closest('tr');
@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
       id: parseInt(row.dataset.id, 10),
       name: row.querySelector('.routine-name-input').value,
       type: row.querySelector('.routine-type-select').value,
+      frequency: row.querySelector('.routine-frequency-select').value,
     };
   }
 
