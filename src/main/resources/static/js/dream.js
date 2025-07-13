@@ -60,14 +60,17 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-  function moveRow(row, toCompleted) {
+
+  //完了済みのテーブルに入れるか，未完了のテーブルに入れるかを決定する
+  function moveRow(row, completed) {
     if (!row) return;
-    if (toCompleted) {
-      if (completedTable && completedTable.tBodies.length > 0) {
-        completedTable.tBodies[0].appendChild(row);
-      }
-    } else if (uncompletedTable && uncompletedTable.tBodies.length > 0) {
-      uncompletedTable.tBodies[0].appendChild(row);
+    //タスクボックスの中なら
+    if (uncompletedTable && completedTable) {
+      const target = completed ? completedTable : uncompletedTable;
+      const tbody = target.tBodies[0] || target;
+      tbody.appendChild(row);
+    }else {
+      row.style.display = completed ? 'none' : '';//task-top画面で完了済みが押されたら非表示にするために，未完了なら表示にする
     }
   }
 
