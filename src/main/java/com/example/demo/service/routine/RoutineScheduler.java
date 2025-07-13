@@ -178,6 +178,32 @@ public class RoutineScheduler {
         }
     }
 
+    @Scheduled(cron = "0 * * * * *")
+    public void addWeeklyChallenges() {
+        LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDate today = LocalDate.now();
+        List<Routine> routines = routineService.getAllRoutines();
+        for (Routine r : routines) {
+            if ("挑戦".equals(r.getType()) && "毎週".equals(r.getFrequency())
+                    && r.getTiming() != null && r.getStartDate() != null) {
+                LocalTime timing = r.getTiming().truncatedTo(ChronoUnit.MINUTES);
+                LocalDate start = r.getStartDate();
+                long days = ChronoUnit.DAYS.between(start, today);
+                if (days >= 0 && days % 7 == 0 && now.equals(timing)) {
+                    boolean exists = challengeService.getAllChallenges().stream()
+                            .anyMatch(c -> c.getTitle().equals(r.getName()) && c.getChallengeDate() == null);
+                    if (!exists) {
+                        Challenge c = new Challenge();
+                        c.setTitle(r.getName());
+                        c.setChallengeLevel(1);
+                        challengeService.addChallenge(c);
+                        log.debug("Added challenge for routine {}", r.getName());
+                    }
+                }
+            }
+        }
+    }
+
     private String getJapaneseDayOfWeek(DayOfWeek day) {
         return day.getDisplayName(TextStyle.SHORT, Locale.JAPANESE);
     }
