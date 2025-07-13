@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.value = '完了';
         moveRow(row, false);
       }
+      console.log(row);
       sendUpdate(row);
     });
   });
