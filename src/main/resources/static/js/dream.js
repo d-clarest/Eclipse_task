@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const uncompletedTable = document.getElementById('uncompleted-dream-table');
+  const completedTable = document.getElementById('completed-dream-table');
+
   // 新規夢ボタン
   document.querySelectorAll('#new-dream-button').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -24,19 +27,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 入力変更
-  document.querySelectorAll('.dream-input').forEach((el) => {
-    el.addEventListener('change', () => {
-      const row = el.closest('tr');
-      if (row) sendUpdate(row);
+  // 完了・取消ボタン
+  document.querySelectorAll('.dream-complete-button').forEach((btn) => {
+    const row = btn.closest('tr');
+    const comp = row ? row.querySelector('.dream-completed-input') : null;
+    if (comp && comp.value) {
+      btn.value = '取消';
+    }
+    btn.addEventListener('click', () => {
+      if (!row || !comp) return;
+      if (btn.value === '完了') {
+        comp.value = new Date().toISOString().split('T')[0];
+        btn.value = '取消';
+        moveRow(row, true);
+      } else {
+        comp.value = '';
+        btn.value = '完了';
+        moveRow(row, false);
+      }
+      sendUpdate(row);
     });
   });
+
+  // 入力変更
+  document
+    .querySelectorAll('.dream-input, .dream-completed-input')
+    .forEach((el) => {
+      el.addEventListener('change', () => {
+        const row = el.closest('tr');
+        if (row) sendUpdate(row);
+      });
+    });
+
+  function moveRow(row, toCompleted) {
+    if (!row) return;
+    if (toCompleted) {
+      completedTable.tBodies[0].appendChild(row);
+    } else {
+      uncompletedTable.tBodies[0].appendChild(row);
+    }
+  }
 
   function gatherData(row) {
     return {
       id: parseInt(row.dataset.id, 10),
-      dream: row.querySelector('.dream-input').value
-          };
+      dream: row.querySelector('.dream-input').value,
+      completedAt: row.querySelector('.dream-completed-input').value || null,
+    };
   }
 
   function sendUpdate(row) {

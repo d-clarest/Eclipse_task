@@ -169,8 +169,15 @@ public class TopController {
             return "redirect:/log-in";
         }
         log.debug("Displaying dream box page");
-        var records = dreamRecordService.getAllRecords();
-        model.addAttribute("dreamRecords", records);
+        var all = dreamRecordService.getAllRecords();
+        var uncompleted = all.stream()
+                .filter(d -> d.getCompletedAt() == null)
+                .toList();
+        var completed = all.stream()
+                .filter(d -> d.getCompletedAt() != null)
+                .toList();
+        model.addAttribute("uncompletedDreamRecords", uncompleted);
+        model.addAttribute("completedDreamRecords", completed);
         model.addAttribute("username", username);
         return "dream-box";
     }

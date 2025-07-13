@@ -11,17 +11,40 @@
     </div>
 
     <div class="database-container">
-      <table class="dream-database">
+      <p>未完了夢</p>
+      <table id="uncompleted-dream-table" class="dream-database">
         <tr>
+          <th>完了</th>
           <th>削除</th>
           <th>夢</th>
+          <th>完了日</th>
         </tr>
-        <tr th:each="dream : ${dreamRecords}" th:data-id="${dream.id}">
+        <tr th:each="dream : ${uncompletedDreamRecords}" th:data-id="${dream.id}">
+          <td><input type="button" value="完了" class="dream-complete-button" /></td>
           <td><input type="button" value="削除" class="dream-delete-button" /></td>
           <td><input type="text" th:value="${dream.dream}" class="dream-input" /></td>
+          <td><input type="date" th:value="${dream.completedAt}" class="dream-completed-input" /></td>
         </tr>
       </table>
       <button id="new-dream-button">新規夢</button>
+    </div>
+
+    <div class="database-container">
+      <p>完了済み夢</p>
+      <table id="completed-dream-table" class="dream-database">
+        <tr>
+          <th>完了</th>
+          <th>削除</th>
+          <th>夢</th>
+          <th>完了日</th>
+        </tr>
+        <tr th:each="dream : ${completedDreamRecords}" th:data-id="${dream.id}">
+          <td><input type="button" value="取消" class="dream-complete-button" /></td>
+          <td><input type="button" value="削除" class="dream-delete-button" /></td>
+          <td><input type="text" th:value="${dream.dream}" class="dream-input" /></td>
+          <td><input type="date" th:value="${dream.completedAt}" class="dream-completed-input" /></td>
+        </tr>
+      </table>
     </div>
 
     <script th:src="@{/js/dream.js}"></script>
