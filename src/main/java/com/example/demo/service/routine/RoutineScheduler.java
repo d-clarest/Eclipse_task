@@ -65,6 +65,41 @@ public class RoutineScheduler {
     }
 
     @Scheduled(cron = "0 * * * * *")
+    public void addWeeklySchedules() {
+        LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDate today = LocalDate.now();
+        List<Routine> routines = routineService.getAllRoutines();
+        for (Routine r : routines) {
+            if ("予定".equals(r.getType()) && "毎週".equals(r.getFrequency())
+                    && r.getTiming() != null && r.getStartDate() != null) {
+                LocalTime timing = r.getTiming().truncatedTo(ChronoUnit.MINUTES);
+                LocalDate start = r.getStartDate();
+                long days = ChronoUnit.DAYS.between(start, today);
+                if (days >= 0 && days % 7 == 0 && now.equals(timing)) {
+                    boolean exists = scheduleService.getAllSchedules().stream()
+                            .anyMatch(s -> s.getTitle().equals(r.getName()) && today.equals(s.getScheduleDate()));
+                    if (!exists) {
+                        Schedule s = new Schedule();
+                        s.setAddFlag(true);
+                        s.setTitle(r.getName());
+                        s.setDayOfWeek(getJapaneseDayOfWeek(today.getDayOfWeek()));
+                        s.setScheduleDate(today);
+                        s.setStartTime(r.getTiming());
+                        s.setEndTime(r.getTiming().plusHours(1));
+                        s.setLocation("");
+                        s.setDetail("");
+                        s.setFeedback("");
+                        s.setPoint(1);
+                        s.setCompletedDay(null);
+                        scheduleService.addSchedule(s);
+                        log.debug("Added schedule for routine {}", r.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 * * * * *")
     public void addDailyTasks() {
         LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
         LocalDate today = LocalDate.now();
