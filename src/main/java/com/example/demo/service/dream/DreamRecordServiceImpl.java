@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.DreamRecord;
 import com.example.demo.repository.dream.DreamRecordRepository;
+import com.example.demo.service.page.DreamPageService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DreamRecordServiceImpl implements DreamRecordService {
 
     private final DreamRecordRepository repository;
+    private final DreamPageService pageService;
 
     @Override
     public List<DreamRecord> getAllRecords() {
@@ -38,6 +40,7 @@ public class DreamRecordServiceImpl implements DreamRecordService {
     @Override
     public void deleteById(int id) {
         log.debug("Deleting dream record id {}", id);
+        pageService.deleteByDreamId(id);
         repository.deleteById(id);
     }
 }
