@@ -81,18 +81,17 @@ body.task-body {
   right: 150px;
 }
 
+#current-time {
+  position: fixed;
+  top: 350px;
+  right: 150px;
+  font-weight: bold;
+}
+
 #total-point-display {
   position: fixed;
   top: 450px;
   left: 50px;
-  font-weight: bold;
-}
-
-/* display current time on task-top */
-#current-time {
-  position: fixed;
-  top: 10px;
-  left: 200px;
   font-weight: bold;
 }
 
