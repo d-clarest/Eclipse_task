@@ -18,5 +18,10 @@
     <div class="page-container">
       <textarea id="dream-page-content" rows="20" cols="80" th:text="${page.content}"></textarea>
     </div>
+
+    <script th:src="@{/js/dream-page.js}"></script>
+    <script th:inline="javascript">
+      const pageId = [[${page.id}]];
+    </script>
   </body>
 </html>
