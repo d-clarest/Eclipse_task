@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('/routine-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: '', type: '予定', frequency: '毎日', timing: '12:00' }),
+        body: JSON.stringify({ name: '', type: '予定', frequency: '毎日', startDate: null, timing: '12:00' }),
       }).then(() => location.reload());
     });
   });
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 入力変更
   document
-    .querySelectorAll('.routine-name-input, .routine-type-select, .routine-frequency-select, .routine-hour, .routine-minute')
+    .querySelectorAll('.routine-name-input, .routine-type-select, .routine-frequency-select, .routine-start-input, .routine-hour, .routine-minute')
     .forEach((el) => {
       el.addEventListener('change', () => {
         const row = el.closest('tr');
@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       name: row.querySelector('.routine-name-input').value,
       type: row.querySelector('.routine-type-select').value,
       frequency: row.querySelector('.routine-frequency-select').value,
+      startDate: row.querySelector('.routine-start-input').value || null,
       timing:
         row.querySelector('.routine-hour').value.padStart(2, '0') +
         ':' +
