@@ -17,12 +17,14 @@
           <th>完了</th>
           <th>削除</th>
           <th>夢</th>
+          <th>詳細</th>
           <th>完了日</th>
         </tr>
         <tr th:each="dream : ${uncompletedDreamRecords}" th:data-id="${dream.id}">
           <td><input type="button" value="完了" class="dream-complete-button" /></td>
           <td><input type="button" value="削除" class="dream-delete-button" /></td>
           <td><input type="text" th:value="${dream.dream}" class="dream-input" /></td>
+          <td><a th:href="@{'/' + ${username} + '/task-top/dream-page/' + ${dream.id}}">go</a></td>
           <td><input type="date" th:value="${dream.completedAt}" class="dream-completed-input" /></td>
         </tr>
       </table>
@@ -36,12 +38,14 @@
           <th>完了</th>
           <th>削除</th>
           <th>夢</th>
+          <th>詳細</th>
           <th>完了日</th>
         </tr>
         <tr th:each="dream : ${completedDreamRecords}" th:data-id="${dream.id}">
           <td><input type="button" value="取消" class="dream-complete-button" /></td>
           <td><input type="button" value="削除" class="dream-delete-button" /></td>
           <td><input type="text" th:value="${dream.dream}" class="dream-input" /></td>
+          <td><a th:href="@{'/' + ${username} + '/task-top/dream-page/' + ${dream.id}}">go</a></td>
           <td><input type="date" th:value="${dream.completedAt}" class="dream-completed-input" /></td>
         </tr>
       </table>

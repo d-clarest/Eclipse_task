@@ -233,12 +233,16 @@
       <div class="database-container">
         <table class="dream-database">
           <tr>
+            <th>報告</th>
             <th>削除</th>
             <th>夢</th>
+            <th>詳細</th>
           </tr>
           <tr th:each="dream : ${dreamRecords}" th:data-id="${dream.id}">
+            <td><input type="button" value="完了" class="dream-complete-button" /></td>
             <td><input type="button" value="削除" class="dream-delete-button" /></td>
             <td><input type="text" th:value="${dream.dream}" class="dream-input" /></td>
+            <td><a th:href="@{'/' + ${username} + '/task-top/dream-page/' + ${dream.id}}">go</a></td>
           </tr>
         </table>
       </div>
