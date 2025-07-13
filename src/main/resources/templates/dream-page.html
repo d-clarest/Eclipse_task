@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>夢ページ</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="task-body">
+    <div class="link-area">
+      <a th:href="@{'/' + ${username} + '/task-top'}">TOPへ</a>
+      <a th:href="@{'/' + ${username} + '/task-top/dream-box'}">一覧へ戻る</a>
+    </div>
+
+    <div class="awareness-title">
+      <span th:text="${dream != null ? dream.dream : ''}"></span>
+    </div>
+
+    <div class="page-container">
+      <textarea id="dream-page-content" rows="20" cols="80" th:text="${page.content}"></textarea>
+    </div>
+  </body>
+</html>
