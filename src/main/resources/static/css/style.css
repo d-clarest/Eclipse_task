@@ -88,6 +88,14 @@ body.task-body {
   font-weight: bold;
 }
 
+/* display current time on task-top */
+#current-time {
+  position: fixed;
+  top: 10px;
+  left: 200px;
+  font-weight: bold;
+}
+
 #new-challenge-button {
   position: fixed;
   top: 510px;
