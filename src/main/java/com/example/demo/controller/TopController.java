@@ -165,9 +165,15 @@ public class TopController {
         var all = subTaskService.getAllSubTasks();
         var uncompleted = all.stream()
                 .filter(st -> st.getCompletedAt() == null)
+                .sorted(java.util.Comparator.comparing(
+                        com.example.demo.entity.SubTask::getDeadline,
+                        java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())))
                 .toList();
         var completed = all.stream()
                 .filter(st -> st.getCompletedAt() != null)
+                .sorted(java.util.Comparator.comparing(
+                        com.example.demo.entity.SubTask::getDeadline,
+                        java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())))
                 .toList();
         model.addAttribute("uncompletedSubTasks", uncompleted);
         model.addAttribute("completedSubTasks", completed);

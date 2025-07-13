@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Comparator;
 
 import org.springframework.stereotype.Service;
 
@@ -59,7 +60,9 @@ public class SubTaskServiceImpl implements SubTaskService {
                 }
             }
             return st;
-        }).toList();
+        }).sorted(Comparator.comparing(SubTask::getDeadline,
+                Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
     }
 
     @Override
@@ -96,7 +99,10 @@ public class SubTaskServiceImpl implements SubTaskService {
             st.setTimeUntilDue(String.format("%d日%d時間%d分", days, hours, mins));
             st.setExpired(expired);
         }
-        return list;
+        return list.stream()
+                .sorted(Comparator.comparing(SubTask::getDeadline,
+                        Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
     }
 
     @Override
