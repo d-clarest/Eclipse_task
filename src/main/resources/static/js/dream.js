@@ -63,8 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function moveRow(row, toCompleted) {
     if (!row) return;
     if (toCompleted) {
-      completedTable.tBodies[0].appendChild(row);
-    } else {
+      if (completedTable && completedTable.tBodies.length > 0) {
+        completedTable.tBodies[0].appendChild(row);
+      }
+    } else if (uncompletedTable && uncompletedTable.tBodies.length > 0) {
       uncompletedTable.tBodies[0].appendChild(row);
     }
   }
