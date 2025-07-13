@@ -66,6 +66,7 @@ public class TopController {
         model.addAttribute("wordRecords", wordList);
         var dreamList = dreamRecordService.getAllRecords()
                 .stream()
+                .filter(d -> d.getCompletedAt() == null)
                 .limit(5)
                 .toList();
         model.addAttribute("dreamRecords", dreamList);
