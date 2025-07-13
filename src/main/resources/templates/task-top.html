@@ -15,6 +15,8 @@
       <a th:href="@{'/' + ${username} + '/task-top/word-box'}">単語ボックス</a>
       <a th:href="@{'/' + ${username} + '/task-top/dream-box'}">夢ボックス</a>
       <a th:href="@{'/' + ${username} + '/task-top/sub-task-box'}">子タスクボックス</a>
+      <a th:href="@{'/' + ${username} + '/task-top/dream-box'}">夢ボックス</a>
+
     </div>
 
     <!-- idの方でjs，classの方でcssの処理を適用-->
@@ -101,6 +103,7 @@
       <button id="new-task-button">タスク新規</button>
       <button id="new-awareness-button">新規気づき</button>
       <button id="new-word-button">新規単語</button>
+       <button id="new-dream-button">新規夢</button>
     </div>
 
     <div class="database-container">

@@ -15,12 +15,10 @@
         <tr>
           <th>削除</th>
           <th>夢</th>
-          <th>ページ</th>
         </tr>
         <tr th:each="dream : ${dreamRecords}" th:data-id="${dream.id}">
           <td><input type="button" value="削除" class="dream-delete-button" /></td>
           <td><input type="text" th:value="${dream.dream}" class="dream-input" /></td>
-          <td><input type="text" th:value="${dream.page}" class="page-input" /></td>
         </tr>
       </table>
       <button id="new-dream-button">新規夢</button>
