@@ -25,26 +25,27 @@ public class RoutineRepositoryImpl implements RoutineRepository {
             r.setId(rs.getInt("id"));
             r.setName(rs.getString("name"));
             r.setType(rs.getString("type"));
+            r.setFrequency(rs.getString("frequency"));
             return r;
         }
     };
 
     @Override
     public List<Routine> findAll() {
-        String sql = "SELECT id, name, type FROM routines ORDER BY id";
+        String sql = "SELECT id, name, type, frequency FROM routines ORDER BY id";
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     @Override
     public void insertRoutine(Routine routine) {
-        String sql = "INSERT INTO routines (name, type) VALUES (?, ?)";
-        jdbcTemplate.update(sql, routine.getName(), routine.getType());
+        String sql = "INSERT INTO routines (name, type, frequency) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, routine.getName(), routine.getType(), routine.getFrequency());
     }
 
     @Override
     public void updateRoutine(Routine routine) {
-        String sql = "UPDATE routines SET name = ?, type = ? WHERE id = ?";
-        jdbcTemplate.update(sql, routine.getName(), routine.getType(), routine.getId());
+        String sql = "UPDATE routines SET name = ?, type = ?, frequency = ? WHERE id = ?";
+        jdbcTemplate.update(sql, routine.getName(), routine.getType(), routine.getFrequency(), routine.getId());
     }
 
     @Override
