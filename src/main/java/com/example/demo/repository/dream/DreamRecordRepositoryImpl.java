@@ -20,13 +20,17 @@ public class DreamRecordRepositoryImpl implements DreamRecordRepository {
 
     @Override
     public List<DreamRecord> findAll() {
-        String sql = "SELECT id, dream FROM dream_records ORDER BY id DESC";
+        String sql = "SELECT id, dream, completed_at FROM dream_records ORDER BY id DESC";
         return jdbcTemplate.query(sql, new RowMapper<DreamRecord>() {
             @Override
             public DreamRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
                 DreamRecord r = new DreamRecord();
                 r.setId(rs.getInt("id"));
                 r.setDream(rs.getString("dream"));
+                java.sql.Date comp = rs.getDate("completed_at");
+                if (comp != null) {
+                    r.setCompletedAt(comp.toLocalDate());
+                }
                 return r;
             }
         });
@@ -34,14 +38,16 @@ public class DreamRecordRepositoryImpl implements DreamRecordRepository {
 
     @Override
     public void insertRecord(DreamRecord record) {
-        String sql = "INSERT INTO dream_records (dream) VALUES (?)";
-        jdbcTemplate.update(sql, record.getDream());
+        String sql = "INSERT INTO dream_records (dream, completed_at) VALUES (?, ?)";
+        java.sql.Date comp = record.getCompletedAt() != null ? java.sql.Date.valueOf(record.getCompletedAt()) : null;
+        jdbcTemplate.update(sql, record.getDream(), comp);
     }
 
     @Override
     public void updateRecord(DreamRecord record) {
-        String sql = "UPDATE dream_records SET dream = ? WHERE id = ?";
-        jdbcTemplate.update(sql, record.getDream(), record.getId());
+        String sql = "UPDATE dream_records SET dream = ?, completed_at = ? WHERE id = ?";
+        java.sql.Date comp = record.getCompletedAt() != null ? java.sql.Date.valueOf(record.getCompletedAt()) : null;
+        jdbcTemplate.update(sql, record.getDream(), comp, record.getId());
     }
 
     @Override
