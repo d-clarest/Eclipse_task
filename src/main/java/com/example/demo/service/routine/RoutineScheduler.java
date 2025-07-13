@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.entity.Routine;
 import com.example.demo.entity.Schedule;
+import com.example.demo.entity.Task;
 import com.example.demo.service.schedule.ScheduleService;
+import com.example.demo.service.task.TaskService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ public class RoutineScheduler {
 
     private final RoutineService routineService;
     private final ScheduleService scheduleService;
+    private final TaskService taskService;
 
     @Scheduled(cron = "0 * * * * *")
     public void addDailySchedules() {
@@ -52,6 +55,33 @@ public class RoutineScheduler {
                         s.setCompletedDay(null);
                         scheduleService.addSchedule(s);
                         log.debug("Added schedule for routine {}", r.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 * * * * *")
+    public void addDailyTasks() {
+        LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDate today = LocalDate.now();
+        List<Routine> routines = routineService.getAllRoutines();
+        for (Routine r : routines) {
+            if ("タスク".equals(r.getType()) && "毎日".equals(r.getFrequency()) && r.getTiming() != null) {
+                LocalTime timing = r.getTiming().truncatedTo(ChronoUnit.MINUTES);
+                if (now.equals(timing)) {
+                    boolean exists = taskService.getAllTasks().stream()
+                            .anyMatch(t -> t.getTitle().equals(r.getName()) &&
+                                    t.getCreatedAt() != null &&
+                                    today.equals(t.getCreatedAt().toLocalDate()));
+                    if (!exists) {
+                        Task t = new Task();
+                        t.setTitle(r.getName());
+                        t.setCategory("今日");
+                        t.setLevel(1);
+                        t.setCompletedAt(null);
+                        taskService.addTask(t);
+                        log.debug("Added task for routine {}", r.getName());
                     }
                 }
             }
