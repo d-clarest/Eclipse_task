@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('/dream-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dream: '', page: '' })
+        body: JSON.stringify({ dream: '' })
       }).then(() => location.reload());
     });
   });
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 入力変更
-  document.querySelectorAll('.dream-input, .page-input').forEach((el) => {
+  document.querySelectorAll('.dream-input').forEach((el) => {
     el.addEventListener('change', () => {
       const row = el.closest('tr');
       if (row) sendUpdate(row);
@@ -35,9 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function gatherData(row) {
     return {
       id: parseInt(row.dataset.id, 10),
-      dream: row.querySelector('.dream-input').value,
-      page: row.querySelector('.page-input').value
-    };
+      dream: row.querySelector('.dream-input').value
+          };
   }
 
   function sendUpdate(row) {
