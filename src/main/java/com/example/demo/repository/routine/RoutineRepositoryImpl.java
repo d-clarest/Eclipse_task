@@ -3,6 +3,7 @@ package com.example.demo.repository.routine;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,6 +28,10 @@ public class RoutineRepositoryImpl implements RoutineRepository {
             r.setName(rs.getString("name"));
             r.setType(rs.getString("type"));
             r.setFrequency(rs.getString("frequency"));
+            java.sql.Date sd = rs.getDate("start_date");
+            if (sd != null) {
+                r.setStartDate(sd.toLocalDate());
+            }
             java.sql.Time tm = rs.getTime("timing");
             if (tm != null) {
                 r.setTiming(tm.toLocalTime());
@@ -37,22 +42,24 @@ public class RoutineRepositoryImpl implements RoutineRepository {
 
     @Override
     public List<Routine> findAll() {
-        String sql = "SELECT id, name, type, frequency, timing FROM routines ORDER BY id";
+        String sql = "SELECT id, name, type, frequency, start_date, timing FROM routines ORDER BY id";
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     @Override
     public void insertRoutine(Routine routine) {
-        String sql = "INSERT INTO routines (name, type, frequency, timing) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO routines (name, type, frequency, start_date, timing) VALUES (?, ?, ?, ?, ?)";
+        java.sql.Date sd = routine.getStartDate() != null ? java.sql.Date.valueOf(routine.getStartDate()) : null;
         java.sql.Time tm = routine.getTiming() != null ? java.sql.Time.valueOf(routine.getTiming()) : null;
-        jdbcTemplate.update(sql, routine.getName(), routine.getType(), routine.getFrequency(), tm);
+        jdbcTemplate.update(sql, routine.getName(), routine.getType(), routine.getFrequency(), sd, tm);
     }
 
     @Override
     public void updateRoutine(Routine routine) {
-        String sql = "UPDATE routines SET name = ?, type = ?, frequency = ?, timing = ? WHERE id = ?";
+        String sql = "UPDATE routines SET name = ?, type = ?, frequency = ?, start_date = ?, timing = ? WHERE id = ?";
+        java.sql.Date sd = routine.getStartDate() != null ? java.sql.Date.valueOf(routine.getStartDate()) : null;
         java.sql.Time tm = routine.getTiming() != null ? java.sql.Time.valueOf(routine.getTiming()) : null;
-        jdbcTemplate.update(sql, routine.getName(), routine.getType(), routine.getFrequency(), tm, routine.getId());
+        jdbcTemplate.update(sql, routine.getName(), routine.getType(), routine.getFrequency(), sd, tm, routine.getId());
     }
 
     @Override

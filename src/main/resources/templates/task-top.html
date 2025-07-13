@@ -261,6 +261,7 @@
             <th>詳細</th>
             <th>区分</th>
             <th>頻度</th>
+            <th>開始日</th>
             <th>タイミング</th>
           </tr>
           <tr th:each="routine : ${routines}" th:data-id="${routine.id}">
@@ -280,6 +281,9 @@
                 <option value="毎週" th:selected="${routine.frequency == '毎週'}">毎週</option>
                 <option value="毎月" th:selected="${routine.frequency == '毎月'}">毎月</option>
               </select>
+            </td>
+            <td>
+              <input type="date" th:value="${routine.startDate}" class="routine-start-input" />
             </td>
             <td>
               <select class="routine-hour" th:data-time="${routine.timing}"></select>
