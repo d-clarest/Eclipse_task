@@ -15,6 +15,7 @@ import com.example.demo.service.task.TaskService;
 import com.example.demo.service.subtask.SubTaskService;
 import com.example.demo.service.word.WordRecordService;
 import com.example.demo.service.dream.DreamRecordService;
+import com.example.demo.service.routine.RoutineService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class TopController {
     private final AwarenessRecordService awarenessRecordService;
     private final WordRecordService wordRecordService;
     private final DreamRecordService dreamRecordService;
+    private final RoutineService routineService;
 
     @GetMapping("/{username}/task-top")
     public String showTaskTop(@PathVariable String username, Model model, HttpSession session) {
@@ -70,6 +72,8 @@ public class TopController {
                 .limit(5)
                 .toList();
         model.addAttribute("dreamRecords", dreamList);
+        var routineList = routineService.getAllRoutines();
+        model.addAttribute("routines", routineList);
         model.addAttribute("username", username);
         return "task-top";
     }
