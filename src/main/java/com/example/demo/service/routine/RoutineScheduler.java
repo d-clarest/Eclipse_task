@@ -127,6 +127,36 @@ public class RoutineScheduler {
     }
 
     @Scheduled(cron = "0 * * * * *")
+    public void addWeeklyTasks() {
+        LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDate today = LocalDate.now();
+        List<Routine> routines = routineService.getAllRoutines();
+        for (Routine r : routines) {
+            if ("タスク".equals(r.getType()) && "毎週".equals(r.getFrequency())
+                    && r.getTiming() != null && r.getStartDate() != null) {
+                LocalTime timing = r.getTiming().truncatedTo(ChronoUnit.MINUTES);
+                LocalDate start = r.getStartDate();
+                long days = ChronoUnit.DAYS.between(start, today);
+                if (days >= 0 && days % 7 == 0 && now.equals(timing)) {
+                    boolean exists = taskService.getAllTasks().stream()
+                            .anyMatch(t -> t.getTitle().equals(r.getName()) &&
+                                    t.getCreatedAt() != null &&
+                                    today.equals(t.getCreatedAt().toLocalDate()));
+                    if (!exists) {
+                        Task t = new Task();
+                        t.setTitle(r.getName());
+                        t.setCategory("今日");
+                        t.setLevel(1);
+                        t.setCompletedAt(null);
+                        taskService.addTask(t);
+                        log.debug("Added task for routine {}", r.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 * * * * *")
     public void addDailyChallenges() {
         LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
         List<Routine> routines = routineService.getAllRoutines();
