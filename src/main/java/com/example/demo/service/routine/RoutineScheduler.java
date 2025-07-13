@@ -14,8 +14,10 @@ import org.springframework.stereotype.Component;
 import com.example.demo.entity.Routine;
 import com.example.demo.entity.Schedule;
 import com.example.demo.entity.Task;
+import com.example.demo.entity.Challenge;
 import com.example.demo.service.schedule.ScheduleService;
 import com.example.demo.service.task.TaskService;
+import com.example.demo.service.challenge.ChallengeService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ public class RoutineScheduler {
     private final RoutineService routineService;
     private final ScheduleService scheduleService;
     private final TaskService taskService;
+    private final ChallengeService challengeService;
 
     @Scheduled(cron = "0 * * * * *")
     public void addDailySchedules() {
@@ -82,6 +85,28 @@ public class RoutineScheduler {
                         t.setCompletedAt(null);
                         taskService.addTask(t);
                         log.debug("Added task for routine {}", r.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 * * * * *")
+    public void addDailyChallenges() {
+        LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+        List<Routine> routines = routineService.getAllRoutines();
+        for (Routine r : routines) {
+            if ("挑戦".equals(r.getType()) && "毎日".equals(r.getFrequency()) && r.getTiming() != null) {
+                LocalTime timing = r.getTiming().truncatedTo(ChronoUnit.MINUTES);
+                if (now.equals(timing)) {
+                    boolean exists = challengeService.getAllChallenges().stream()
+                            .anyMatch(c -> c.getTitle().equals(r.getName()) && c.getChallengeDate() == null);
+                    if (!exists) {
+                        Challenge c = new Challenge();
+                        c.setTitle(r.getName());
+                        c.setChallengeLevel(1);
+                        challengeService.addChallenge(c);
+                        log.debug("Added challenge for routine {}", r.getName());
                     }
                 }
             }
