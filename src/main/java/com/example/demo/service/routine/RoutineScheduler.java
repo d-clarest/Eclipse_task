@@ -100,6 +100,41 @@ public class RoutineScheduler {
     }
 
     @Scheduled(cron = "0 * * * * *")
+    public void addMonthlySchedules() {
+        LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDate today = LocalDate.now();
+        List<Routine> routines = routineService.getAllRoutines();
+        for (Routine r : routines) {
+            if ("予定".equals(r.getType()) && "毎月".equals(r.getFrequency())
+                    && r.getTiming() != null && r.getStartDate() != null) {
+                LocalTime timing = r.getTiming().truncatedTo(ChronoUnit.MINUTES);
+                LocalDate start = r.getStartDate();
+                long months = ChronoUnit.MONTHS.between(start.withDayOfMonth(1), today.withDayOfMonth(1));
+                if (months >= 0 && today.getDayOfMonth() == start.getDayOfMonth() && now.equals(timing)) {
+                    boolean exists = scheduleService.getAllSchedules().stream()
+                            .anyMatch(s -> s.getTitle().equals(r.getName()) && today.equals(s.getScheduleDate()));
+                    if (!exists) {
+                        Schedule s = new Schedule();
+                        s.setAddFlag(true);
+                        s.setTitle(r.getName());
+                        s.setDayOfWeek(getJapaneseDayOfWeek(today.getDayOfWeek()));
+                        s.setScheduleDate(today);
+                        s.setStartTime(r.getTiming());
+                        s.setEndTime(r.getTiming().plusHours(1));
+                        s.setLocation("");
+                        s.setDetail("");
+                        s.setFeedback("");
+                        s.setPoint(1);
+                        s.setCompletedDay(null);
+                        scheduleService.addSchedule(s);
+                        log.debug("Added schedule for routine {}", r.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 * * * * *")
     public void addDailyTasks() {
         LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
         LocalDate today = LocalDate.now();
@@ -157,6 +192,36 @@ public class RoutineScheduler {
     }
 
     @Scheduled(cron = "0 * * * * *")
+    public void addMonthlyTasks() {
+        LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDate today = LocalDate.now();
+        List<Routine> routines = routineService.getAllRoutines();
+        for (Routine r : routines) {
+            if ("タスク".equals(r.getType()) && "毎月".equals(r.getFrequency())
+                    && r.getTiming() != null && r.getStartDate() != null) {
+                LocalTime timing = r.getTiming().truncatedTo(ChronoUnit.MINUTES);
+                LocalDate start = r.getStartDate();
+                long months = ChronoUnit.MONTHS.between(start.withDayOfMonth(1), today.withDayOfMonth(1));
+                if (months >= 0 && today.getDayOfMonth() == start.getDayOfMonth() && now.equals(timing)) {
+                    boolean exists = taskService.getAllTasks().stream()
+                            .anyMatch(t -> t.getTitle().equals(r.getName()) &&
+                                    t.getCreatedAt() != null &&
+                                    today.equals(t.getCreatedAt().toLocalDate()));
+                    if (!exists) {
+                        Task t = new Task();
+                        t.setTitle(r.getName());
+                        t.setCategory("今日");
+                        t.setLevel(1);
+                        t.setCompletedAt(null);
+                        taskService.addTask(t);
+                        log.debug("Added task for routine {}", r.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 * * * * *")
     public void addDailyChallenges() {
         LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
         List<Routine> routines = routineService.getAllRoutines();
@@ -190,6 +255,32 @@ public class RoutineScheduler {
                 LocalDate start = r.getStartDate();
                 long days = ChronoUnit.DAYS.between(start, today);
                 if (days >= 0 && days % 7 == 0 && now.equals(timing)) {
+                    boolean exists = challengeService.getAllChallenges().stream()
+                            .anyMatch(c -> c.getTitle().equals(r.getName()) && c.getChallengeDate() == null);
+                    if (!exists) {
+                        Challenge c = new Challenge();
+                        c.setTitle(r.getName());
+                        c.setChallengeLevel(1);
+                        challengeService.addChallenge(c);
+                        log.debug("Added challenge for routine {}", r.getName());
+                    }
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 * * * * *")
+    public void addMonthlyChallenges() {
+        LocalTime now = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDate today = LocalDate.now();
+        List<Routine> routines = routineService.getAllRoutines();
+        for (Routine r : routines) {
+            if ("挑戦".equals(r.getType()) && "毎月".equals(r.getFrequency())
+                    && r.getTiming() != null && r.getStartDate() != null) {
+                LocalTime timing = r.getTiming().truncatedTo(ChronoUnit.MINUTES);
+                LocalDate start = r.getStartDate();
+                long months = ChronoUnit.MONTHS.between(start.withDayOfMonth(1), today.withDayOfMonth(1));
+                if (months >= 0 && today.getDayOfMonth() == start.getDayOfMonth() && now.equals(timing)) {
                     boolean exists = challengeService.getAllChallenges().stream()
                             .anyMatch(c -> c.getTitle().equals(r.getName()) && c.getChallengeDate() == null);
                     if (!exists) {
