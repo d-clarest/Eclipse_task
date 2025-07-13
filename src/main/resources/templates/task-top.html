@@ -250,6 +250,24 @@
         </tr>
         </table>
       </div>
+      <div class="database-container">
+        <table class="routine-database">
+          <tr>
+            <th>ルーティン名</th>
+            <th>区分</th>
+          </tr>
+          <tr th:each="routine : ${routines}">
+            <td><input type="text" th:value="${routine.name}" class="routine-name-input" /></td>
+            <td>
+              <select class="routine-type-select">
+                <option value="予定" th:selected="${routine.type == '予定'}">予定</option>
+                <option value="タスク" th:selected="${routine.type == 'タスク'}">タスク</option>
+                <option value="挑戦" th:selected="${routine.type == '挑戦'}">挑戦</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
 
     <!-- idはjs，classはcss用 -->
