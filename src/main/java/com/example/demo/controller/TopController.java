@@ -14,6 +14,7 @@ import com.example.demo.service.schedule.ScheduleService;
 import com.example.demo.service.task.TaskService;
 import com.example.demo.service.subtask.SubTaskService;
 import com.example.demo.service.word.WordRecordService;
+import com.example.demo.service.dream.DreamRecordService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class TopController {
     private final SubTaskService subTaskService;
     private final AwarenessRecordService awarenessRecordService;
     private final WordRecordService wordRecordService;
+    private final DreamRecordService dreamRecordService;
 
     @GetMapping("/{username}/task-top")
     public String showTaskTop(@PathVariable String username, Model model, HttpSession session) {
@@ -62,6 +64,11 @@ public class TopController {
                 .limit(5)
                 .toList();
         model.addAttribute("wordRecords", wordList);
+        var dreamList = dreamRecordService.getAllRecords()
+                .stream()
+                .limit(5)
+                .toList();
+        model.addAttribute("dreamRecords", dreamList);
         model.addAttribute("username", username);
         return "task-top";
     }
@@ -153,6 +160,19 @@ public class TopController {
         model.addAttribute("wordRecords", records);
         model.addAttribute("username", username);
         return "word-box";
+    }
+
+    @GetMapping("/{username}/task-top/dream-box")
+    public String showDreamBox(@PathVariable String username, Model model, HttpSession session) {
+        String loginUser = (String) session.getAttribute("loginUser");
+        if (loginUser == null || !loginUser.equals(username)) {
+            return "redirect:/log-in";
+        }
+        log.debug("Displaying dream box page");
+        var records = dreamRecordService.getAllRecords();
+        model.addAttribute("dreamRecords", records);
+        model.addAttribute("username", username);
+        return "dream-box";
     }
 
     @GetMapping("/{username}/task-top/sub-task-box")

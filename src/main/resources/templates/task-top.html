@@ -13,6 +13,7 @@
       <a th:href="@{'/' + ${username} + '/task-top/task-box'}">タスクボックス</a>
       <a th:href="@{'/' + ${username} + '/task-top/awareness-box'}">気づきボックス</a>
       <a th:href="@{'/' + ${username} + '/task-top/word-box'}">単語ボックス</a>
+      <a th:href="@{'/' + ${username} + '/task-top/dream-box'}">夢ボックス</a>
       <a th:href="@{'/' + ${username} + '/task-top/sub-task-box'}">子タスクボックス</a>
     </div>
 
@@ -226,6 +227,20 @@
           </tr>
         </table>
       </div>
+      <div class="database-container">
+        <table class="dream-database">
+          <tr>
+            <th>削除</th>
+            <th>夢</th>
+            <th>ページ</th>
+          </tr>
+          <tr th:each="dream : ${dreamRecords}" th:data-id="${dream.id}">
+            <td><input type="button" value="削除" class="dream-delete-button" /></td>
+            <td><input type="text" th:value="${dream.dream}" class="dream-input" /></td>
+            <td><input type="text" th:value="${dream.page}" class="page-input" /></td>
+          </tr>
+        </table>
+      </div>
     </div>
 
     <!-- idはjs，classはcss用 -->
@@ -242,6 +257,7 @@
     <script th:src="@{/js/task.js}"></script>
     <script th:src="@{/js/awareness.js}"></script>
     <script th:src="@{/js/word.js}"></script>
+    <script th:src="@{/js/dream.js}"></script>
     <script th:src="@{/js/calendar-detail.js}"></script>
   </body>
 </html>
