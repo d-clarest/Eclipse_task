@@ -130,4 +130,11 @@ public class TaskRepositoryImpl implements TaskRepository {
         Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
         return result != null ? result : 0;
     }
+
+    @Override
+    public boolean existsByTitleAndDate(String title, java.time.LocalDate date) {
+        String sql = "SELECT COUNT(*) FROM tasks WHERE title = ? AND DATE(created_at) = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, title, java.sql.Date.valueOf(date));
+        return count != null && count > 0;
+    }
 }

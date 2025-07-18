@@ -11,4 +11,13 @@ public interface TaskRepository {
     void updateTask(Task task);
     void deleteById(int id);
     int sumCompletedLevels();
+
+    /**
+     * 指定したタイトルで、作成日が指定日に該当するタスクが存在するかを判定する。
+     *
+     * @param title タイトル
+     * @param date  作成日
+     * @return 存在する場合は true
+     */
+    boolean existsByTitleAndDate(String title, java.time.LocalDate date);
 }
