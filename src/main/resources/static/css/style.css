@@ -385,7 +385,7 @@ td {
 }
 /* style for awareness page */
 #awareness-input {
-  width: 100%;
+  width: auto;
   font-size: 32px;
   padding: 10px;
   box-sizing: border-box;
