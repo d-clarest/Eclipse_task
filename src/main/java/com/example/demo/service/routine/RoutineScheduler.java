@@ -143,10 +143,7 @@ public class RoutineScheduler {
             if ("タスク".equals(r.getType()) && "毎日".equals(r.getFrequency()) && r.getTiming() != null) {
                 LocalTime timing = r.getTiming().truncatedTo(ChronoUnit.MINUTES);
                 if (now.equals(timing)) {
-                    boolean exists = taskService.getAllTasks().stream()
-                            .anyMatch(t -> t.getTitle().equals(r.getName()) &&
-                                    t.getCreatedAt() != null &&
-                                    today.equals(t.getCreatedAt().toLocalDate()));
+                    boolean exists = taskService.existsTaskCreatedOn(r.getName(), today);
                     if (!exists) {
                         Task t = new Task();
                         t.setTitle(r.getName());
@@ -173,10 +170,7 @@ public class RoutineScheduler {
                 LocalDate start = r.getStartDate();
                 long days = ChronoUnit.DAYS.between(start, today);
                 if (days >= 0 && days % 7 == 0 && now.equals(timing)) {
-                    boolean exists = taskService.getAllTasks().stream()
-                            .anyMatch(t -> t.getTitle().equals(r.getName()) &&
-                                    t.getCreatedAt() != null &&
-                                    today.equals(t.getCreatedAt().toLocalDate()));
+                    boolean exists = taskService.existsTaskCreatedOn(r.getName(), today);
                     if (!exists) {
                         Task t = new Task();
                         t.setTitle(r.getName());
@@ -203,10 +197,7 @@ public class RoutineScheduler {
                 LocalDate start = r.getStartDate();
                 long months = ChronoUnit.MONTHS.between(start.withDayOfMonth(1), today.withDayOfMonth(1));
                 if (months >= 0 && today.getDayOfMonth() == start.getDayOfMonth() && now.equals(timing)) {
-                    boolean exists = taskService.getAllTasks().stream()
-                            .anyMatch(t -> t.getTitle().equals(r.getName()) &&
-                                    t.getCreatedAt() != null &&
-                                    today.equals(t.getCreatedAt().toLocalDate()));
+                    boolean exists = taskService.existsTaskCreatedOn(r.getName(), today);
                     if (!exists) {
                         Task t = new Task();
                         t.setTitle(r.getName());

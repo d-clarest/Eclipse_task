@@ -16,4 +16,13 @@ public interface TaskService {
     int getTotalCompletedLevels();
 
     Task getTaskById(int id);
+
+    /**
+     * 指定タイトルで作成日が指定日に該当するタスクが存在するか判定する。
+     *
+     * @param title タイトル
+     * @param date  作成日
+     * @return 存在する場合は true
+     */
+    boolean existsTaskCreatedOn(String title, java.time.LocalDate date);
 }

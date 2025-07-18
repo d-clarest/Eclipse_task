@@ -156,6 +156,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public boolean existsTaskCreatedOn(String title, LocalDate date) {
+        return repository.existsByTitleAndDate(title, date);
+    }
+
+    @Override
     public Task getTaskById(int id) {
         log.debug("Fetching task by id {}", id);
         Task t = repository.findById(id);
