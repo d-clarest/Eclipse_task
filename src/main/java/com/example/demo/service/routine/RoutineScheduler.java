@@ -142,7 +142,8 @@ public class RoutineScheduler {
         for (Routine r : routines) {
             if ("タスク".equals(r.getType()) && "毎日".equals(r.getFrequency()) && r.getTiming() != null) {
                 LocalTime timing = r.getTiming().truncatedTo(ChronoUnit.MINUTES);
-                if (now.equals(timing)) {
+                LocalDate start = r.getStartDate();
+                if ((start == null || !today.isBefore(start)) && now.equals(timing)) {
                     boolean exists = taskService.existsTaskCreatedOn(r.getName(), today);
                     if (!exists) {
                         Task t = new Task();
