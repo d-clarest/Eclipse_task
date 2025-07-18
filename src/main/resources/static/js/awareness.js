@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const w = inp.scrollWidth + 4; //「4px」の余裕を足して、文字が切れないように
         inp.style.width = w + 'px';
       };
+      adjustWidth(); // 初期表示時にも現在の文字数に合わせて幅を調整
       // フォーカスが当たった瞬間に、現在の幅を originalWidth に保存
       inp.addEventListener('focus', () => {
         originalWidth = inp.style.width || inp.offsetWidth + 'px'; //inp.style.width が設定されていればそれを使う.なければ、現在の見た目の幅である offsetWidth を使う。
