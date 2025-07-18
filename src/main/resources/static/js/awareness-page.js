@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (awarenessInput) {
+    enableFullTextDisplay();
     awarenessInput.addEventListener('change', saveRecord);
   }
 
@@ -34,6 +35,24 @@ document.addEventListener('DOMContentLoaded', () => {
         awareness: awarenessInput.value,
         awarenessLevel: awarenessLevel
       })
+    });
+  }
+
+  function enableFullTextDisplay() {
+    let originalWidth = '';
+    const adjustWidth = () => {
+      awarenessInput.style.width = 'auto';
+      const w = awarenessInput.scrollWidth + 4;
+      awarenessInput.style.width = w + 'px';
+    };
+    adjustWidth();
+    awarenessInput.addEventListener('focus', () => {
+      originalWidth = awarenessInput.style.width || awarenessInput.offsetWidth + 'px';
+      adjustWidth();
+    });
+    awarenessInput.addEventListener('input', adjustWidth);
+    awarenessInput.addEventListener('blur', () => {
+      awarenessInput.style.width = originalWidth;
     });
   }
 });
