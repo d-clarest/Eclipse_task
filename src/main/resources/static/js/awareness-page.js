@@ -3,11 +3,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const awarenessInput = document.getElementById('awareness-input');
 
   if (textarea) {
+    autoResize();
+    textarea.addEventListener('input', autoResize);
     textarea.addEventListener('change', savePage);
   }
 
   if (awarenessInput) {
     awarenessInput.addEventListener('change', saveRecord);
+  }
+
+  function autoResize() {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
   }
 
   function savePage() {
