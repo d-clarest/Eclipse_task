@@ -192,13 +192,12 @@
       <div class="database-container">
         <table class="awareness-database">
           <tr>
-            <th>削除</th>
             <th>詳細</th>
             <th>気づき</th>
             <th>気づき度</th>
+            <th>削除</th>
           </tr>
           <tr th:each="record : ${awarenessRecords}" th:data-id="${record.id}">
-            <td><input type="button" value="削除" class="awareness-delete-button" /></td>
             <td><a th:href="@{'/' + ${username} + '/task-top/awareness-page/' + ${record.id}}">go</a></td>
             <td><input type="text" th:value="${record.awareness}" class="awareness-input" /></td>
             <td>
@@ -207,6 +206,8 @@
                 <option th:each="level : ${#numbers.sequence(1,5)}" th:value="${level}" th:text="${level}" th:selected="${level == record.awarenessLevel}"></option>
               </select>
             </td>
+            <td><input type="button" value="削除" class="awareness-delete-button" /></td>
+
           </tr>
         </table>
       </div>
