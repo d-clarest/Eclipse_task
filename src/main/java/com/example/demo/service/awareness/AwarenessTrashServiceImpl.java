@@ -58,10 +58,11 @@ public class AwarenessTrashServiceImpl implements AwarenessTrashService {
         TrashItem item = trash.remove(recordId);
         if (item != null) {
             log.debug("Restoring awareness record id {}", recordId);
+            // Insert the record first so that the page can reference it
+            recordRepository.insertRecordWithId(item.record);
             if (item.page != null) {
                 pageRepository.insertPageWithId(item.page);
             }
-            recordRepository.insertRecordWithId(item.record);
         }
     }
 
