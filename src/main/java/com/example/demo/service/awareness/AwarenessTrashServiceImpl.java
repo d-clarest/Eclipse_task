@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.time.ZoneId;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.example.demo.entity.AwarenessPage;
 import com.example.demo.entity.AwarenessRecord;
 import com.example.demo.repository.awareness.AwarenessRecordRepository;
 import com.example.demo.repository.page.AwarenessPageRepository;
+import com.example.demo.dto.DeletedAwarenessRecordInfo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,11 +46,17 @@ public class AwarenessTrashServiceImpl implements AwarenessTrashService {
     }
 
     @Override
-    public List<AwarenessRecord> getDeletedRecords() {
+    public List<DeletedAwarenessRecordInfo> getDeletedRecords() {
         removeExpired();
-        List<AwarenessRecord> list = new ArrayList<>();
+        List<DeletedAwarenessRecordInfo> list = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
         for (TrashItem item : trash.values()) {
-            list.add(item.record);
+            DeletedAwarenessRecordInfo info = new DeletedAwarenessRecordInfo();
+            info.setRecord(item.record);
+            long expiry = item.deletedAt.plusMinutes(10)
+                .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            info.setExpiryEpochMillis(expiry);
+            list.add(info);
         }
         return list;
     }
