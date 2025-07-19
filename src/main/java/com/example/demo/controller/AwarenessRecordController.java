@@ -38,4 +38,11 @@ public class AwarenessRecordController {
         service.deleteById(record.getId());
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/awareness-restore")
+    public ResponseEntity<Void> restoreRecord(@RequestBody AwarenessRecord record) {
+        log.debug("Restoring awareness record id {}", record.getId());
+        service.restoreById(record.getId());
+        return ResponseEntity.ok().build();
+    }
 }

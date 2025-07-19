@@ -30,9 +30,21 @@ public class AwarenessPageServiceImpl implements AwarenessPageService {
     }
 
     @Override
+    public AwarenessPage getPage(int recordId) {
+        log.debug("Fetching page only for record {}", recordId);
+        return repository.findByRecordId(recordId);
+    }
+
+    @Override
     public void updatePage(AwarenessPage page) {
         log.debug("Updating page id {}", page.getId());
         repository.updatePage(page);
+    }
+
+    @Override
+    public void insertPageWithId(AwarenessPage page) {
+        log.debug("Inserting page with id {}", page.getId());
+        repository.insertPageWithId(page);
     }
 
     @Override

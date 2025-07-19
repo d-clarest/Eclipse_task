@@ -41,6 +41,12 @@ public class AwarenessPageRepositoryImpl implements AwarenessPageRepository {
     }
 
     @Override
+    public void insertPageWithId(AwarenessPage page) {
+        String sql = "INSERT INTO awareness_pages (id, record_id, content) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, page.getId(), page.getRecordId(), page.getContent());
+    }
+
+    @Override
     public void updatePage(AwarenessPage page) {
         String sql = "UPDATE awareness_pages SET content = ? WHERE id = ?";
         jdbcTemplate.update(sql, page.getContent(), page.getId());

@@ -34,9 +34,33 @@ public class AwarenessRecordRepositoryImpl implements AwarenessRecordRepository 
     }
 
     @Override
+    public AwarenessRecord findById(int id) {
+        String sql = "SELECT id, awareness, awareness_level FROM awareness_records WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new RowMapper<AwarenessRecord>() {
+            @Override
+            public AwarenessRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
+                AwarenessRecord r = new AwarenessRecord();
+                r.setId(rs.getInt("id"));
+                r.setAwareness(rs.getString("awareness"));
+                r.setAwarenessLevel(rs.getInt("awareness_level"));
+                return r;
+            }
+        }, id);
+    }
+
+    @Override
     public void insertRecord(AwarenessRecord record) {
         String sql = "INSERT INTO awareness_records (awareness, awareness_level) VALUES (?, ?)";
         jdbcTemplate.update(sql,
+                record.getAwareness(),
+                record.getAwarenessLevel());
+    }
+
+    @Override
+    public void insertRecordWithId(AwarenessRecord record) {
+        String sql = "INSERT INTO awareness_records (id, awareness, awareness_level) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql,
+                record.getId(),
                 record.getAwareness(),
                 record.getAwarenessLevel());
     }
