@@ -14,6 +14,12 @@ public interface SubTaskRepository {
     void insertSubTask(SubTask subTask);
     void updateSubTask(SubTask subTask);
     void deleteById(int id);
+    /**
+     * 指定した親タスクに紐づく子タスクをすべて削除する。
+     *
+     * @param taskId 親タスクのID
+     */
+    void deleteByTaskId(int taskId);
     int countByTaskId(int taskId);
     int countCompletedByTaskId(int taskId);
 

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entity.Task;
 import com.example.demo.repository.task.TaskRepository;
 import com.example.demo.repository.subtask.SubTaskRepository;
+import com.example.demo.repository.page.TaskPageRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository repository;
     private final SubTaskRepository subTaskRepository;
+    private final TaskPageRepository taskPageRepository;
 
     /**
      * カテゴリから締切日時を計算する。
@@ -146,6 +148,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTaskById(int id) {
         log.debug("Deleting task with id {}", id);
+        // 子タスクとページを先に削除してから親タスクを削除する
+        taskPageRepository.deleteByTaskId(id);
+        subTaskRepository.deleteByTaskId(id);
         repository.deleteById(id);
     }
 

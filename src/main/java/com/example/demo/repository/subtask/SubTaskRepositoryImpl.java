@@ -72,6 +72,12 @@ public class SubTaskRepositoryImpl implements SubTaskRepository {
     }
 
     @Override
+    public void deleteByTaskId(int taskId) {
+        String sql = "DELETE FROM sub_tasks WHERE task_id = ?";
+        jdbcTemplate.update(sql, taskId);
+    }
+
+    @Override
     public int countByTaskId(int taskId) {
         String sql = "SELECT COUNT(*) FROM sub_tasks WHERE task_id = ?";
         Integer result = jdbcTemplate.queryForObject(sql, Integer.class, taskId);
