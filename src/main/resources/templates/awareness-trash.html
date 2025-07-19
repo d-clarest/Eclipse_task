@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>削除済み気づき</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="task-body">
+    <div class="link-area">
+      <a th:href="@{'/' + ${username} + '/task-top/awareness-box'}">一覧へ戻る</a>
+    </div>
+
+    <div class="database-container">
+      <table class="awareness-database">
+        <tr>
+          <th>復元</th>
+          <th>気づき</th>
+          <th>気づき度</th>
+        </tr>
+        <tr th:each="record : ${deletedRecords}" th:data-id="${record.id}">
+          <td><input type="button" value="復元" class="awareness-restore-button" /></td>
+          <td th:text="${record.awareness}"></td>
+          <td th:text="${record.awarenessLevel}"></td>
+        </tr>
+      </table>
+    </div>
+
+    <script th:src="@{/js/awareness-trash.js}"></script>
+  </body>
+</html>

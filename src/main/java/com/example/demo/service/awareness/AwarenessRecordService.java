@@ -13,5 +13,9 @@ public interface AwarenessRecordService {
 
     void deleteById(int id);
 
+    void restoreById(int id);
+
+    AwarenessRecord getRecordById(int id);
+
     int getTotalAwarenessLevel();
 }

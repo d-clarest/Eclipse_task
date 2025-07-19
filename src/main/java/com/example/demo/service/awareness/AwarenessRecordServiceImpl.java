@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.entity.AwarenessRecord;
 import com.example.demo.repository.awareness.AwarenessRecordRepository;
 import com.example.demo.service.page.AwarenessPageService;
+import com.example.demo.service.awareness.AwarenessTrashService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ public class AwarenessRecordServiceImpl implements AwarenessRecordService {
 
     private final AwarenessRecordRepository repository;
     private final AwarenessPageService pageService;
+    private final AwarenessTrashService trashService;
 
     @Override
     public List<AwarenessRecord> getAllRecords() {
@@ -40,8 +42,27 @@ public class AwarenessRecordServiceImpl implements AwarenessRecordService {
     @Override
     public void deleteById(int id) {
         log.debug("Deleting awareness record id {}", id);
+        AwarenessRecord record = repository.findById(id);
+        var page = pageService.getPage(id);
+        if (page != null) {
+            trashService.addDeletedRecord(record, page);
+        } else {
+            trashService.addDeletedRecord(record, null);
+        }
         pageService.deleteByRecordId(id);
         repository.deleteById(id);
+    }
+
+    @Override
+    public void restoreById(int id) {
+        log.debug("Restoring awareness record id {}", id);
+        trashService.restore(id);
+    }
+
+    @Override
+    public AwarenessRecord getRecordById(int id) {
+        log.debug("Fetching awareness record id {}", id);
+        return repository.findById(id);
     }
 
     @Override
