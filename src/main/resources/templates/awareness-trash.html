@@ -16,11 +16,13 @@
           <th>復元</th>
           <th>気づき</th>
           <th>気づき度</th>
+          <th>残り時間</th>
         </tr>
-        <tr th:each="record : ${deletedRecords}" th:data-id="${record.id}">
+        <tr th:each="item : ${deletedRecords}" th:data-id="${item.record.id}" th:data-expiry="${item.expiryEpochMillis}">
           <td><input type="button" value="復元" class="awareness-restore-button" /></td>
-          <td th:text="${record.awareness}"></td>
-          <td th:text="${record.awarenessLevel}"></td>
+          <td th:text="${item.record.awareness}"></td>
+          <td th:text="${item.record.awarenessLevel}"></td>
+          <td class="time-left"></td>
         </tr>
       </table>
     </div>
