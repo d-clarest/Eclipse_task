@@ -151,6 +151,7 @@ public class TopController {
         var records = awarenessRecordService.getAllRecords();
         model.addAttribute("awarenessRecords", records);
         model.addAttribute("username", username);
+                System.out.println("ABA");
         return "awareness-box";
     }
 
