@@ -15,6 +15,7 @@ import com.example.demo.service.task.TaskService;
 import com.example.demo.service.subtask.SubTaskService;
 import com.example.demo.service.word.WordRecordService;
 import com.example.demo.service.dream.DreamRecordService;
+import com.example.demo.service.diary.DiaryRecordService;
 import com.example.demo.service.routine.RoutineService;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class TopController {
     private final AwarenessRecordService awarenessRecordService;
     private final WordRecordService wordRecordService;
     private final DreamRecordService dreamRecordService;
+    private final DiaryRecordService diaryRecordService;
     private final RoutineService routineService;
 
     @GetMapping("/{username}/task-top")
@@ -72,6 +74,11 @@ public class TopController {
                 .limit(5)
                 .toList();
         model.addAttribute("dreamRecords", dreamList);
+        var diaryList = diaryRecordService.getAllRecords()
+                .stream()
+                .limit(5)
+                .toList();
+        model.addAttribute("diaryRecords", diaryList);
         var routineList = routineService.getAllRoutines();
         model.addAttribute("routines", routineList);
         model.addAttribute("username", username);
@@ -186,6 +193,19 @@ public class TopController {
         model.addAttribute("completedDreamRecords", completed);
         model.addAttribute("username", username);
         return "dream-box";
+    }
+
+    @GetMapping("/{username}/task-top/diary-box")
+    public String showDiaryBox(@PathVariable String username, Model model, HttpSession session) {
+        String loginUser = (String) session.getAttribute("loginUser");
+        if (loginUser == null || !loginUser.equals(username)) {
+            return "redirect:/log-in";
+        }
+        log.debug("Displaying diary box page");
+        var records = diaryRecordService.getAllRecords();
+        model.addAttribute("diaryRecords", records);
+        model.addAttribute("username", username);
+        return "diary-box";
     }
 
     @GetMapping("/{username}/task-top/sub-task-box")

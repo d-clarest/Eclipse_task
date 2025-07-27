@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>日記ボックス</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="task-body">
+    <div class="link-area">
+      <a th:href="@{'/' + ${username} + '/task-top'}">TOPへ</a>
+    </div>
+
+    <div class="database-container">
+      <table class="diary-database">
+        <tr>
+          <th>削除</th>
+          <th>日付</th>
+          <th>内容</th>
+        </tr>
+        <tr th:each="diary : ${diaryRecords}" th:data-id="${diary.id}">
+          <td><input type="button" value="削除" class="diary-delete-button" /></td>
+          <td><input type="date" th:value="${diary.recordDate}" class="diary-date-input" /></td>
+          <td><input type="text" th:value="${diary.content}" class="diary-content-input" /></td>
+        </tr>
+      </table>
+      <button id="new-diary-button">新規日記</button>
+    </div>
+
+    <script th:src="@{/js/diary.js}"></script>
+  </body>
+</html>
