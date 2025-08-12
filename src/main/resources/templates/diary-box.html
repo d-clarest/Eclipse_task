@@ -13,16 +13,14 @@
     <div class="database-container">
       <table class="diary-database">
         <tr>
-          <th>削除</th>
           <th>詳細</th>
           <th>日付</th>
-          <th>内容</th>
+          <th>削除</th>
         </tr>
         <tr th:each="diary : ${diaryRecords}" th:data-id="${diary.id}" th:data-detail="${diary.detail}">
-          <td><input type="button" value="削除" class="diary-delete-button" /></td>
-          <td><a th:href="@{'/' + ${username} + '/task-top/diary-page/' + ${diary.id}}">go</a></td>
+          <td><a th:href="@{'/' + ${username} + '/task-top/diary-box/' + ${diary.id}}">go</a></td>
           <td><input type="date" th:value="${diary.recordDate}" class="diary-date-input" /></td>
-          <td><input type="text" th:value="${diary.content}" class="diary-content-input" /></td>
+          <td><input type="button" value="削除" class="diary-delete-button" /></td>
         </tr>
       </table>
       <button id="new-diary-button">新規日記</button>

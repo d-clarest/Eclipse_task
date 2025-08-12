@@ -19,8 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 public class DiaryPageController {
 
     private final DiaryRecordService recordService;
+    private final DiaryPageService service;
 
-    @GetMapping("/{username}/task-top/diary-page/{recordId}")
+    @GetMapping("/{username}/task-top/diary-box/{recordId}")
     public String showDiaryPage(@PathVariable String username, @PathVariable int recordId,
             Model model, HttpSession session) {
         String loginUser = (String) session.getAttribute("loginUser");
@@ -28,11 +29,13 @@ public class DiaryPageController {
             return "redirect:/log-in";
         }
         log.debug("Displaying diary page for record {}", recordId);
+        DairyPage page = service.getOrCreatePage(recordId);
         DiaryRecord record = recordService.getAllRecords().stream()
                 .filter(r -> r.getId() == recordId)
                 .findFirst()
                 .orElse(null);
         model.addAttribute("record", record);
+        model.addAttribute("page", page);
         model.addAttribute("username", username);
         return "diary-page";
     }
