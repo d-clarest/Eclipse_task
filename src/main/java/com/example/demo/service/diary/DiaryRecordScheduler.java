@@ -22,6 +22,7 @@ public class DiaryRecordScheduler {
         DiaryRecord record = new DiaryRecord();
         record.setRecordDate(LocalDate.now());
         record.setContent("");
+        record.setDetail("");
         service.addRecord(record);
         log.debug("Added daily diary record for {}", record.getRecordDate());
     }

@@ -21,7 +21,7 @@ public class DiaryRecordRepositoryImpl implements DiaryRecordRepository {
 
     @Override
     public List<DiaryRecord> findAll() {
-        String sql = "SELECT id, record_date, content FROM diary_records ORDER BY id DESC";
+        String sql = "SELECT id, record_date, content, detail FROM diary_records ORDER BY id DESC";
         return jdbcTemplate.query(sql, new RowMapper<DiaryRecord>() {
             @Override
             public DiaryRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -29,6 +29,7 @@ public class DiaryRecordRepositoryImpl implements DiaryRecordRepository {
                 d.setId(rs.getInt("id"));
                 d.setRecordDate(rs.getDate("record_date").toLocalDate());
                 d.setContent(rs.getString("content"));
+                d.setDetail(rs.getString("detail"));
                 return d;
             }
         });
@@ -36,17 +37,17 @@ public class DiaryRecordRepositoryImpl implements DiaryRecordRepository {
 
     @Override
     public void insertRecord(DiaryRecord record) {
-        String sql = "INSERT INTO diary_records (record_date, content) VALUES (?, ?)";
+        String sql = "INSERT INTO diary_records (record_date, content, detail) VALUES (?, ?, ?)";
         LocalDate date = record.getRecordDate();
         java.sql.Date sqlDate = date != null ? java.sql.Date.valueOf(date) : null;
-        jdbcTemplate.update(sql, sqlDate, record.getContent());
+        jdbcTemplate.update(sql, sqlDate, record.getContent(), record.getDetail());
     }
 
     @Override
     public void updateRecord(DiaryRecord record) {
-        String sql = "UPDATE diary_records SET record_date = ?, content = ? WHERE id = ?";
+        String sql = "UPDATE diary_records SET record_date = ?, content = ?, detail = ? WHERE id = ?";
         java.sql.Date sqlDate = record.getRecordDate() != null ? java.sql.Date.valueOf(record.getRecordDate()) : null;
-        jdbcTemplate.update(sql, sqlDate, record.getContent(), record.getId());
+        jdbcTemplate.update(sql, sqlDate, record.getContent(), record.getDetail(), record.getId());
     }
 
     @Override

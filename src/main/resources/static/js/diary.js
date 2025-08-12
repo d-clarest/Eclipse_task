@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('/diary-add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recordDate: new Date().toISOString().split('T')[0], content: '' })
+        body: JSON.stringify({ recordDate: new Date().toISOString().split('T')[0], content: '', detail: '' })
       }).then(() => location.reload());
     });
   });
@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return {
       id: parseInt(row.dataset.id, 10),
       recordDate: row.querySelector('.diary-date-input').value,
-      content: row.querySelector('.diary-content-input').value
+      content: row.querySelector('.diary-content-input').value,
+      detail: row.dataset.detail
     };
   }
 
