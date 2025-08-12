@@ -8,5 +8,6 @@ import lombok.Data;
 public class DiaryRecord {
     private int id;               // ID
     private LocalDate recordDate; // 記入日
-    private String content;       // 日記内容
+    private String content;       // タイトル
+    private String detail;        // 詳細
 }
