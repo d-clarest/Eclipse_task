@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const textarea = document.getElementById('diary-detail-content');
+  const textarea = document.getElementById('diary-page-content');
   const titleInput = document.getElementById('diary-title-input');
 
   if (textarea) {

@@ -11,9 +11,17 @@
       <a th:href="@{'/' + ${username} + '/task-top/diary-box'}">一覧へ戻る</a>
     </div>
 
+    <div class="diary-title">
+      <input
+        type="text"
+        id="diary-title-input"
+        th:value="${record != null ? record.content : ''}" />
+    </div>
 
     <div class="page-container">
-      <textarea id="diary-detail-content" th:text="${record.detail}"></textarea>
+      <textarea
+        id="diary-page-content"
+        th:text="${record.detail}"></textarea>
     </div>
 
     <script th:src="@{/js/diary-page.js}"></script>
