@@ -356,7 +356,8 @@ td {
 }
 
 /* task-page.htmlのスタイル---------------------------------------------------------------------------- */
-.awareness-title {
+.awareness-title,
+.diary-title {
   font-size: 24px;
   font-weight: bold;
   text-align: center;
