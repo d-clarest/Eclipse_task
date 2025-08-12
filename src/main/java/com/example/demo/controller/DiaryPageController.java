@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.demo.entity.DiaryRecord;
+import com.example.demo.entity.DairyPage;
 import com.example.demo.service.diary.DiaryRecordService;
+import com.example.demo.service.page.DairyPageService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DiaryPageController {
 
     private final DiaryRecordService recordService;
-    private final DiaryPageService service;
+    private final DairyPageService service;
 
     @GetMapping("/{username}/task-top/diary-box/{recordId}")
     public String showDiaryPage(@PathVariable String username, @PathVariable int recordId,
